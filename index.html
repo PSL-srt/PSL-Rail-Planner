@@ -842,7 +842,7 @@
               </div>
               <button class="swap-btn" id="swapStationsBtn" type="button" title="สลับสถานีต้นทางและสถานีปลายทาง">⇄</button>
               <div class="field">
-                <label for="passDest">สถานีลง <span>ปลายทางผู้โดยสาร</span></label>
+                <label for="passDest">สถานีปลายทาง <span>ปลายทางผู้โดยสาร</span></label>
                 <div class="control-wrap">
                   <input class="control station-input" id="passDest" readonly role="button" aria-haspopup="dialog" aria-controls="stationPickerDialog" autocomplete="off" placeholder="กดเลือกสถานีลง" />
                   <button class="mini-btn" id="favDestBtn" type="button" title="บันทึกสถานีโปรด">☆</button>
@@ -1279,7 +1279,8 @@ function selectQuickStation(stationName) {
     showToast(`ขบวน ${train.id} ไม่ได้จอดหรือไม่ได้วิ่งผ่านสถานี${stationName}`);
     return;
   }
-  /* ลอจิกอัจฉริยะ: ถ้าสถานีขึ้นว่าง ให้ลงสถานีขึ้นก่อน ถ้าไม่ว่างให้ลงสถานีลง */
+  /* ลอจิกอัจฉริยะ: ถ้าสถานีขึ้นว่าง ให้ลงสถานีขึ้นก่อน ถ้าไม่ว่างให้ลงสถานีปลายทาง
+  */
   let targetField = el.passOrigin;
   if (!el.passOrigin.value) {
     targetField = el.passOrigin;
@@ -1438,9 +1439,9 @@ function calculateBooking() {
   if (d.travelDate < localDateOnly()) return bookingError('วันที่เดินทางผ่านไปแล้ว กรุณาเลือกวันนี้หรือวันในอนาคต');
 
   if (d.mode === 'station') {
-    if (!d.origin || !d.destination) return bookingEmpty('กรุณาเลือก "สถานีขึ้น" และ "สถานีลง"');
+    if (!d.origin || !d.destination) return bookingEmpty('กรุณาเลือก "สถานีต้นทาง" และ "สถานีปลายทาง"');
     if (!exactStation(d.origin) || !exactStation(d.destination)) return bookingError('กรุณาเลือกสถานีจากรายการสถานีสายเหนือ');
-    if (d.origin === d.destination) return bookingError('สถานีขึ้นและสถานีลงต้องเป็นคนละสถานีกัน');
+    if (d.origin === d.destination) return bookingError('สถานีต้นทางและสถานีปลายทางต้องเป็นคนละสถานีกัน');
     if (d.train) {
       const stops = activeStationNames(d.train);
       if (!stops.includes(d.origin) || !stops.includes(d.destination)) {
@@ -1796,8 +1797,8 @@ let stationPickerField = null;
 const STATION_FIELD_LABELS = {
   trainOrigin: 'ต้นทางขบวนรถ',
   trainDest: 'ปลายทางขบวนรถ',
-  passOrigin: 'สถานีขึ้น (ต้นทางผู้โดยสาร)',
-  passDest: 'สถานีลง (ปลายทางผู้โดยสาร)'
+  passOrigin: 'สถานีต้นทาง',
+  passDest: 'สถานีปลายทาง'
 };
 
 function pickerStationNames(field) {
