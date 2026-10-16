@@ -496,11 +496,11 @@
     }
     .footer strong { color: var(--ink); font-weight: 500; }
 
-    /* Universal Modal Overlay (Works 100% in LINE WebView) */
+    /* Universal Modal Overlay */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      z-index: 100;
+      z-index: 200;
       background: rgba(18, 18, 30, 0.58);
       backdrop-filter: blur(2px);
       display: none;
@@ -675,7 +675,7 @@
 
     .toast {
       position: fixed;
-      z-index: 200;
+      z-index: 300;
       bottom: 22px;
       left: 50%;
       transform: translate(-50%, 12px);
@@ -775,13 +775,13 @@
                 <optgroup label="ขบวนรถไม่สำรองที่นั่ง (ธรรมดา / ท้องถิ่น)">
                   <option value="201/202">201/202 ธรรมดา กรุงเทพ (หัวลำโพง)–พิษณุโลก</option>
                   <option value="401/402">401/402 ท้องถิ่น ลพบุรี–พิษณุโลก</option>
-                  <option value="403/410">403/410 ท้องถิ่น พิษณุโลก–ศิลาอาสน์</option>
-                  <option value="407/408">407/408 ท้องถิ่น นครสวรรค์–เชียงใหม่</option>
+                  <option value="403">403 ท้องถิ่น พิษณุโลก–ศิลาอาสน์</option>
+                  <option value="410">410 ท้องถิ่น ศิลาอาสน์–พิษณุโลก</option>
                 </optgroup>
               </select>
             </div>
 
-            <!-- ปุ่มลัดสถานีหลัก (Quick Chips) -->
+            <!-- ปุ่มลัดสถานีหลัก -->
             <div class="quick-strip">
               <div class="strip-head">
                 <span>📍 ปุ่มลัดสถานีหลัก (แตะเพื่อใส่สถานีต้นทาง / สถานีปลายทาง)</span>
@@ -865,13 +865,13 @@
   </footer>
 </div>
 
-<!-- Modal 1: ตั้งเตือนปฏิทิน -->
+<!-- Modal 1: ตั้งเตือนวันเปิดจอง -->
 <div class="modal-overlay" id="reminderDialog" role="dialog" aria-modal="true" aria-labelledby="reminderTitle">
   <div class="modal-box">
     <div class="dialog-head">
       <div>
-        <h2 id="reminderTitle">ตั้งเตือนวันเปิดจอง</h2>
-        <p>เพิ่มนัดหมายแจ้งเตือนลงในปฏิทินมือถือ</p>
+        <h2 id="reminderTitle">ตั้งเตือนวันเปิดจองตั๋ว</h2>
+        <p>คัดลอกข้อความเพื่อนำไปวางแจ้งเตือนในแชท LINE</p>
       </div>
       <button class="dialog-close" id="closeReminderBtn" type="button" aria-label="ปิดหน้าตั้งเตือน">×</button>
     </div>
@@ -903,8 +903,8 @@
       <div class="reminder-preview" id="reminderPreview" aria-live="polite"></div>
       <div class="reminder-error hidden" id="reminderError" role="alert"></div>
       <div class="reminder-buttons">
-        <button class="action-btn primary" type="button" id="googleCalendarBtn">📅 เพิ่มใน Google Calendar (แนะนำ)</button>
-        <button class="action-btn" type="button" id="copyReminderBtn">📋 คัดลอกข้อความแจ้งเตือนไว้ส่งในแชท</button>
+        <button class="action-btn primary" type="button" id="copyReminderBtn">📋 คัดลอกข้อความเตือนไปวางใน LINE</button>
+        <button class="action-btn" type="button" id="googleCalendarBtn">📅 เพิ่มใน Google Calendar (ทางเลือก)</button>
       </div>
       <div class="reminder-handoff hidden" id="reminderHandoff" role="status" aria-live="polite"></div>
     </div>
@@ -970,9 +970,6 @@
 <script>
 'use strict';
 
-/* =========================================================
-   1) APP CONFIG & BOOKING RULES
-   ========================================================= */
 const APP_CONFIG = Object.freeze({
   dticketUrl: 'https://dticket.railway.co.th/DTicketPublicWeb/home/Home?openExternalBrowser=1',
   hotline: '1690',
@@ -990,9 +987,6 @@ const QUICK_STATIONS = Object.freeze([
   'เชียงใหม่'
 ]);
 
-/* =========================================================
-   2) STATION & TRAIN DATA
-   ========================================================= */
 const northStations = [
   { name: "กรุงเทพ (หัวลำโพง)", km: 0 }, { name: "สามเสน", km: 5 }, { name: "ชุมทางบางซื่อ", km: 7 },
   { name: "กรุงเทพอภิวัฒน์", km: 8 }, { name: "บางเขน", km: 13 }, { name: "หลักสี่", km: 18 },
@@ -1045,17 +1039,16 @@ const northSchedules = [
     stops: ["กรุงเทพอภิวัฒน์", "ดอนเมือง", "รังสิต", "อยุธยา", "ชุมทางบ้านภาชี", "ท่าเรือ", "บ้านหมอ", "ลพบุรี 2 (ท่าวุ้ง)", "บ้านหมี่", "จันเสน", "ช่องแค", "บ้านตาคลี", "หนองโพ", "นครสวรรค์", "ปากน้ำโพ", "ชุมแสง", "บางมูลนาก", "ตะพานหิน", "พิจิตร", "บางกระทุ่ม", "พิษณุโลก", "พรหมพิราม", "หนองตม", "พิชัย", "ชุมทางบ้านดารา", "ท่าสัก", "ตรอน", "อุตรดิตถ์", "ศิลาอาสน์", "เด่นชัย", "บ้านปิน", "แม่เมาะ", "นครลำปาง", "ขุนตาน", "ลำพูน", "เชียงใหม่"] },
   { id: "111/112", name: "111/112 เร็ว กรุงเทพอภิวัฒน์–เด่นชัย", origin: "กรุงเทพอภิวัฒน์", dest: "เด่นชัย",
     stops: ["กรุงเทพอภิวัฒน์", "ดอนเมือง", "รังสิต", "เชียงราก", "บางปะอิน", "อยุธยา", "มาบพระจันทร์", "พระแก้ว", "ชุมทางบ้านภาชี", "หนองวิวัฒน์", "ท่าเรือ", "บ้านหมอ", "หนองโดน", "ลพบุรี 2 (ท่าวุ้ง)", "บ้านหมี่", "จันเสน", "ช่องแค", "บ้านตาคลี", "หนองโพ", "นครสวรรค์", "ทับกฤช", "ปากน้ำโพ", "ชุมแสง", "บางมูลนาก", "ตะพานหิน", "หัวดง", "วังกรด", "พิจิตร", "บางกระทุ่ม", "พิษณุโลก", "พรหมพิราม", "หนองตม", "พิชัย", "ชุมทางบ้านดารา", "ท่าสัก", "ตรอน", "อุตรดิตถ์", "ศิลาอาสน์", "บ้านด่าน", "ปางต้นผึ้ง", "ห้วยไร่", "เด่นชัย"] },
-  { id: "201/202", name: "201/202 ธรรมดา กรุงเทพ (หัวลำโพง)–พิษณุโลก", origin: "กรุงเทพ (หัวลำโพง)", dest: "พิษณุโลก" },
-  { id: "207/208", name: "207/208 ธรรมดา กรุงเทพ (หัวลำโพง)–นครสวรรค์", origin: "กรุงเทพ (หัวลำโพง)", dest: "นครสวรรค์" },
-  { id: "209/210", name: "209/210 ธรรมดา กรุงเทพ (หัวลำโพง)–บ้านตาคลี", origin: "กรุงเทพ (หัวลำโพง)", dest: "บ้านตาคลี" },
-  { id: "401/402", name: "401/402 ท้องถิ่น ลพบุรี–พิษณุโลก", origin: "ลพบุรี", dest: "พิษณุโลก" },
-  { id: "403/404", name: "403/404 ท้องถิ่น พิษณุโลก–ศิลาอาสน์", origin: "พิษณุโลก", dest: "ศิลาอาสน์" },
-  { id: "407/408", name: "407/408 ท้องถิ่น นครสวรรค์–เชียงใหม่", origin: "นครสวรรค์", dest: "เชียงใหม่" }
+  { id: "201/202", name: "201/202 ธรรมดา กรุงเทพ (หัวลำโพง)–พิษณุโลก", origin: "กรุงเทพ (หัวลำโพง)", dest: "พิษณุโลก",
+    stops: ["กรุงเทพ (หัวลำโพง)", "สามเสน", "ชุมทางบางซื่อ", "กรุงเทพอภิวัฒน์", "บางเขน", "หลักสี่", "ดอนเมือง", "รังสิต", "เชียงราก", "บางปะอิน", "อยุธยา", "ชุมทางบ้านภาชี", "ท่าเรือ", "ลพบุรี", "บ้านหมี่", "ช่องแค", "บ้านตาคลี", "นครสวรรค์", "ปากน้ำโพ", "ชุมแสง", "ตะพานหิน", "พิจิตร", "บางกระทุ่ม", "พิษณุโลก"] },
+  { id: "401/402", name: "401/402 ท้องถิ่น ลพบุรี–พิษณุโลก", origin: "ลพบุรี", dest: "พิษณุโลก",
+    stops: ["ลพบุรี", "บ้านป่าหวาย", "บ้านกลับ", "หนองโดน", "บ้านหมอ", "ท่าเรือ", "หนองวิวัฒน์", "ชุมทางบ้านภาชี", "พระแก้ว", "มาบพระจันทร์", "บ้านม้า", "อยุธยา", "บ้านโพ", "บางปะอิน", "คลองพุทรา", "เชียงรากน้อย", "นวนคร", "มหาวิทยาลัยธรรมศาสตร์", "เชียงราก", "คลองหนึ่ง", "รังสิต", "หลักหก", "ดอนเมือง", "หลักสี่", "บางเขน", "กรุงเทพอภิวัฒน์", "ชุมทางบางซื่อ", "สามเสน", "กรุงเทพ (หัวลำโพง)", "สามเสน", "ชุมทางบางซื่อ", "กรุงเทพอภิวัฒน์", "บางเขน", "หลักสี่", "ดอนเมือง", "รังสิต", "เชียงราก", "บางปะอิน", "อยุธยา", "ชุมทางบ้านภาชี", "ท่าเรือ", "ลพบุรี", "บ้านหมี่", "ช่องแค", "บ้านตาคลี", "นครสวรรค์", "ปากน้ำโพ", "ชุมแสง", "ตะพานหิน", "พิจิตร", "บางกระทุ่ม", "พิษณุโลก"] },
+  { id: "403", name: "403 ท้องถิ่น พิษณุโลก–ศิลาอาสน์", origin: "พิษณุโลก", dest: "ศิลาอาสน์",
+    stops: ["พิษณุโลก", "บ้านเต็งหนาม", "บ้านตูม", "พรหมพิราม", "หนองตม", "บ้านโคน", "พิชัย", "ชุมทางบ้านดารา", "ท่าสัก", "ตรอน", "อุตรดิตถ์", "ศิลาอาสน์"] },
+  { id: "410", name: "410 ท้องถิ่น ศิลาอาสน์–พิษณุโลก", origin: "ศิลาอาสน์", dest: "พิษณุโลก",
+    stops: ["ศิลาอาสน์", "อุตรดิตถ์", "ตรอน", "ท่าสัก", "ชุมทางบ้านดารา", "พิชัย", "บ้านโคน", "หนองตม", "พรหมพิราม", "บ้านตูม", "บ้านเต็งหนาม", "พิษณุโลก"] }
 ];
 
-/* =========================================================
-   3) SAFE UTILITIES & MODAL CONTROLLER
-   ========================================================= */
 const $ = (id) => document.getElementById(id);
 const DAY_MS = 86400000;
 const REMINDER_ZONE = 'Asia/Bangkok';
@@ -1087,7 +1080,6 @@ function closeModal(id) {
   }
 }
 
-/* คำนวณวันปัจจุบันตามเวลาประเทศไทย (UTC+7) โดยไม่พึ่งพา en-CA locale */
 function bangkokToday() {
   const now = new Date(Date.now() + 7 * 3600000);
   const y = now.getUTCFullYear();
@@ -1183,9 +1175,6 @@ function statusForOpenDate(openDate, openTime = '08:30') {
   return { kind: 'waiting', text: `อีก ${Math.max(diff, 0).toLocaleString('th-TH')} วัน`, detail: `เริ่มเปิดจอง ${formatDate(openDate)} เวลา ${openTime} น.` };
 }
 
-/* =========================================================
-   4) STATE & DOM REFERENCES
-   ========================================================= */
 const state = {
   lastStationField: 'passOrigin',
   lastBookingResult: null,
@@ -1211,9 +1200,6 @@ const el = {
   quickStationChips: $('quickStationChips')
 };
 
-/* =========================================================
-   5) STATION UI & QUICK CHIPS
-   ========================================================= */
 function syncStationButtons() {
   const orig = el.passOrigin.value;
   const dest = el.passDest.value;
@@ -1267,9 +1253,6 @@ function renderQuickChips() {
   }).join('');
 }
 
-/* =========================================================
-   6) FAVORITES
-   ========================================================= */
 function saveFavorites() {
   STORAGE.set('plkNorthFavoriteStations', state.favorites);
   renderFavorites();
@@ -1305,9 +1288,6 @@ function renderFavoriteButtons() {
   $('favDestBtn').textContent = b ? '★' : '☆';
 }
 
-/* =========================================================
-   7) BOOKING CALCULATION ENGINE
-   ========================================================= */
 function getBookingInputs() {
   const travelDate = parseLocalDate(el.travelDate.value);
   const train = getTrain(el.selectedTrain.value);
@@ -1533,9 +1513,6 @@ function shareBooking() {
   }
 }
 
-/* =========================================================
-   8) HISTORY
-   ========================================================= */
 function getBookingSnapshot() {
   return {
     date: el.travelDate.value,
@@ -1580,9 +1557,6 @@ function restoreBooking(s) {
   showToast('เรียกคืนข้อมูลแล้ว');
 }
 
-/* =========================================================
-   9) CALENDAR REMINDER
-   ========================================================= */
 let reminderResult = null;
 function bookingReminderDate(r) {
   return r?.bookingDate || (r?.type === 'nonreserved' ? r.travelDate : null);
@@ -1612,11 +1586,9 @@ function openBookingReminder() {
   lead.options[2].textContent = non ? 'ก่อนเดินทาง 2 วัน' : 'ก่อนเปิดจอง 2 วัน';
   lead.value = '0';
 
-  $('reminderDate').min = bangkokToday();
-  $('reminderDate').max = r.travelDate;
+  $('reminderDate').min = bangkokToday();$('reminderDate').max = r.travelDate;
   $('reminderDate').value = date;
-  $('reminderTime').value = r.openTime || '08:30';
-  $('reminderRoute').innerHTML = `
+  $('reminderTime').value = r.openTime \vert{}\vert{} '08:30';$('reminderRoute').innerHTML = `
     <b>${esc(r.origin)} → ${esc(r.destination)}</b>
     <span>เดินทาง ${bangkokDateLabel(r.travelDate)} · ${esc(r.trainName)}</span>
     <span>${non ? 'ซื้อตั๋วที่สถานีในวันเดินทาง' : `เริ่มเปิดจอง ${bangkokDateLabel(date)} เวลา ${esc(r.openTime || '08:30')} น.`}</span>`;
@@ -1700,9 +1672,6 @@ function copyReminderText() {
   });
 }
 
-/* =========================================================
-   10) STATION PICKER MODAL
-   ========================================================= */
 let stationPickerField = null;
 const STATION_FIELD_LABELS = {
   passOrigin: 'สถานีต้นทาง',
@@ -1760,9 +1729,6 @@ function choosePickerStation(name) {
   calculateBooking();
 }
 
-/* =========================================================
-   11) THAI BUDDHIST ERA CALENDAR MODAL
-   ========================================================= */
 const thaiPicker = { field: null, year: 0, month: 0 };
 
 function thaiDateText(iso) {
@@ -1845,9 +1811,6 @@ function chooseThaiDate(iso) {
   else updateReminderPreview();
 }
 
-/* =========================================================
-   12) THEME & EVENT LISTENERS
-   ========================================================= */
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
   STORAGE.set('plkNorthTheme', theme);
@@ -1857,7 +1820,6 @@ function applyTheme(theme) {
 
 el.selectedTrain.addEventListener('change', () => { syncStationConstraints(); calculateBooking(); });
 
-/* Event Delegation สำหรับปุ่มลัดและประวัติ */
 el.quickStationChips.addEventListener('click', e => {
   const btn = e.target.closest('button[data-quick]');
   if (btn && !btn.disabled) selectQuickStation(btn.dataset.quick);
@@ -1906,11 +1868,10 @@ $('clearBookingHistoryBtn').addEventListener('click', () => {
 
 $('themeBtn').addEventListener('click', () => applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
 
-/* Modal Bindings */
 el.passOriginBtn.addEventListener('click', () => openStationPicker('passOrigin'));
 el.passDestBtn.addEventListener('click', () => openStationPicker('passDest'));
 
-$('stationSearch').addEventListener('input', renderStationPicker);$('clearStationSearchBtn').addEventListener('click', () => { $('stationSearch').value = ''; renderStationPicker();$('stationSearch').focus(); });
+$('stationSearch').addEventListener('input', renderStationPicker);$('clearStationSearchBtn').addEventListener('click', () => { $('stationSearch'].value = ''; renderStationPicker();$('stationSearch'].focus(); });
 $('stationOptions').addEventListener('click', e => { const btn = e.target.closest('button[data-station]'); if (btn) choosePickerStation(btn.dataset.station); });$('closeStationPickerBtn').addEventListener('click', () => closeModal('stationPickerDialog'));
 
 $('travelDatePickerBtn').addEventListener('click', () => openThaiDatePicker('travelDate'));$('reminderDatePickerBtn').addEventListener('click', () => openThaiDatePicker('reminderDate'));
@@ -1931,16 +1892,12 @@ $('closeReminderBtn').addEventListener('click', () => closeModal('reminderDialog
 });
 $('googleCalendarBtn').addEventListener('click', openGoogleCalendar);$('copyReminderBtn').addEventListener('click', copyReminderText);
 
-/* ปิด Modal เมื่อแตะพื้นที่สีดำด้านนอก */
 ['stationPickerDialog', 'thaiDateDialog', 'reminderDialog'].forEach(id => {
   $(id).addEventListener('click', e => {
     if (e.target === $(id)) closeModal(id);
   });
 });
 
-/* =========================================================
-   13) BOOT
-   ========================================================= */
 (function boot() {
   el.travelDate.min = bangkokToday();
   syncStationConstraints();
