@@ -39,28 +39,6 @@
       --focus: 0 0 0 4px #841b3a1c;
       --topbar: 72px;
     }
-    html[data-theme="dark"] {
-      color-scheme: dark;
-      --brand: #eda1b9;
-      --brand-deep: #f5bdcf;
-      --brand-soft: #33212b;
-      --ink: #edf0f5;
-      --muted: #b0b7c5;
-      --muted-2: #8a93a4;
-      --bg: #11151e;
-      --surface: #1a202c;
-      --surface-2: #202735;
-      --surface-3: #272e3e;
-      --line: #333b4c;
-      --line-strong: #566078;
-      --success: #a6debd;
-      --success-bg: #1b342b;
-      --warning: #eac78d;
-      --warning-bg: #382e20;
-      --danger: #ffb2bb;
-      --danger-bg: #3a252d;
-      --shadow: 0 10px 30px #0004;
-    }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
@@ -69,583 +47,129 @@
       background: var(--bg);
       color: var(--ink);
       font-family: 'K2D', 'Leelawadee UI', Tahoma, sans-serif;
-      font-weight: 400;
-      line-height: 1.6;
       font-size: 16px;
-      -webkit-tap-highlight-color: transparent;
     }
-    body.modal-open { overflow: hidden; }
     button, input, select { font: inherit; touch-action: manipulation; }
     button { cursor: pointer; color: inherit; }
-    button:disabled { cursor: not-allowed; opacity: .5; }
-    button:focus-visible, a:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
-    input:focus, select:focus { outline: none; border-color: var(--brand); box-shadow: var(--focus); }
     h1, h2, h3, p { margin: 0; }
     h1, h2, h3 { font-weight: 600; }
-    strong, b { font-weight: 500; }
     .hidden { display: none !important; }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
-    /* Topbar */
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 30;
-      background: var(--surface);
-      border-bottom: 1px solid var(--line);
-    }
-    .topbar-inner {
-      max-width: 1080px;
-      min-height: var(--topbar);
-      margin: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 10px 20px;
-    }
-    .brand {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      text-align: left;
-    }
-    .brand-mark {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: #841b3a;
-      color: #fff;
-      display: grid;
-      place-items: center;
-      font-weight: 600;
-      font-size: 16px;
-      letter-spacing: .5px;
-      flex-shrink: 0;
-      box-shadow: 0 4px 10px #841b3a24;
-    }
+    .topbar { position: sticky; top: 0; z-index: 30; background: var(--surface); border-bottom: 1px solid var(--line); }
+    .topbar-inner { max-width: 1080px; min-height: var(--topbar); margin: auto; display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; }
+    .brand { display: flex; gap: 12px; align-items: center; }
+    .brand-mark { width: 44px; height: 44px; border-radius: 12px; background: #841b3a; color: #fff; display: grid; place-items: center; font-weight: 600; font-size: 16px; }
     .brand-text { display: flex; flex-direction: column; }
-    .brand-title { font-size: 16px; font-weight: 600; line-height: 1.3; color: var(--ink); }
+    .brand-title { font-size: 16px; font-weight: 600; color: var(--ink); }
     .brand-sub { font-size: 12px; color: var(--brand); margin-top: 2px; font-weight: 500; }
-    .icon-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 42px;
-      min-height: 42px;
-      background: var(--surface-2);
-      border: 1px solid var(--line);
-      border-radius: 11px;
-      font-size: 20px;
-      flex-shrink: 0;
-    }
 
-    /* Main Workspace */
-    .workspace {
-      max-width: 1080px;
-      margin: auto;
-      padding: 18px 20px 28px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
-      gap: 20px;
-      align-items: start;
-    }
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      min-width: 0;
-      box-shadow: var(--shadow);
-    }
-    .card-head {
-      padding: 18px 20px 14px;
-      border-bottom: 1px solid var(--line);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
+    .workspace { max-width: 1080px; margin: auto; padding: 18px 20px 28px; display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); }
+    .card-head { padding: 18px 20px 14px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
     .card-head h2 { font-size: 18px; }
     .card-head p { font-size: 13px; color: var(--muted); margin-top: 2px; }
-    .line-badge {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--brand);
-      background: var(--brand-soft);
-      padding: 5px 11px;
-      border-radius: 30px;
-      white-space: nowrap;
-    }
+    .line-badge { font-size: 12px; font-weight: 500; color: var(--brand); background: var(--brand-soft); padding: 5px 11px; border-radius: 30px; }
     .card-body { padding: 20px; }
     .sticky { position: sticky; top: calc(var(--topbar) + 16px); }
 
-    /* Steps & Form Controls */
     .step { display: flex; gap: 11px; margin-bottom: 24px; }
-    .step:last-child { margin-bottom: 0; }
-    .step-no {
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
-      width: 26px;
-      height: 26px;
-      border-radius: 8px;
-      background: var(--brand-soft);
-      color: var(--brand);
-      font-size: 13px;
-      font-weight: 600;
-      margin-top: 2px;
-    }
+    .step-no { display: grid; place-items: center; flex-shrink: 0; width: 26px; height: 26px; border-radius: 8px; background: var(--brand-soft); color: var(--brand); font-size: 13px; font-weight: 600; margin-top: 2px; }
     .step-content { flex: 1; min-width: 0; }
     .step h3 { font-size: 16px; margin-bottom: 12px; }
     .grid { display: grid; gap: 12px; }
     .field { min-width: 0; }
-    .field label {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 6px;
-      font-size: 14px;
-      margin-bottom: 6px;
-    }
+    .field label { display: flex; justify-content: space-between; align-items: center; font-size: 14px; margin-bottom: 6px; }
     .field label span { font-size: 12px; color: var(--muted); }
-    .control {
-      width: 100%;
-      min-height: 46px;
-      padding: 9px 12px;
-      background: var(--surface);
-      border: 1px solid var(--line-strong);
-      border-radius: 10px;
-      color: var(--ink);
-      font-size: 15px;
-      transition: border-color .15s;
-    }
-    .station-picker-trigger {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      text-align: left;
-      padding-right: 40px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='none' stroke='%23727a89' stroke-width='2'%3E%3Cpath d='m4 6 5 5 5-5'/%3E%3C/svg%3E");
-      background-position: right 36px center;
-      background-repeat: no-repeat;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .station-picker-trigger.is-empty { color: var(--muted-2); }
+    .control { width: 100%; min-height: 46px; padding: 9px 12px; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 10px; color: var(--ink); font-size: 15px; }
+    
+    .station-input { cursor: pointer; background: var(--surface-2); text-align: left; }
     .control-wrap { display: flex; position: relative; }
-    .mini-btn {
-      position: absolute;
-      right: 4px;
-      top: 4px;
-      width: 30px;
-      height: 38px;
-      background: none;
-      border: 0;
-      color: var(--muted);
-      font-size: 20px;
-      z-index: 2;
-    }
+    .mini-btn { position: absolute; right: 4px; top: 4px; width: 30px; height: 38px; background: none; border: 0; color: var(--muted); font-size: 20px; z-index: 2; }
     .mini-btn.active { color: var(--gold); }
-    .date-control {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      text-align: left;
-    }
-    .date-control svg { width: 20px; height: 20px; flex-shrink: 0; color: var(--brand); }
-    .date-control.is-empty span { color: var(--muted-2); }
 
-    .swap-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 38px minmax(0, 1fr);
-      gap: 8px;
-      align-items: end;
-      margin-top: 12px;
-    }
-    .swap-btn {
-      width: 38px;
-      height: 46px;
-      background: var(--surface-2);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      color: var(--brand);
-      font-size: 20px;
-      padding: 0;
-    }
+    .swap-row { display: grid; grid-template-columns: minmax(0, 1fr) 38px minmax(0, 1fr); gap: 8px; align-items: end; margin-top: 12px; }
+    .swap-btn { width: 38px; height: 46px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; color: var(--brand); font-size: 20px; padding: 0; }
 
-    /* Quick Chips */
-    .quick-strip {
-      margin-top: 14px;
-      padding-top: 12px;
-      border-top: 1px solid var(--line);
-    }
-    .strip-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
+    .quick-strip { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+    .strip-head { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); margin-bottom: 8px; }
     .text-btn { border: 0; background: none; color: var(--brand); font-size: 12px; padding: 2px 6px; }
     .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-    .chip {
-      border: 1px solid var(--line-strong);
-      background: var(--surface-2);
-      padding: 6px 12px;
-      border-radius: 9px;
-      font-size: 13px;
-      color: var(--ink);
-      transition: all .15s;
-    }
-    .chip:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); }
-    .chip.highlight {
-      background: var(--brand-soft);
-      border-color: var(--brand);
-      color: var(--brand);
-      font-weight: 500;
-    }
-    .chip.selected {
-      background: #841b3a;
-      border-color: #841b3a;
-      color: #fff;
-    }
-    .chip.muted { color: var(--muted); border-color: var(--line); cursor: default; }
+    .chip { border: 1px solid var(--line-strong); background: var(--surface-2); padding: 6px 12px; border-radius: 9px; font-size: 13px; color: var(--ink); }
+    .chip.highlight { background: var(--brand-soft); border-color: var(--brand); color: var(--brand); font-weight: 500; }
+    .chip.selected { background: #841b3a; border-color: #841b3a; color: #fff; }
 
-    /* Distance Metrics */
-    .distance-summary {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-      margin-top: 14px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 10px 12px;
-      background: var(--surface-2);
-    }
+    .distance-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 14px; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--surface-2); }
     .metric { display: flex; flex-direction: column; gap: 2px; }
     .metric span { color: var(--muted); font-size: 11px; }
     .metric strong { font-size: 14px; }
 
-    /* Result Box */
     .result-body { padding: 16px; }
     .empty { text-align: center; padding: 30px 10px 32px; }
-    .empty-icon {
-      display: grid;
-      place-items: center;
-      width: 56px;
-      height: 56px;
-      background: var(--surface-2);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      margin: 0 auto 14px;
-      font-size: 26px;
-    }
+    .empty-icon { display: grid; place-items: center; width: 56px; height: 56px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 16px; margin: 0 auto 14px; font-size: 26px; }
     .empty h3 { font-size: 18px; margin-bottom: 4px; }
     .empty p { font-size: 13px; color: var(--muted); }
     .result-card { border: 1px solid var(--line); border-radius: 13px; overflow: hidden; }
-    .result-top {
-      background: var(--brand-soft);
-      padding: 14px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
-    }
+    .result-top { background: var(--brand-soft); padding: 14px 16px; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
     .result-top h3 { font-size: 16px; line-height: 1.5; }
     .kicker { font-size: 12px; color: var(--brand); margin-bottom: 3px; font-weight: 500; }
-    .status {
-      display: inline-flex;
-      align-items: center;
-      padding: 4px 9px;
-      border-radius: 7px;
-      font-size: 12px;
-      white-space: nowrap;
-      font-weight: 500;
-    }
+    .status { display: inline-flex; align-items: center; padding: 4px 9px; border-radius: 7px; font-size: 12px; font-weight: 500; }
     .status.open { background: var(--success-bg); color: var(--success); }
     .status.waiting { background: var(--warning-bg); color: var(--warning); }
     .status.info { background: var(--surface); color: var(--muted); }
     .result-main { padding: 16px; }
-    .route-line {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      font-size: 14px;
-      font-weight: 500;
-      background: var(--surface-2);
-      padding: 8px 12px;
-      border-radius: 9px;
-    }
-    .station { flex: 1; text-align: center; overflow-wrap: anywhere; }
-    .arrow { color: var(--brand); flex-shrink: 0; }
+    .route-line { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 14px; font-weight: 500; background: var(--surface-2); padding: 8px 12px; border-radius: 9px; }
+    .station { flex: 1; text-align: center; }
+    .arrow { color: var(--brand); }
     .big-result { text-align: center; margin: 18px 0; }
     .big-result > span { font-size: 13px; color: var(--muted); display: block; }
-    .big-result strong {
-      display: block;
-      font-size: 44px;
-      color: var(--brand);
-      font-weight: 600;
-      line-height: 1.3;
-      margin: 2px 0;
-    }
+    .big-result strong { display: block; font-size: 40px; color: var(--brand); font-weight: 600; line-height: 1.3; margin: 2px 0; }
     .big-result small { display: block; font-size: 12px; color: var(--muted); }
-    .date-panel {
-      border: 1px solid var(--line);
-      border-left: 4px solid var(--brand);
-      background: var(--surface-2);
-      border-radius: 10px;
-      padding: 13px 15px;
-      margin-bottom: 12px;
-    }
+    .date-panel { border: 1px solid var(--line); border-left: 4px solid var(--brand); background: var(--surface-2); border-radius: 10px; padding: 13px 15px; margin-bottom: 12px; }
     .date-panel .label { color: var(--muted); font-size: 12px; }
-    .date-panel .date { font-size: 20px; font-weight: 600; color: var(--ink); margin-top: 3px; }
+    .date-panel .date { font-size: 18px; font-weight: 600; color: var(--ink); margin-top: 3px; }
     .date-panel .time { font-size: 13px; color: var(--brand); margin-top: 2px; font-weight: 500; }
     .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-    .result-mini {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      background: var(--surface-2);
-      border-radius: 8px;
-      padding: 9px 11px;
-    }
+    .result-mini { display: flex; flex-direction: column; gap: 2px; background: var(--surface-2); border-radius: 8px; padding: 9px 11px; }
     .result-mini span { font-size: 11px; color: var(--muted); }
     .result-mini strong { font-size: 14px; }
     .note { border-radius: 9px; padding: 10px 12px; line-height: 1.6; font-size: 12px; margin-top: 12px; }
-    .note.info { background: var(--surface-2); color: var(--muted); border: 1px solid var(--line); }
     .note.warning { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--line); }
 
-    .reminder-entry {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 14px;
-      padding: 12px;
-      border-radius: 11px;
-      border: 1px solid var(--line);
-      background: var(--brand-soft);
-    }
+    .reminder-entry { display: flex; align-items: center; gap: 10px; margin-top: 14px; padding: 12px; border-radius: 11px; border: 1px solid var(--line); background: var(--brand-soft); }
     .reminder-entry svg { width: 23px; height: 23px; color: var(--brand); flex-shrink: 0; }
-    .reminder-entry > div { flex: 1; min-width: 0; }
+    .reminder-entry > div { flex: 1; }
     .reminder-entry b { font-size: 13px; display: block; }
     .reminder-entry span { display: block; font-size: 11px; color: var(--muted); }
-    .reminder-entry button {
-      flex-shrink: 0;
-      background: #841b3a;
-      border: 0;
-      color: #fff;
-      border-radius: 9px;
-      min-height: 40px;
-      padding: 7px 12px;
-      font-size: 13px;
-      font-weight: 500;
-    }
-    .result-actions {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 7px;
-      margin-top: 12px;
-    }
-    .action-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      min-height: 42px;
-      border: 1px solid var(--line-strong);
-      background: var(--surface);
-      color: var(--ink);
-      border-radius: 9px;
-      font-size: 13px;
-      padding: 7px 6px;
-      text-decoration: none;
-    }
-    .action-btn:hover { background: var(--surface-2); border-color: var(--brand); }
+    .reminder-entry button { background: #841b3a; border: 0; color: #fff; border-radius: 9px; min-height: 40px; padding: 7px 12px; font-size: 13px; font-weight: 500; }
+    .result-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; margin-top: 12px; }
+    .action-btn { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 42px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); border-radius: 9px; font-size: 13px; text-decoration: none; }
     .action-btn.primary { background: #841b3a; color: #fff; border-color: #841b3a; font-weight: 500; }
-    .action-btn.primary:hover { background: #64172f; }
 
-    /* History & Footer */
     .side-section { border-top: 1px solid var(--line); padding-top: 14px; }
     .side-section h3 { font-size: 13px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
     .history-list { display: grid; gap: 6px; }
-    .history-item {
-      display: block;
-      text-align: left;
-      width: 100%;
-      padding: 9px 11px;
-      border: 1px solid var(--line);
-      border-radius: 9px;
-      background: var(--surface-2);
-    }
+    .history-item { display: block; text-align: left; width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface-2); }
     .history-item b { display: block; font-size: 13px; color: var(--ink); }
     .history-item span { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
-    .footer {
-      max-width: 1080px;
-      margin: 4px auto 0;
-      padding: 18px 20px 26px;
-      border-top: 1px solid var(--line);
-      font-size: 12px;
-      color: var(--muted);
-      text-align: center;
-      line-height: 1.8;
-    }
+
+    .footer { max-width: 1080px; margin: 4px auto 0; padding: 18px 20px 26px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); text-align: center; line-height: 1.8; }
     .footer strong { color: var(--ink); font-weight: 500; }
 
-    /* Universal Modal Overlay */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 200;
-      background: rgba(18, 18, 30, 0.58);
-      backdrop-filter: blur(2px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 14px;
-    }
-    .modal-overlay.open {
-      display: flex;
-    }
-    .modal-box {
-      width: 100%;
-      max-width: 480px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: var(--surface);
-      color: var(--ink);
-      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
-      max-height: calc(100dvh - 28px);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    .dialog-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: flex-start;
-      padding: 16px 18px 13px;
-      border-bottom: 1px solid var(--line);
-      flex-shrink: 0;
-    }
-    .dialog-head h2 { font-size: 18px; line-height: 1.4; }
+    /* Dialog Native Overlays */
+    dialog { width: calc(100% - 24px); max-width: 480px; padding: 0; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); color: var(--ink); box-shadow: 0 25px 70px rgba(0,0,0,0.35); }
+    dialog::backdrop { background: rgba(18, 18, 30, 0.58); backdrop-filter: blur(2px); }
+    .dialog-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; padding: 16px 18px 13px; border-bottom: 1px solid var(--line); }
+    .dialog-head h2 { font-size: 18px; }
     .dialog-head p { font-size: 12px; color: var(--muted); margin-top: 2px; }
-    .dialog-close {
-      flex-shrink: 0;
-      width: 34px;
-      height: 34px;
-      display: grid;
-      place-items: center;
-      border: 1px solid var(--line);
-      background: var(--surface-2);
-      border-radius: 9px;
-      font-size: 22px;
-      line-height: 1;
-    }
-    .dialog-body { padding: 16px 18px; overflow-y: auto; }
-    .station-picker-body { padding: 14px 18px 18px; display: flex; flex-direction: column; overflow: hidden; flex: 1; }
-    .station-search { position: relative; flex-shrink: 0; }
-    .station-search .control { padding-right: 40px; }
-    .search-clear {
-      position: absolute;
-      right: 4px;
-      top: 4px;
-      width: 36px;
-      height: 38px;
-      border: 0;
-      background: none;
-      color: var(--muted);
-      font-size: 22px;
-    }
-    .station-count { font-size: 12px; color: var(--muted); margin: 9px 0 6px; flex-shrink: 0; }
-    .station-options {
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      max-height: 52dvh;
-      display: grid;
-      gap: 6px;
-      padding: 2px;
-    }
-    .station-option {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      min-height: 46px;
-      padding: 9px 12px;
-      border: 1px solid var(--line);
-      background: var(--surface-2);
-      border-radius: 10px;
-      text-align: left;
-      font-size: 15px;
-    }
-    .station-option[aria-pressed="true"] {
-      border-color: var(--brand);
-      color: var(--brand);
-      background: var(--brand-soft);
-      font-weight: 500;
-    }
-    .station-option small { color: var(--muted); font-size: 12px; white-space: nowrap; }
-    .station-group { font-size: 12px; color: var(--brand); font-weight: 500; padding: 6px 2px 2px; }
-    .station-no-results { padding: 20px 10px; text-align: center; color: var(--muted); font-size: 14px; }
+    .dialog-close { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid var(--line); background: var(--surface-2); border-radius: 9px; font-size: 22px; }
+    .dialog-body { padding: 16px 18px; }
+    
+    .station-options { max-height: 50vh; overflow-y: auto; display: grid; gap: 6px; padding: 4px; }
+    .station-option { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border: 1px solid var(--line); background: var(--surface-2); border-radius: 10px; text-align: left; font-size: 15px; }
+    .station-option small { color: var(--muted); font-size: 12px; }
 
-    /* Thai Date Picker */
-    .date-picker-body { padding: 16px 18px 18px; overflow-y: auto; }
-    .calendar-nav { display: flex; align-items: center; gap: 7px; margin-bottom: 12px; }
-    .calendar-selects { display: grid; grid-template-columns: 1.3fr 1fr; gap: 6px; flex: 1; }
-    .calendar-selects .control { min-height: 42px; padding: 7px; font-size: 14px; }
-    .calendar-weekdays, .calendar-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
-    .calendar-weekdays { color: var(--muted); text-align: center; font-size: 12px; margin-bottom: 6px; }
-    .calendar-days { min-height: 236px; align-content: start; }
-    .calendar-day {
-      display: grid;
-      place-items: center;
-      border: 1px solid transparent;
-      background: none;
-      color: var(--ink);
-      border-radius: 9px;
-      min-height: 38px;
-      font-size: 15px;
-      padding: 4px;
-    }
-    .calendar-day.is-today { border-color: var(--brand); font-weight: 600; }
-    .calendar-day[aria-pressed="true"] { background: #841b3a; color: #fff; border-color: #841b3a; }
-    .calendar-day:disabled { opacity: .25; }
-    .calendar-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: 14px;
-      border-top: 1px solid var(--line);
-      padding-top: 12px;
-    }
-    .calendar-footer span { font-size: 12px; color: var(--muted); }
-    .calendar-key { margin-top: 10px; font-size: 11px; color: var(--muted); }
-
-    .toast {
-      position: fixed;
-      z-index: 300;
-      bottom: 22px;
-      left: 50%;
-      transform: translate(-50%, 12px);
-      max-width: calc(100vw - 28px);
-      background: #222734;
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 11px;
-      font-size: 13px;
-      opacity: 0;
-      visibility: hidden;
-      transition: .2s;
-      text-align: center;
-      box-shadow: 0 8px 25px #0003;
-    }
+    .toast { position: fixed; z-index: 300; bottom: 22px; left: 50%; transform: translate(-50%, 12px); background: #222734; color: #fff; padding: 10px 18px; border-radius: 11px; font-size: 13px; opacity: 0; visibility: hidden; transition: .2s; text-align: center; }
     .toast.show { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
   </style>
 </head>
@@ -660,11 +184,6 @@
           <span class="brand-sub">ระบบคำนวณวันเปิดจำหน่ายตั๋วล่วงหน้า</span>
         </span>
       </div>
-      <div class="top-actions">
-        <button class="icon-btn" id="themeBtn" type="button" title="สลับโหมดสี" aria-label="สลับโหมดสี">
-          <span id="themeIcon">☾</span>
-        </button>
-      </div>
     </div>
   </header>
 
@@ -673,7 +192,7 @@
       <div class="card-head">
         <div>
           <h2>ข้อมูลการเดินทาง</h2>
-          <p>เลือกวันเดินทาง ขบวนรถ และสถานี ระบบคำนวณให้อัตโนมัติ</p>
+          <p>เลือกวันเดินทางและขบวนรถ ระบบคำนวณให้อัตโนมัติ</p>
         </div>
         <span class="line-badge">🚆 สายเหนือ</span>
       </div>
@@ -683,22 +202,18 @@
           <div class="step-content">
             <h3>เลือกวันที่เดินทาง</h3>
             <div class="field">
-              <label for="travelDatePickerBtn">วันที่เดินทาง <span>ปฏิทิน พ.ศ.</span></label>
-              <input id="travelDate" type="hidden" />
-              <button class="control date-control is-empty" id="travelDatePickerBtn" type="button">
-                <span id="travelDateLabel">กดเลือกวันที่เดินทาง</span>
-                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-11 4h3"/></svg>
-              </button>
+              <label for="travelDate">วันที่เดินทาง <span>เลือกจากปฏิทิน</span></label>
+              <input class="control" id="travelDate" type="date" />
             </div>
           </div>
         </div>
 
-        <div class="step" id="stationStep">
+        <div class="step">
           <div class="step-no">2</div>
           <div class="step-content">
             <h3>เลือกขบวนรถและสถานี</h3>
-            <div class="field">
-              <label for="selectedTrain">ขบวนรถไฟ <span>ด่วนพิเศษ / ด่วน / เร็ว / ธรรมดา / ท้องถิ่น</span></label>
+            <div class="field" style="margin-bottom: 14px;">
+              <label for="selectedTrain">ขบวนรถไฟ</label>
               <select class="control" id="selectedTrain">
                 <option value="">- กรุณาเลือกขบวนรถ -</option>
                 <optgroup label="ขบวนรถสำรองที่นั่ง (ด่วนพิเศษ / ด่วน / เร็ว)">
@@ -719,13 +234,10 @@
               </select>
             </div>
 
-            <!-- ส่วนเลือกสถานี -->
+            <!-- ส่วนเลือกสถานี (ซ่อนอัตโนมัติหากเป็นรถไม่สำรองที่นั่ง) -->
             <div id="stationSelectionBox">
               <div class="quick-strip">
-                <div class="strip-head">
-                  <span>📍 ปุ่มลัดสถานีหลัก (แตะเพื่อใส่สถานีต้นทาง / สถานีปลายทาง)</span>
-                  <button class="text-btn" id="clearRouteBtn" type="button">ล้างสถานี</button>
-                </div>
+                <div class="strip-head"><span>📍 ปุ่มลัดสถานีหลัก</span><button class="text-btn" id="clearRouteBtn" type="button">ล้าง</button></div>
                 <div class="chips" id="quickStationChips">
                   <button type="button" class="chip highlight" data-quick="พิษณุโลก">📌 พิษณุโลก</button>
                   <button type="button" class="chip" data-quick="กรุงเทพอภิวัฒน์">กรุงเทพอภิวัฒน์</button>
@@ -735,40 +247,20 @@
 
               <div class="swap-row">
                 <div class="field">
-                  <label for="passOriginBtn">สถานีต้นทาง <span>ต้นทางผู้โดยสาร</span></label>
+                  <label for="passOrigin">สถานีต้นทาง</label>
                   <div class="control-wrap">
-                    <input id="passOrigin" type="hidden" value="" />
-                    <button class="control station-picker-trigger is-empty" id="passOriginBtn" type="button">
-                      <span id="passOriginLabel">กดเลือกสถานีต้นทาง</span>
-                    </button>
+                    <input class="control station-input" id="passOrigin" readonly placeholder="แตะเพื่อเลือกสถานี" />
                     <button class="mini-btn" id="favOriginBtn" type="button" title="บันทึกสถานีโปรด">☆</button>
                   </div>
                 </div>
-                <button class="swap-btn" id="swapStationsBtn" type="button" title="สลับสถานีต้นทางและสถานีปลายทาง">⇄</button>
+                <button class="swap-btn" id="swapStationsBtn" type="button" title="สลับสถานี">⇄</button>
                 <div class="field">
-                  <label for="passDestBtn">สถานีปลายทาง <span>ปลายทางผู้โดยสาร</span></label>
+                  <label for="passDest">สถานีปลายทาง</label>
                   <div class="control-wrap">
-                    <input id="passDest" type="hidden" value="" />
-                    <button class="control station-picker-trigger is-empty" id="passDestBtn" type="button">
-                      <span id="passDestLabel">กดเลือกสถานีปลายทาง</span>
-                    </button>
+                    <input class="control station-input" id="passDest" readonly placeholder="แตะเพื่อเลือกสถานี" />
                     <button class="mini-btn" id="favDestBtn" type="button" title="บันทึกสถานีโปรด">☆</button>
                   </div>
                 </div>
-              </div>
-
-              <div class="quick-strip" id="favoriteStrip">
-                <div class="strip-head">
-                  <span>⭐ สถานีที่บันทึกไว้เพิ่มเติม</span>
-                  <button class="text-btn" id="clearFavoritesBtn" type="button">ล้างทั้งหมด</button>
-                </div>
-                <div class="chips" id="favoriteChips"></div>
-              </div>
-
-              <div class="distance-summary hidden" id="distanceSummary">
-                <div class="metric"><span>ระยะขบวนรถ</span><strong id="totalKmText">-</strong></div>
-                <div class="metric"><span>ระยะเดินทาง</span><strong id="passengerKmText">-</strong></div>
-                <div class="metric"><span>สัดส่วนระยะทาง</span><strong id="percentageText">-</strong></div>
               </div>
             </div>
 
@@ -784,16 +276,16 @@
           <p>ตรวจสอบวันแรกที่เปิดให้จองล่วงหน้า</p>
         </div>
       </div>
-      <div class="result-body" id="bookingResult" role="status" aria-live="polite" aria-atomic="true">
+      <div class="result-body" id="bookingResult">
         <div class="empty">
           <div class="empty-icon">🚆</div>
           <h3>พร้อมคำนวณวันเปิดจอง</h3>
-          <p>เลือกวันที่เดินทาง ขบวนรถ และสถานีต้นทาง–ปลายทางให้ครบ<br>ผลลัพธ์จะแสดงอัตโนมัติทันที</p>
+          <p>เลือกวันที่และขบวนรถเพื่อดูผลลัพธ์</p>
         </div>
       </div>
       <div class="card-body" style="padding-top:0">
         <div class="side-section">
-          <h3><span>🕘 ประวัติที่เช็กล่าสุด</span><button class="text-btn" id="clearBookingHistoryBtn" type="button">ล้าง</button></h3>
+          <h3><span>🕘 ประวัติล่าสุด</span><button class="text-btn" id="clearBookingHistoryBtn" type="button">ล้าง</button></h3>
           <div class="history-list" id="bookingHistory"></div>
         </div>
       </div>
@@ -802,123 +294,32 @@
 
   <footer class="footer">
     <strong>พัฒนาโดย : vtomet</strong><br>
-    สถานีรถไฟพิษณุโลก · ผลคำนวณใช้ประกอบการวางแผนเบื้องต้น โปรดตรวจสอบเงื่อนไขเพิ่มเติม สายด่วน 1690
+    สถานีรถไฟพิษณุโลก · สายด่วน 1690
   </footer>
 </div>
 
-<!-- Modal 1: ตั้งเตือนวันเปิดจอง -->
-<div class="modal-overlay" id="reminderDialog">
-  <div class="modal-box">
-    <div class="dialog-head">
-      <div>
-        <h2 id="reminderTitle">ตั้งเตือนวันเปิดจองตั๋ว</h2>
-        <p>คัดลอกข้อความเพื่อนำไปวางแจ้งเตือนในแชท LINE</p>
-      </div>
-      <button class="dialog-close" id="closeReminderBtn" type="button">×</button>
-    </div>
-    <div class="dialog-body">
-      <div class="reminder-route" id="reminderRoute"></div>
-      <div class="grid grid-2">
-        <div class="field">
-          <label for="reminderLead">เตือนเมื่อไหร่</label>
-          <select class="control" id="reminderLead">
-            <option value="0">วันเปิดจอง</option>
-            <option value="1">ก่อนเปิดจอง 1 วัน</option>
-            <option value="2">ก่อนเปิดจอง 2 วัน</option>
-            <option value="custom">เลือกวันเอง</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="reminderTime">เวลาที่ต้องการเตือน</label>
-          <input class="control" id="reminderTime" type="time" required value="08:30" />
-        </div>
-      </div>
-      <div class="field hidden" id="reminderCustomBox" style="margin-top:12px">
-        <label for="reminderDatePickerBtn">วันที่ต้องการเตือน</label>
-        <input id="reminderDate" type="hidden" />
-        <button class="control date-control is-empty" id="reminderDatePickerBtn" type="button">
-          <span id="reminderDateLabel">กดเลือกวันที่</span>
-        </button>
-      </div>
-      <div class="reminder-preview" id="reminderPreview"></div>
-      <div class="reminder-error hidden" id="reminderError"></div>
-      <div class="reminder-buttons">
-        <button class="action-btn primary" type="button" id="copyReminderBtn">📋 คัดลอกข้อความเตือนไปวางใน LINE</button>
-        <button class="action-btn" type="button" id="googleCalendarBtn">📅 เพิ่มใน Google Calendar</button>
-      </div>
-    </div>
+<!-- Modal เลือกสถานี (ใช้ระบบ Dialog มาตรฐานของเบราว์เซอร์ มั่นใจว่ากดได้แน่นอน) -->
+<dialog id="stationPickerDialog">
+  <div class="dialog-head">
+    <div><h2 id="stationPickerTitle">เลือกสถานี</h2><p>แตะเลือกสถานีจากรายการด้านล่าง</p></div>
+    <button class="dialog-close" id="closeStationPickerBtn" type="button">×</button>
   </div>
-</div>
-
-<!-- Modal 2: เลือกสถานี -->
-<div class="modal-overlay" id="stationPickerDialog">
-  <div class="modal-box">
-    <div class="dialog-head">
-      <div>
-        <h2 id="stationPickerTitle">เลือกสถานี</h2>
-        <p id="stationPickerContext">กรุณาเลือกสถานี</p>
-      </div>
-      <button class="dialog-close" id="closeStationPickerBtn" type="button">×</button>
+  <div class="dialog-body">
+    <div style="margin-bottom: 10px;">
+      <input class="control" id="stationSearch" type="search" placeholder="พิมพ์ค้นหาชื่อสถานี..." autocomplete="off">
     </div>
-    <div class="station-picker-body">
-      <div class="station-search">
-        <input class="control" id="stationSearch" type="search" placeholder="พิมพ์ค้นหาชื่อสถานี..." autocomplete="off">
-        <button class="search-clear hidden" id="clearStationSearchBtn" type="button">×</button>
-      </div>
-      <p class="station-count" id="stationCount"></p>
-      <div class="station-options" id="stationOptions"></div>
-    </div>
+    <div class="station-options" id="stationOptions"></div>
   </div>
-</div>
-
-<!-- Modal 3: ปฏิทินไทย พ.ศ. -->
-<div class="modal-overlay" id="thaiDateDialog">
-  <div class="modal-box">
-    <div class="dialog-head">
-      <div>
-        <h2 id="thaiDateTitle">เลือกวันที่เดินทาง</h2>
-        <p>เดือนภาษาไทย · ปี พ.ศ.</p>
-      </div>
-      <button class="dialog-close" id="closeThaiDateBtn" type="button">×</button>
-    </div>
-    <div class="date-picker-body">
-      <div class="calendar-nav">
-        <button class="icon-btn" id="thaiCalendarPrev" type="button">‹</button>
-        <div class="calendar-selects">
-          <select class="control" id="thaiCalendarMonth"></select>
-          <select class="control" id="thaiCalendarYear"></select>
-        </div>
-        <button class="icon-btn" id="thaiCalendarNext" type="button">›</button>
-      </div>
-      <div class="calendar-weekdays">
-        <span>อา.</span><span>จ.</span><span>อ.</span><span>พ.</span><span>พฤ.</span><span>ศ.</span><span>ส.</span>
-      </div>
-      <div class="calendar-days" id="thaiCalendarDays"></div>
-      <p class="calendar-key">กรอบสีคือวันนี้ · วันที่จางคือวันที่ผ่านมาแล้ว</p>
-      <div class="calendar-footer">
-        <span id="thaiCalendarSelection"></span>
-        <button class="action-btn" id="thaiCalendarToday" type="button">เลือกวันนี้</button>
-      </div>
-    </div>
-  </div>
-</div>
+</dialog>
 
 <div class="toast" id="toast"></div>
 
 <script>
 'use strict';
 
-const APP_CONFIG = Object.freeze({
-  dticketUrl: 'https://dticket.railway.co.th/DTicketPublicWeb/home/Home?openExternalBrowser=1',
-  historyLimit: 6
-});
-
-const BOOKING_RULES = Object.freeze({
-  standardOpenTime: '08:30',
-  nonReservedText: 'ซื้อตั๋วในวันเดินทาง ก่อนขบวนรถออกไม่เกิน 2 ชั่วโมง'
-});
-
-const QUICK_STATIONS = Object.freeze(['พิษณุโลก', 'กรุงเทพอภิวัฒน์', 'เชียงใหม่']);
+const APP_CONFIG = { dticketUrl: 'https://dticket.railway.co.th/DTicketPublicWeb/home/Home?openExternalBrowser=1' };
+const BOOKING_RULES = { standardOpenTime: '08:30', nonReservedText: 'ซื้อตั๋วในวันเดินทาง ก่อนขบวนรถออกไม่เกิน 2 ชั่วโมง' };
+const QUICK_STATIONS = ['พิษณุโลก', 'กรุงเทพอภิวัฒน์', 'เชียงใหม่'];
 
 const northStations = [
   { name: "กรุงเทพ (หัวลำโพง)", km: 0 }, { name: "สามเสน", km: 5 }, { name: "ชุมทางบางซื่อ", km: 7 },
@@ -973,346 +374,127 @@ const northSchedules = [
 
 const $ = (id) => document.getElementById(id);
 const DAY_MS = 86400000;
-const REMINDER_ZONE = 'Asia/Bangkok';
-const THAI_MONTHS = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
 
-const STORAGE = {
-  get(key, fallback) { try { const raw = localStorage.getItem(key); return raw === null ? fallback : JSON.parse(raw); } catch { return fallback; } },
-  set(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch {} }
-};
-
-function openModal(id) { const m = $(id); if (m) { m.classList.add('open'); document.body.classList.add('modal-open'); } }
-function closeModal(id) { const m = $(id); if (m) { m.classList.remove('open'); document.body.classList.remove('modal-open'); } }
-
-function bangkokToday() {
-  const now = new Date(Date.now() + 7 * 3600000);
-  return `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}-${String(now.getUTCDate()).padStart(2, '0')}`;
-}
-
-function parseLocalDate(value) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value || '')) return null;
-  const [y, m, d] = value.split('-').map(Number);
-  const date = new Date(y, m - 1, d);
-  return date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d ? date : null;
-}
-function localDateOnly(date) { return date ? new Date(date.getFullYear(), date.getMonth(), date.getDate()) : parseLocalDate(bangkokToday()); }
-function toLocalISO(date = new Date()) { return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`; }
-function formatDate(date) { return date ? `${date.getDate()} ${THAI_MONTHS[date.getMonth()]} ${date.getFullYear() + 543}` : ''; }
-function money(value) { const n = Number(value); return Number.isFinite(n) ? n.toLocaleString('th-TH', { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 }) : '0'; }
-function esc(value) { return String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[ch])); }
 function showToast(msg) { const t = $('toast'); if (!t) return; t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200); }
-function copyText(text) { return navigator.clipboard?.writeText ? navigator.clipboard.writeText(text) : Promise.resolve(); }
-function daysUntil(date) { return Math.round((localDateOnly(date) - localDateOnly()) / DAY_MS); }
-function exactStation(name) { return Boolean(northStations.some(s => s.name === name)); }
-function getKm(name) { const s = northStations.find(i => i.name === name); return s ? Number(s.km) : null; }
 function getTrain(id) { return northSchedules.find(t => t.id === id) || null; }
 function getReservationType(train) { return /(ธรรมดา|ชานเมือง|ท้องถิ่น|ที่นั่งอิสระ)/i.test(`${train?.id || ''} ${train?.name || ''}`) ? 'nonreserved' : 'reserved'; }
-function stationNames() { return northStations.map(s => s.name); }
 function activeStationNames(train) {
-  const all = stationNames();
+  const all = northStations.map(s => s.name);
   if (!train) return all;
   if (Array.isArray(train.stops) && train.stops.length) return train.stops.filter(n => all.includes(n));
-  return all.filter(n => {
-    const km = getKm(n), a = getKm(train.origin), b = getKm(train.dest);
-    return Number.isFinite(km) && Number.isFinite(a) && Number.isFinite(b) && km >= Math.min(a, b) && km <= Math.max(a, b);
-  });
-}
-function bookingDaysFromPercentage(p) { return p >= 60 ? 90 : p >= 25 ? 30 : 1; }
-function bangkokInstant(iso, time) { return !parseLocalDate(iso) || !/^([01]\d|2[0-3]):[0-5]\d$/.test(time || '') ? null : new Date(`${iso}T${time}:00+07:00`); }
-function statusForOpenDate(openDate, openTime = '08:30') {
-  const now = new Date(), opensAt = bangkokInstant(toLocalISO(openDate), openTime);
-  if (now >= opensAt) return { kind: 'open', text: 'เปิดจองแล้ว', detail: 'สามารถตรวจสอบที่นั่งใน D-Ticket หรือที่สถานีได้ทันที' };
-  const diff = daysUntil(openDate);
-  if (diff === 0) return { kind: 'waiting', text: `เปิดวันนี้ ${openTime} น.`, detail: 'ยังไม่ถึงเวลาเปิดจอง' };
-  if (diff === 1) return { kind: 'waiting', text: `เปิดพรุ่งนี้ ${openTime} น.`, detail: 'เตรียมทำรายการล่วงหน้าได้' };
-  return { kind: 'waiting', text: `อีก ${Math.max(diff, 0).toLocaleString('th-TH')} วัน`, detail: `เริ่มเปิดจอง ${formatDate(openDate)} เวลา ${openTime} น.` };
+  return all;
 }
 
-const state = { lastStationField: 'passOrigin', lastBookingResult: null, bookingHistory: STORAGE.get('plkNorthBookingHistory', []), favorites: STORAGE.get('plkNorthFavoriteStations', []) };
-const el = {
-  travelDate: $('travelDate'), travelDateLabel: $('travelDateLabel'), travelDatePickerBtn:$('travelDatePickerBtn'),
-  selectedTrain: $('selectedTrain'), passOrigin: $('passOrigin'), passDest:$('passDest'),
-  passOriginBtn: $('passOriginBtn'), passDestBtn:$('passDestBtn'), passOriginLabel: $('passOriginLabel'), passDestLabel:$('passDestLabel'),
-  stationSelectionBox: $('stationSelectionBox'), distanceSummary:$('distanceSummary'),
-  totalKmText: $('totalKmText'), passengerKmText: $('passengerKmText'), percentageText:$('percentageText'),
-  bookingResult: $('bookingResult'), bookingHistory: $('bookingHistory'), quickStationChips:$('quickStationChips')
-};
+const state = { lastField: 'passOrigin', lastResult: null, history: [] };
 
-function syncStationButtons() {
-  const orig = el.passOrigin.value, dest = el.passDest.value;
-  el.passOriginLabel.textContent = orig || 'กดเลือกสถานีต้นทาง';
-  el.passOriginBtn.classList.toggle('is-empty', !orig);
-  el.passDestLabel.textContent = dest || 'กดเลือกสถานีปลายทาง';
-  el.passDestBtn.classList.toggle('is-empty', !dest);
-}
-
-function syncStationConstraints() {
-  const train = getTrain(el.selectedTrain.value);
+function syncUI() {
+  const train = getTrain($('selectedTrain').value);
   const isNon = getReservationType(train) === 'nonreserved';
-  el.stationSelectionBox.classList.toggle('hidden', isNon);
-  if (isNon) { el.passOrigin.value = ''; el.passDest.value = ''; }
-  else if (train) {
-    const allowed = activeStationNames(train);
-    if (el.passOrigin.value && !allowed.includes(el.passOrigin.value)) el.passOrigin.value = '';
-    if (el.passDest.value && !allowed.includes(el.passDest.value)) el.passDest.value = '';
-  }
-  syncStationButtons();
-  renderQuickChips();
-}
-
-function selectQuickStation(name) {
-  const train = getTrain(el.selectedTrain.value);
-  if (train && !activeStationNames(train).includes(name)) { showToast(`ขบวนนี้ไม่ผ่านสถานี${name}`); return; }
-  let target = !el.passOrigin.value ? el.passOrigin : (!el.passDest.value && el.passOrigin.value !== name ? el.passDest : (state.lastStationField === 'passDest' ? el.passDest : el.passOrigin));
-  target.value = name;
-  state.lastStationField = target === el.passOrigin ? 'passDest' : 'passOrigin';
-  syncStationButtons();
-  calculateBooking();
-}
-
-function renderQuickChips() {
-  const train = getTrain(el.selectedTrain.value), allowed = activeStationNames(train);
-  el.quickStationChips.innerHTML = QUICK_STATIONS.map(name => {
-    const isSel = el.passOrigin.value === name || el.passDest.value === name, isPlk = name === 'พิษณุโลก', dis = train && !allowed.includes(name);
-    return `<button type="button" class="chip ${isPlk ? 'highlight' : ''} ${isSel ? 'selected' : ''}" data-quick="${esc(name)}" ${dis ? 'disabled' : ''}>${isPlk ? '📌 ' : ''}${esc(name)}</button>`;
-  }).join('');
-}
-
-function getBookingInputs() {
-  const travelDate = parseLocalDate(el.travelDate.value), train = getTrain(el.selectedTrain.value);
-  if (getReservationType(train) === 'nonreserved') return { travelDate, train, reservationType: 'nonreserved', total: 0, passenger: 0, routeValid: true };
-  let total = NaN, passenger = NaN, routeValid = true;
-  const origin = el.passOrigin.value.trim(), destination = el.passDest.value.trim();
-  const t1 = getKm(train?.origin), t2 = getKm(train?.dest), p1 = getKm(origin), p2 = getKm(destination);
-  if ([t1, t2].every(Number.isFinite)) total = Math.abs(t2 - t1);
-  if ([p1, p2].every(Number.isFinite)) passenger = Math.abs(p2 - p1);
-  if ([t1, t2, p1, p2].every(Number.isFinite)) { const min = Math.min(t1, t2), max = Math.max(t1, t2); routeValid = p1 >= min && p1 <= max && p2 >= min && p2 <= max; }
-  return { travelDate, train, reservationType: 'reserved', total, passenger, routeValid, origin, destination };
-}
-
-function bookingEmpty(msg = 'เลือกวันที่เดินทาง และขบวนรถไฟให้ครบถ้วน') {
-  state.lastBookingResult = null;
-  el.distanceSummary.classList.add('hidden');
-  el.bookingResult.innerHTML = `<div class="empty"><div class="empty-icon">🚆</div><h3>พร้อมคำนวณวันเปิดจอง</h3><p>${esc(msg)}<br>ผลลัพธ์จะแสดงอัตโนมัติทันที</p></div>`;
-}
-function bookingError(msg) {
-  state.lastBookingResult = null;
-  el.distanceSummary.classList.add('hidden');
-  el.bookingResult.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><h3>ข้อมูลยังไม่ครบถ้วน</h3><p>${esc(msg)}</p></div>`;
+  $('stationSelectionBox').classList.toggle('hidden', isNon);
+  if (isNon) { $('passOrigin').value = '';$('passDest').value = ''; }
 }
 
 function calculateBooking() {
-  syncDateControls();
-  syncStationButtons();
-  renderQuickChips();
-  const d = getBookingInputs();
+  syncUI();
+  const dateVal = $('travelDate').value;
+  const train = getTrain($('selectedTrain').value);
+  const resBox = $('bookingResult');
 
-  if (!d.travelDate) return bookingEmpty('กรุณากดเลือก "วันที่เดินทาง" ในขั้นตอนที่ 1');
-  if (d.travelDate < localDateOnly()) return bookingError('วันที่เดินทางผ่านไปแล้ว กรุณาเลือกวันในอนาคต');
-  if (!d.train) return bookingEmpty('กรุณาเลือก "ขบวนรถไฟ" ในขั้นตอนที่ 2');
-  if (d.reservationType === 'nonreserved') return renderNonReservedResult(d);
+  if (!dateVal) { resBox.innerHTML = '<div class="empty"><h3>กรุณาเลือกวันที่เดินทาง</h3></div>'; return; }
+  if (!train) { resBox.innerHTML = '<div class="empty"><h3>กรุณาเลือกขบวนรถไฟ</h3></div>'; return; }
 
-  if (!d.origin || !d.destination) return bookingEmpty('กรุณาเลือก "สถานีต้นทาง" และ "สถานีปลายทาง"');
-  if (d.origin === d.destination) return bookingError('สถานีต้นทางและสถานีปลายทางต้องเป็นคนละสถานีกัน');
-  if (!activeStationNames(d.train).includes(d.origin) || !activeStationNames(d.train).includes(d.destination)) return bookingError('สถานีที่เลือกไม่อยู่ในเส้นทางของขบวนนี้');
+  const travelDate = new Date(dateVal + 'T00:00:00');
+  const today = new Date(); today.setHours(0,0,0,0);
+  if (travelDate < today) { resBox.innerHTML = '<div class="empty"><h3>วันที่เดินทางผ่านไปแล้ว</h3></div>'; return; }
 
-  if (!Number.isFinite(d.total) || !Number.isFinite(d.passenger) || !d.routeValid) return bookingError('ข้อมูลสถานีไม่ถูกต้องตามเส้นทางขบวนรถ');
-
-  const p = (d.passenger / d.total) * 100, days = bookingDaysFromPercentage(p);
-  const bookingDate = new Date(d.travelDate); bookingDate.setDate(bookingDate.getDate() - days);
-  const status = statusForOpenDate(bookingDate, BOOKING_RULES.standardOpenTime);
-
-  const result = {
-    type: 'standard', createdAt: new Date().toISOString(), travelDate: toLocalISO(d.travelDate),
-    origin: d.origin, destination: d.destination, trainId: d.train.id, trainName: d.train.name,
-    total: d.total, passenger: d.passenger, percentage: p, days, bookingDate: toLocalISO(bookingDate),
-    openTime: BOOKING_RULES.standardOpenTime, headline: `จองล่วงหน้า ${days} วัน`,
-    summary: `เริ่มจอง ${formatDate(bookingDate)} เวลา ${BOOKING_RULES.standardOpenTime} น.`,
-    copyText: `🚆 ${d.train.name}\n📍 ${d.origin} → ${d.destination}\n📅 วันเดินทาง: ${formatDate(d.travelDate)}\n✅ จองล่วงหน้าได้: ${days} วัน\n🗓️ เริ่มจอง: ${formatDate(bookingDate)} เวลา 08:30 น.`
-  };
-  state.lastBookingResult = result;
-
-  el.distanceSummary.classList.remove('hidden');
-  el.totalKmText.textContent = `${money(d.total)} กม.`;
-  el.passengerKmText.textContent = `${money(d.passenger)} กม.`;
-  el.percentageText.textContent = `${p.toFixed(2)}%`;
-
-  el.bookingResult.innerHTML = `
-    <div class="result-card">
-      <div class="result-top">
-        <div><div class="kicker">${esc(result.trainName)}</div><h3>${esc(d.origin)} → ${esc(d.destination)}</h3></div>
-        <span class="status ${status.kind}">${status.kind === 'open' ? '✓' : '⏳'} ${esc(status.text)}</span>
-      </div>
-      <div class="result-main">
-        <div class="route-line"><div class="station">${esc(d.origin)}</div><div class="arrow">➜</div><div class="station">${esc(d.destination)}</div></div>
-        <div class="big-result"><span>สามารถซื้อตั๋วล่วงหน้าได้สูงสุด</span><strong>${days} วัน</strong><small>สัดส่วนระยะทาง ${p.toFixed(2)}% ของขบวน</small></div>
-        <div class="date-panel"><div class="label">วันแรกที่เปิดขายตั๋ว</div><div class="date">${formatDate(bookingDate)}</div><div class="time">เวลา 08:30 น. เป็นต้นไป</div></div>
-        <div class="note warning">${esc(status.detail)} · จองผ่านแอป/เว็บ D-Ticket หรือสถานีรถไฟ</div>
-        ${bookingActions()}
-      </div>
-    </div>`;
-  afterBookingRender(result);
-}
-
-function renderNonReservedResult(d) {
-  el.distanceSummary.classList.add('hidden');
-  const result = {
-    type: 'nonreserved', createdAt: new Date().toISOString(), travelDate: toLocalISO(d.travelDate),
-    origin: d.train.origin, destination: d.train.dest, trainId: d.train.id, trainName: d.train.name,
-    headline: 'ซื้อในวันเดินทาง', summary: BOOKING_RULES.nonReservedText,
-    copyText: `🚆 ${d.train.name}\n📅 เดินทางวันที่ ${formatDate(d.travelDate)}\n🎫 ${BOOKING_RULES.nonReservedText}`
-  };
-  state.lastBookingResult = result;
-  el.bookingResult.innerHTML = `
-    <div class="result-card">
-      <div class="result-top">
-        <div><div class="kicker">${esc(result.trainName)}</div><h3>ไม่ต้องจองล่วงหน้า</h3></div>
-        <span class="status info">🎫 ซื้อวันเดินทาง</span>
-      </div>
-      <div class="result-main">
-        <div class="big-result"><span>การจำหน่ายตั๋ว</span><strong style="font-size:28px">ซื้อในวันเดินทาง</strong><small>ก่อนรถออกไม่เกิน 2 ชม.</small></div>
-        <div class="date-panel"><div class="label">วันที่เดินทาง</div><div class="date">${formatDate(d.travelDate)}</div></div>
-        <div class="note warning">ขบวนรถธรรมดา/ท้องถิ่น ไม่ต้องจองล่วงหน้า ติดต่อซื้อตั๋วที่สถานีในวันเดินทางได้เลย</div>
-        ${bookingActions()}
-      </div>
-    </div>`;
-  afterBookingRender(result);
-}
-
-function bookingActions() {
-  return `
-    <div class="reminder-entry">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg>
-      <div><b>ตั้งเตือนวันเปิดจอง</b><span>เพิ่มลง Google Calendar หรือคัดลอกเก็บไว้</span></div>
-      <button type="button" data-action="remind-booking">ตั้งเตือน</button>
-    </div>
-    <div class="result-actions">
-      <a class="action-btn primary" href="${APP_CONFIG.dticketUrl}" target="_blank" rel="noopener noreferrer">จอง D-Ticket</a>
-      <button class="action-btn" type="button" data-action="copy-booking">คัดลอก</button>
-      <button class="action-btn" type="button" data-action="share-booking">แชร์</button>
-    </div>`;
-}
-
-function afterBookingRender(res) {
-  el.bookingResult.querySelector('[data-action="remind-booking"]')?.addEventListener('click', openBookingReminder);
-  el.bookingResult.querySelector('[data-action="copy-booking"]')?.addEventListener('click', () => copyText(res.copyText).then(() => showToast('คัดลอกข้อความแล้ว')));
-  el.bookingResult.querySelector('[data-action="share-booking"]')?.addEventListener('click', () => {
-    if (navigator.share) navigator.share({ title: 'เช็กวันจองตั๋ว', text: res.copyText }).catch(() => {});
-    else copyText(res.copyText).then(() => showToast('คัดลอกข้อความแล้ว'));
-  });
-}
-
-/* Modal Station Picker */
-let stationPickerField = null;
-function openStationPicker(field) {
-  stationPickerField = field;
-  state.lastStationField = field;
-  $('stationPickerTitle').textContent = field === 'passOrigin' ? 'เลือกสถานีต้นทาง' : 'เลือกสถานีปลายทาง';
-  $('stationSearch').value = '';
-  renderStationPicker();
-  openModal('stationPickerDialog');
-}
-
-function renderStationPicker() {
-  const train = getTrain(el.selectedTrain.value), all = activeStationNames(train);
-  const q = $('stationSearch').value.trim().toLowerCase();
-  const names = all.filter(n => n.toLowerCase().includes(q));
-  const selected = $(stationPickerField).value;
-
-  $('stationOptions').innerHTML = names.length ? names.map(n => {
-    const isPlk = n === 'พิษณุโลก';
-    return `<button type="button" class="station-option" data-station="${esc(n)}" aria-pressed="${n === selected}">
-      <span>${isPlk ? '📌 ' : ''}${esc(n)}</span>
-      <small>${n === selected ? '✓ เลือกอยู่' : `กม. ${money(getKm(n))}`}</small>
-    </button>`;
-  }).join('') : '<div class="station-no-results">ไม่พบชื่อสถานี</div>';
-  $('stationCount').textContent = `มี ${names.length} สถานี · แตะเลือกได้เลย`;
-}
-
-/* Thai Calendar Modal */
-const thaiPicker = { field: null, year: 2026, month: 3 };
-function syncDateControls() {
-  const val = el.travelDate.value, txt = thaiDateText(val);
-  el.travelDateLabel.textContent = txt || 'กดเลือกวันที่เดินทาง';
-  el.travelDatePickerBtn.classList.toggle('is-empty', !txt);
-}
-function thaiDateText(iso) { const d = parseLocalDate(iso); return d ? `${d.getDate()} ${THAI_MONTHS[d.getMonth()]} ${d.getFullYear() + 543}` : ''; }
-
-function openThaiDatePicker() {
-  const iso = parseLocalDate(el.travelDate.value) ? el.travelDate.value : bangkokToday();
-  const d = parseLocalDate(iso);
-  thaiPicker.year = d.getFullYear(); thaiPicker.month = d.getMonth();
-  renderThaiCalendar();
-  openModal('thaiDateDialog');
-}
-
-function renderThaiCalendar() {
-  const y = thaiPicker.year, m = thaiPicker.month, selected = el.travelDate.value, today = bangkokToday();
-  $('thaiCalendarMonth').innerHTML = THAI_MONTHS.map((n, i) => `<option value="${i}"${i === m ? ' selected' : ''}>${n}</option>`).join('');
-  let years = ''; for (let yr = 2024; yr <= 2030; yr++) years += `<option value="${yr}"${yr === y ? ' selected' : ''}>พ.ศ. ${yr + 543}</option>`;
-  $('thaiCalendarYear').innerHTML = years;
-
-  const first = new Date(y, m, 1).getDay(), count = new Date(y, m + 1, 0).getDate();
-  let markup = '';
-  for (let i = 0; i < first; i++) markup += '<span></span>';
-  for (let day = 1; day <= count; day++) {
-    const iso = `${y}-${String(m + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    markup += `<button type="button" class="calendar-day${iso === today ? ' is-today' : ''}" data-date="${iso}" aria-pressed="${iso === selected}">${day}</button>`;
+  if (getReservationType(train) === 'nonreserved') {
+    resBox.innerHTML = `
+      <div class="result-card">
+        <div class="result-top"><div><div class="kicker">${train.name}</div><h3>ไม่ต้องจองล่วงหน้า</h3></div><span class="status info">🎫 ซื้อวันเดินทาง</span></div>
+        <div class="result-main">
+          <div class="big-result"><strong>ซื้อในวันเดินทาง</strong><small>ก่อนรถออกไม่เกิน 2 ชั่วโมง</small></div>
+          <div class="date-panel"><div class="label">วันที่เดินทาง</div><div class="date">${travelDate.toLocaleDateString('th-TH', {dateStyle:'long'})}</div></div>
+          <div class="note warning">ขบวนรถธรรมดา/ท้องถิ่น ไม่ต้องจองล่วงหน้า ติดต่อซื้อตั๋วที่สถานีในวันเดินทางได้เลย</div>
+          <div class="reminder-entry"><div><b>ติดต่อสอบถาม</b><span>สถานีรถไฟพิษณุโลก · โทร 1690</span></div><a class="action-btn primary" href="${APP_CONFIG.dticketUrl}" target="_blank">เว็บไซต์ D-Ticket</a></div>
+        </div>
+      </div>`;
+    return;
   }
-  $('thaiCalendarDays').innerHTML = markup;
-  $('thaiCalendarSelection').textContent = thaiDateText(selected) ? `เลือก: ${thaiDateText(selected)}` : 'แตะวันที่เพื่อเลือก';
+
+  const orig = $('passOrigin').value, dest =$('passDest').value;
+  if (!orig || !dest) { resBox.innerHTML = '<div class="empty"><h3>กรุณาเลือกสถานีต้นทางและปลายทาง</h3></div>'; return; }
+  if (orig === dest) { resBox.innerHTML = '<div class="empty"><h3>สถานีต้นทางและปลายทางต้องไม่เหมือนกัน</h3></div>'; return; }
+
+  const km1 = northStations.find(s => s.name === orig)?.km;
+  const km2 = northStations.find(s => s.name === dest)?.km;
+  const tStart = northStations.find(s => s.name === train.origin)?.km ?? 0;
+  const tEnd = northStations.find(s => s.name === train.dest)?.km ?? 751;
+  const totalKm = Math.abs(tEnd - tStart);
+  const passKm = Math.abs(km2 - km1);
+
+  const p = (passKm / totalKm) * 100;
+  const days = p >= 60 ? 90 : p >= 25 ? 30 : 1;
+  const bookDate = new Date(travelDate); bookDate.setDate(bookDate.getDate() - days);
+
+  resBox.innerHTML = `
+    <div class="result-card">
+      <div class="result-top"><div><div class="kicker">${train.name}</div><h3>${orig} → ${dest}</h3></div><span class="status open">✓ คำนวณแล้ว</span></div>
+      <div class="result-main">
+        <div class="route-line"><div class="station">${orig}</div><div class="arrow">➜</div><div class="station">${dest}</div></div>
+        <div class="big-result"><span>จองล่วงหน้าได้สูงสุด</span><strong>${days} วัน</strong><small>สัดส่วนระยะทาง ${p.toFixed(2)}% ของขบวน</small></div>
+        <div class="date-panel"><div class="label">วันแรกที่เริ่มเปิดขายตั๋ว</div><div class="date">${bookDate.toLocaleDateString('th-TH', {dateStyle:'long'})}</div><div class="time">เวลา 08:30 น. เป็นต้นไป</div></div>
+        <div class="result-actions">
+          <a class="action-btn primary" href="${APP_CONFIG.dticketUrl}" target="_blank">จอง D-Ticket</a>
+          <button class="action-btn" type="button" onclick="navigator.clipboard.writeText('จองตั๋ว ${train.name} เส้นทาง ${orig} ไป ${dest} เดินทางวันที่ ${travelDate.toLocaleDateString(\'th-TH\')} เปิดจองวันที่ ${bookDate.toLocaleDateString(\'th-TH\')}'); showToast('คัดลอกข้อความแล้ว');">คัดลอกผล</button>
+        </div>
+      </div>
+    </div>`;
 }
 
-/* Event Bindings ที่เชื่อมโยงสมบูรณ์ */
-el.travelDatePickerBtn.addEventListener('click', openThaiDatePicker);
-el.passOriginBtn.addEventListener('click', () => openStationPicker('passOrigin'));
-el.passDestBtn.addEventListener('click', () => openStationPicker('passDest'));
+/* Modal เลือกสถานีมาตรฐาน */
+let currentField = null;
+function openPicker(field) {
+  currentField = field;
+  state.lastField = field;
+  const train = getTrain($('selectedTrain').value);
+  const names = activeStationNames(train);
+  const q = $('stationSearch').value.trim().toLowerCase();
+  const filtered = names.filter(n => n.toLowerCase().includes(q));
 
-el.selectedTrain.addEventListener('change', () => { syncStationConstraints(); calculateBooking(); });
-el.quickStationChips.addEventListener('click', e => { const b = e.target.closest('button[data-quick]'); if (b && !b.disabled) selectQuickStation(b.dataset.quick); });
+  $('stationPickerTitle').textContent = field === 'passOrigin' ? 'เลือกสถานีต้นทาง' : 'เลือกสถานีปลายทาง';
+  $('stationOptions').innerHTML = filtered.map(n => `<button type="button" class="station-option" onclick="selectStation('${n}')"><span>${n === 'พิษณุโลก' ? '📌 ' : ''}${n}</span><small>กม. ${northStations.find(s=>s.name===n)?.km}</small></button>`).join('');
+  $('stationPickerDialog').showModal();
+}
+
+function selectStation(name) {
+  $(currentField).value = name;
+  $('stationPickerDialog').close();
+  calculateBooking();
+}
+
+/* Event Bindings */
+$('travelDate').value = new Date().toISOString().slice(0, 10);
+$('travelDate').addEventListener('change', calculateBooking);$('selectedTrain').addEventListener('change', calculateBooking);
+
+$('passOrigin').addEventListener('click', () => openPicker('passOrigin'));
+$('passDest').addEventListener('click', () => openPicker('passDest'));$('closeStationPickerBtn').addEventListener('click', () => $('stationPickerDialog').close());$('stationSearch').addEventListener('input', () => openPicker(currentField));
 
 $('swapStationsBtn').addEventListener('click', () => {
-  const a = el.passOrigin.value; el.passOrigin.value = el.passDest.value; el.passDest.value = a;
-  syncStationButtons(); calculateBooking(); showToast('สลับสถานีแล้ว');
+  const a = $('passOrigin').value; $('passOrigin').value = $('passDest').value; $('passDest').value = a;
+  calculateBooking(); showToast('สลับสถานีแล้ว');
 });
-$('clearRouteBtn').addEventListener('click', () => { el.passOrigin.value = ''; el.passDest.value = ''; syncStationButtons(); calculateBooking(); });
+$('clearRouteBtn').addEventListener('click', () => { $('passOrigin').value = '';$('passDest').value = ''; calculateBooking(); });
 
-/* Modal Controls */
-$('closeStationPickerBtn').addEventListener('click', () => closeModal('stationPickerDialog'));$('closeThaiDateBtn').addEventListener('click', () => closeModal('thaiDateDialog'));
-$('stationSearch').addEventListener('input', renderStationPicker);$('stationOptions').addEventListener('click', e => {
-  const b = e.target.closest('button[data-station]');
-  if (b) { $(stationPickerField).value = b.dataset.station; closeModal('stationPickerDialog'); syncStationButtons(); calculateBooking(); }
-});
-$('thaiCalendarPrev').addEventListener('click', () => { thaiPicker.month--; if(thaiPicker.month<0){thaiPicker.month=11;thaiPicker.year--;} renderThaiCalendar(); });$('thaiCalendarNext').addEventListener('click', () => { thaiPicker.month++; if(thaiPicker.month>11){thaiPicker.month=0;thaiPicker.year++;} renderThaiCalendar(); });
-$('thaiCalendarMonth').addEventListener('change', e => { thaiPicker.month = Number(e.target.value); renderThaiCalendar(); });$('thaiCalendarYear').addEventListener('change', e => { thaiPicker.year = Number(e.target.value); renderThaiCalendar(); });
-$('thaiCalendarDays').addEventListener('click', e => { const b = e.target.closest('button[data-date]'); if (b) { el.travelDate.value = b.dataset.date; syncDateControls(); closeModal('thaiDateDialog'); calculateBooking(); } });$('thaiCalendarToday').addEventListener('click', () => { el.travelDate.value = bangkokToday(); syncDateControls(); closeModal('thaiDateDialog'); calculateBooking(); });
-
-['stationPickerDialog', 'thaiDateDialog', 'reminderDialog'].forEach(id => {
-  $(id).addEventListener('click', e => { if (e.target ===$(id)) closeModal(id); });
+document.querySelectorAll('[data-quick]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const name = btn.dataset.quick;
+    const target = !$('passOrigin').value ? $('passOrigin') :$('passDest');
+    target.value = name;
+    calculateBooking();
+  });
 });
 
-let reminderResult = null;
-function openBookingReminder() {
-  const r = state.lastBookingResult; if (!r) return; reminderResult = r;
-  $('reminderRoute').innerHTML = `<b>${esc(r.trainName)}</b><span>เดินทาง ${formatDate(parseLocalDate(r.travelDate))}</span>`;
-  openModal('reminderDialog');
-}
-$('closeReminderBtn').addEventListener('click', () => closeModal('reminderDialog'));$('copyReminderBtn').addEventListener('click', () => { copyText(reminderResult.copyText).then(() => { showToast('คัดลอกข้อความเตือนแล้ว'); closeModal('reminderDialog'); }); });
-$('googleCalendarBtn').addEventListener('click', () => {
-  const url = new URL('https://calendar.google.com/calendar/render');
-  url.searchParams.set('action', 'TEMPLATE'); url.searchParams.set('text', `เตือนรถไฟ: ${reminderResult.trainName}`);
-  url.searchParams.set('details', reminderResult.copyText); url.searchParams.set('openExternalBrowser', '1');
-  window.open(url.toString(), '_blank');
-});
-
-/* Boot */
-(function boot() {
-  const today = bangkokToday();
-  el.travelDate.value = today;
-  syncDateControls();
-  syncStationConstraints();
-  calculateBooking();
-})();
+calculateBooking();
 </script>
 </body>
 </html>
