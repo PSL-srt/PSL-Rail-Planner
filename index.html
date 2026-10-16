@@ -1,180 +1,232 @@
 <!DOCTYPE html>
-<html lang="th" data-theme="light">
+<html lang="th">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#841b3a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="description" content="ระบบคำนวณวันเปิดจองตั๋วรถไฟล่วงหน้า สถานีรถไฟพิษณุโลก" />
+  <title>สถานีรถไฟพิษณุโลก | เช็กวันจองตั๋วล่วงหน้า</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23841b3a'/%3E%3Ctext x='32' y='39' font-family='sans-serif' font-size='20' font-weight='bold' text-anchor='middle' fill='white'%3EPLK%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <meta name="color-scheme" content="light dark" />
-  <meta name="description" content="ระบบคำนวณวันเปิดจองตั๋วรถไฟล่วงหน้า สถานีรถไฟพิษณุโลก" />
-  <title>สถานีรถไฟพิษณุโลก | เช็กวันจองตั๋วล่วงหน้า</title>
+  <!-- ตั้งธีมก่อนวาดหน้า กันจอกระพริบ -->
+  <script>
+    try { const t = JSON.parse(localStorage.getItem('plkNorthTheme')); document.documentElement.dataset.theme = t || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
+    catch { document.documentElement.dataset.theme = 'light'; }
+  </script>
   <style>
-    :root {
-      color-scheme: light;
-      --brand: #841b3a;
-      --brand-deep: #531329;
-      --brand-soft: #f8edf1;
-      --gold: #b99555;
-      --ink: #222734;
-      --muted: #626879;
-      --muted-2: #858b9a;
-      --bg: #f4f5f8;
-      --surface: #fff;
-      --surface-2: #f8f9fb;
-      --surface-3: #f0f2f6;
-      --line: #e2e5ec;
-      --line-strong: #c8ccd7;
-      --success: #176649;
-      --success-bg: #eaf6ef;
-      --warning: #895b18;
-      --warning-bg: #fff6e6;
-      --danger: #b5313e;
-      --danger-bg: #fff0f1;
-      --shadow: 0 10px 30px rgba(39, 25, 36, .06);
-      --focus: 0 0 0 4px #841b3a1c;
-      --topbar: 72px;
+    :root{color-scheme:light;--brand:#841b3a;--brand-deep:#531329;--brand-soft:#f8edf1;--gold:#b99555;--ink:#222734;--muted:#626879;--muted-2:#858b9a;--bg:#f4f5f8;--surface:#fff;--surface-2:#f8f9fb;--surface-3:#f0f2f6;--line:#e2e5ec;--line-strong:#c8ccd7;--success:#176649;--success-bg:#eaf6ef;--warning:#895b18;--warning-bg:#fff6e6;--danger:#b5313e;--danger-bg:#fff0f1;--shadow:0 10px 30px rgba(39,25,36,.06);--focus:0 0 0 4px #841b3a1c;--topbar:72px}
+    html[data-theme="dark"]{color-scheme:dark;--brand:#eda1b9;--brand-deep:#f5bdcf;--brand-soft:#33212b;--ink:#edf0f5;--muted:#b0b7c5;--muted-2:#8a93a4;--bg:#11151e;--surface:#1a202c;--surface-2:#202735;--surface-3:#272e3e;--line:#333b4c;--line-strong:#566078;--success:#a6debd;--success-bg:#1b342b;--warning:#eac78d;--warning-bg:#382e20;--danger:#ffb2bb;--danger-bg:#3a252d;--shadow:0 10px 30px #0004}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:'K2D','Leelawadee UI',Tahoma,sans-serif;font-weight:400;line-height:1.6;font-size:16px;-webkit-tap-highlight-color:transparent}
+    button,input,select{font:inherit;touch-action:manipulation}
+    button{cursor:pointer;color:inherit}
+    button:disabled{cursor:not-allowed;opacity:.55}
+    button:focus-visible,a:focus-visible{outline:3px solid var(--brand);outline-offset:3px}
+    input:focus,select:focus{outline:none;border-color:var(--brand);box-shadow:var(--focus)}
+    h1,h2,h3,p{margin:0}
+    h1,h2,h3{font-weight:600}
+    strong,b{font-weight:500}
+    .hidden{display:none!important}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+    /* Topbar */
+    .topbar{position:sticky;top:0;z-index:30;background:var(--surface);border-bottom:1px solid var(--line)}
+    .topbar-inner{max-width:1080px;min-height:var(--topbar);margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 20px}
+    .brand{display:flex;gap:12px;align-items:center;text-align:left}
+    .brand-mark{width:44px;height:44px;border-radius:12px;background:#841b3a;color:#fff;display:grid;place-items:center;font-weight:600;font-size:16px;letter-spacing:.5px;flex-shrink:0;box-shadow:0 4px 10px #841b3a24}
+    .brand-text{display:flex;flex-direction:column}
+    .brand-title{font-size:16px;font-weight:600;line-height:1.3;color:var(--ink)}
+    .brand-sub{font-size:12px;color:var(--brand);margin-top:2px;font-weight:500}
+    .icon-btn{display:flex;align-items:center;justify-content:center;min-width:42px;min-height:42px;background:var(--surface-2);border:1px solid var(--line);border-radius:11px;font-size:20px;flex-shrink:0}
+
+    /* Workspace */
+    .workspace{max-width:1080px;margin:auto;padding:18px 20px 28px;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:20px;align-items:start}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:18px;min-width:0;box-shadow:var(--shadow)}
+    .card-head{padding:18px 20px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .card-head h2{font-size:18px}
+    .card-head p{font-size:13px;color:var(--muted);margin-top:2px}
+    .line-badge{font-size:12px;font-weight:500;color:var(--brand);background:var(--brand-soft);padding:5px 11px;border-radius:30px;white-space:nowrap}
+    .card-body{padding:20px}
+    .sticky{position:sticky;top:calc(var(--topbar) + 16px)}
+
+    /* Steps & Controls */
+    .step{display:flex;gap:11px;margin-bottom:24px}
+    .step:last-child{margin-bottom:0}
+    .step-no{display:grid;place-items:center;flex-shrink:0;width:26px;height:26px;border-radius:8px;background:var(--brand-soft);color:var(--brand);font-size:13px;font-weight:600;margin-top:2px}
+    .step-content{flex:1;min-width:0}
+    .step h3{font-size:16px;margin-bottom:12px}
+    .grid{display:grid;gap:12px}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .field{min-width:0}
+    .field label{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:14px;margin-bottom:6px}
+    .field label span{font-size:12px;color:var(--muted)}
+    .control{width:100%;min-height:46px;padding:9px 12px;background:var(--surface);border:1px solid var(--line-strong);border-radius:10px;color:var(--ink);font-size:15px;transition:border-color .15s}
+    .control::placeholder{color:var(--muted-2);opacity:1}
+    .station-input[readonly]{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='none' stroke='%23727a89' stroke-width='2'%3E%3Cpath d='m4 6 5 5 5-5'/%3E%3C/svg%3E");background-position:right 10px center;background-repeat:no-repeat;padding-right:34px;text-overflow:ellipsis}
+    .control-wrap{display:flex;position:relative}
+    .control-wrap .station-input[readonly]{background-position:right 36px center;padding-right:60px}
+    .mini-btn{position:absolute;right:4px;top:4px;width:30px;height:38px;background:none;border:0;color:var(--muted);font-size:20px}
+    .mini-btn.active{color:var(--gold)}
+    .date-control{display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left}
+    .date-control svg{width:20px;height:20px;flex-shrink:0;color:var(--brand)}
+    .date-control.is-empty span{color:var(--muted-2)}
+    .swap-row{display:grid;grid-template-columns:minmax(0,1fr) 38px minmax(0,1fr);gap:8px;align-items:end;margin-top:12px}
+    .swap-btn{width:38px;height:46px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;color:var(--brand);font-size:20px;padding:0}
+
+    /* Chips */
+    .quick-strip{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+    .strip-head{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin-bottom:8px}
+    .text-btn{border:0;background:none;color:var(--brand);font-size:12px;padding:2px 6px}
+    .chips{display:flex;flex-wrap:wrap;gap:6px}
+    .chip{border:1px solid var(--line-strong);background:var(--surface-2);padding:5px 11px;border-radius:9px;font-size:13px;color:var(--ink);transition:border-color .15s,color .15s,background .15s}
+    .chip:hover{border-color:var(--brand);color:var(--brand)}
+    .chip.highlight{background:var(--brand-soft);border-color:var(--brand);color:var(--brand);font-weight:500}
+    .chip.selected{background:#841b3a;border-color:#841b3a;color:#fff}
+    .chip.muted{color:var(--muted);border-color:var(--line);cursor:default}
+
+    /* Distance */
+    .distance-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--surface-2)}
+    .metric{display:flex;flex-direction:column;gap:2px}
+    .metric span{color:var(--muted);font-size:11px}
+    .metric strong{font-size:14px}
+
+    /* Result */
+    .result-body{padding:16px}
+    .empty{text-align:center;padding:30px 10px 32px}
+    .empty-icon{display:grid;place-items:center;width:56px;height:56px;background:var(--surface-2);border:1px solid var(--line);border-radius:16px;margin:0 auto 14px;font-size:26px}
+    .empty h3{font-size:18px;margin-bottom:4px}
+    .empty p{font-size:13px;color:var(--muted)}
+    .result-card{border:1px solid var(--line);border-radius:13px;overflow:hidden}
+    .result-top{background:var(--brand-soft);padding:14px 16px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+    .result-top h3{font-size:16px;line-height:1.5}
+    .kicker{font-size:12px;color:var(--brand);margin-bottom:3px;font-weight:500}
+    .status{display:inline-flex;align-items:center;padding:4px 9px;border-radius:7px;font-size:12px;white-space:nowrap;font-weight:500}
+    .status.open{background:var(--success-bg);color:var(--success)}
+    .status.waiting{background:var(--warning-bg);color:var(--warning)}
+    .status.info{background:var(--surface);color:var(--muted)}
+    .result-main{padding:16px}
+    .route-line{display:flex;align-items:center;justify-content:center;gap:10px;font-size:14px;font-weight:500;background:var(--surface-2);padding:8px 12px;border-radius:9px}
+    .station{flex:1;text-align:center;overflow-wrap:anywhere}
+    .arrow{color:var(--brand);flex-shrink:0}
+    .big-result{text-align:center;margin:18px 0}
+    .big-result>span{font-size:13px;color:var(--muted);display:block}
+    .big-result strong{display:block;font-size:44px;color:var(--brand);font-weight:600;line-height:1.3;margin:2px 0}
+    .big-result small{display:block;font-size:12px;color:var(--muted)}
+    .date-panel{border:1px solid var(--line);border-left:4px solid var(--brand);background:var(--surface-2);border-radius:10px;padding:13px 15px;margin-bottom:12px}
+    .date-panel .label{color:var(--muted);font-size:12px}
+    .date-panel .date{font-size:20px;font-weight:600;color:var(--ink);margin-top:3px}
+    .date-panel .time{font-size:13px;color:var(--brand);margin-top:2px;font-weight:500}
+    .result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+    .result-mini{display:flex;flex-direction:column;gap:2px;background:var(--surface-2);border-radius:8px;padding:9px 11px}
+    .result-mini span{font-size:11px;color:var(--muted)}
+    .result-mini strong{font-size:14px}
+    .note{border-radius:9px;padding:10px 12px;line-height:1.6;font-size:12px;margin-top:12px}
+    .note.info{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+    .note.warning{background:var(--warning-bg);color:var(--warning);border:1px solid color-mix(in srgb,var(--warning) 18%,transparent)}
+    .reminder-entry{display:flex;align-items:center;gap:10px;margin-top:14px;padding:12px;border-radius:11px;border:1px solid var(--line);background:var(--brand-soft)}
+    .reminder-entry svg{width:23px;height:23px;color:var(--brand);flex-shrink:0}
+    .reminder-entry>div{flex:1;min-width:0}
+    .reminder-entry b{font-size:13px;display:block}
+    .reminder-entry span{display:block;font-size:11px;color:var(--muted)}
+    .reminder-entry button{flex-shrink:0;background:#841b3a;border:0;color:#fff;border-radius:9px;min-height:40px;padding:7px 12px;font-size:13px;font-weight:500}
+    .result-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:12px}
+    .action-btn{display:flex;align-items:center;justify-content:center;gap:6px;min-height:42px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);border-radius:9px;font-size:13px;padding:7px 6px;text-decoration:none}
+    .action-btn:hover{background:var(--surface-2);border-color:var(--brand)}
+    .action-btn.primary{background:#841b3a;color:#fff;border-color:#841b3a;font-weight:500}
+    .action-btn.primary:hover{background:#64172f}
+
+    /* History & Footer */
+    .side-section{border-top:1px solid var(--line);padding-top:14px}
+    .side-section h3{font-size:13px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .history-list{display:grid;gap:6px}
+    .history-item{display:block;text-align:left;width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2)}
+    .history-item b{display:block;font-size:13px;color:var(--ink)}
+    .history-item span{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+    .footer{max-width:1080px;margin:4px auto 0;padding:18px 20px 26px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);text-align:center;line-height:1.8}
+    .footer strong{color:var(--ink);font-weight:500}
+
+    /* Dialogs */
+    .picker-dialog,.reminder-dialog{width:calc(100% - 24px);max-width:500px;margin:auto;padding:0;border:1px solid var(--line);border-radius:18px;background:var(--surface);color:var(--ink);box-shadow:0 25px 70px #0004;max-height:calc(100dvh - 24px);overflow:auto}
+    .picker-dialog::backdrop,.reminder-dialog::backdrop{background:#12121e88;backdrop-filter:blur(3px)}
+    .dialog-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:18px 20px 14px;border-bottom:1px solid var(--line)}
+    .dialog-head h2{font-size:19px;line-height:1.4}
+    .dialog-head p{font-size:13px;color:var(--muted);margin-top:3px}
+    .dialog-close{flex-shrink:0;width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--line);background:var(--surface-2);border-radius:9px;font-size:22px;line-height:1}
+    .dialog-body{padding:18px 20px}
+    .station-picker-body{padding:14px 18px 18px;display:flex;flex-direction:column}
+    .station-search{position:relative}
+    .station-search .control{padding-right:40px}
+    .search-clear{position:absolute;right:4px;top:4px;width:36px;height:38px;border:0;background:none;color:var(--muted);font-size:22px}
+    .station-count{font-size:12px;color:var(--muted);margin:9px 0 6px}
+    .station-options{overflow-y:auto;overscroll-behavior:contain;max-height:min(400px,52dvh);display:grid;gap:6px;padding:2px;contain:content}
+    .station-option{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:46px;padding:9px 12px;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;text-align:left;font-size:15px}
+    .station-option[aria-pressed="true"]{border-color:var(--brand);color:var(--brand);background:var(--brand-soft);font-weight:500}
+    .station-option small{color:var(--muted);font-size:12px;white-space:nowrap}
+    .station-group{font-size:12px;color:var(--brand);font-weight:500;padding:6px 2px 2px}
+    .station-no-results{padding:20px 10px;text-align:center;color:var(--muted);font-size:14px}
+
+    /* Thai calendar */
+    .date-picker-body{padding:16px 18px 18px}
+    .calendar-nav{display:flex;align-items:center;gap:7px;margin-bottom:12px}
+    .calendar-selects{display:grid;grid-template-columns:1.3fr 1fr;gap:6px;flex:1}
+    .calendar-selects .control{min-height:42px;padding:7px;font-size:14px}
+    .calendar-weekdays,.calendar-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+    .calendar-weekdays{color:var(--muted);text-align:center;font-size:12px;margin-bottom:6px}
+    .calendar-days{min-height:240px;align-content:start}
+    .calendar-day{display:grid;place-items:center;border:1px solid transparent;background:none;color:var(--ink);border-radius:9px;min-height:38px;font-size:15px;padding:4px}
+    .calendar-day.is-today{border-color:var(--brand);font-weight:600}
+    .calendar-day[aria-pressed="true"]{background:#841b3a;color:#fff;border-color:#841b3a}
+    .calendar-day:disabled{opacity:.25}
+    .calendar-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+    .calendar-footer span{font-size:12px;color:var(--muted)}
+    .calendar-key{margin-top:10px;font-size:11px;color:var(--muted)}
+
+    /* Reminder */
+    .reminder-route{margin-bottom:14px;padding:11px 13px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;font-size:13px}
+    .reminder-route b{display:block;font-size:14px}
+    .reminder-route span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+    .reminder-preview{margin-top:14px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);border-left:3px solid var(--brand);background:var(--brand-soft)}
+    .reminder-preview>span{display:block;font-size:12px;color:var(--muted)}
+    .reminder-preview>strong{display:block;font-size:16px;color:var(--brand);margin-top:2px}
+    .reminder-preview>small{display:block;font-size:11px;color:var(--muted)}
+    .reminder-buttons{display:grid;gap:8px;margin-top:14px}
+    .reminder-buttons .action-btn{font-size:14px;min-height:44px}
+    .reminder-error{font-size:13px;color:var(--danger);border:1px solid var(--danger);border-radius:9px;padding:9px 11px;background:var(--danger-bg);margin-top:10px}
+    .reminder-handoff{font-size:12px;line-height:1.6;margin-top:12px;padding:11px;border:1px solid var(--line);border-radius:9px;color:var(--brand);background:var(--brand-soft)}
+
+    .toast{position:fixed;z-index:150;bottom:22px;left:50%;transform:translate(-50%,12px);max-width:calc(100vw - 28px);background:#222734;color:#fff;padding:10px 18px;border-radius:11px;font-size:13px;opacity:0;visibility:hidden;transition:opacity .2s,transform .2s,visibility .2s;text-align:center;box-shadow:0 8px 25px #0003}
+    .toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
+
+    @media (max-width:820px){
+      .workspace{grid-template-columns:1fr;padding:14px 14px 22px;gap:16px}
+      .sticky{position:static}
+      .control{font-size:16px}
     }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--ink);
-      font-family: 'K2D', 'Leelawadee UI', Tahoma, sans-serif;
-      font-size: 16px;
+    @media (max-width:560px){
+      .topbar-inner{padding:10px 14px}
+      .brand-title{font-size:15px}
+      .brand-sub{font-size:11px}
+      .card-head{padding:15px 16px 12px}
+      .card-body{padding:16px}
+      .step .grid-2{grid-template-columns:1fr;gap:12px}
+      .step-content .swap-row{grid-template-columns:minmax(0,1fr) 34px;gap:10px}
+      .step-content .swap-row>.field:last-child{grid-column:1/2}
+      .step-content .swap-row>.swap-btn{grid-column:2;grid-row:1/3;align-self:center;width:34px}
     }
-    button, input, select { font: inherit; touch-action: manipulation; }
-    button { cursor: pointer; color: inherit; }
-    h1, h2, h3, p { margin: 0; }
-    h1, h2, h3 { font-weight: 600; }
-    .hidden { display: none !important; }
-    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-
-    .topbar { position: sticky; top: 0; z-index: 30; background: var(--surface); border-bottom: 1px solid var(--line); }
-    .topbar-inner { max-width: 1080px; min-height: var(--topbar); margin: auto; display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; }
-    .brand { display: flex; gap: 12px; align-items: center; }
-    .brand-mark { width: 44px; height: 44px; border-radius: 12px; background: #841b3a; color: #fff; display: grid; place-items: center; font-weight: 600; font-size: 16px; }
-    .brand-text { display: flex; flex-direction: column; }
-    .brand-title { font-size: 16px; font-weight: 600; color: var(--ink); }
-    .brand-sub { font-size: 12px; color: var(--brand); margin-top: 2px; font-weight: 500; }
-
-    .workspace { max-width: 1080px; margin: auto; padding: 18px 20px 28px; display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); gap: 20px; align-items: start; }
-    .card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); }
-    .card-head { padding: 18px 20px 14px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
-    .card-head h2 { font-size: 18px; }
-    .card-head p { font-size: 13px; color: var(--muted); margin-top: 2px; }
-    .line-badge { font-size: 12px; font-weight: 500; color: var(--brand); background: var(--brand-soft); padding: 5px 11px; border-radius: 30px; }
-    .card-body { padding: 20px; }
-    .sticky { position: sticky; top: calc(var(--topbar) + 16px); }
-
-    .step { display: flex; gap: 11px; margin-bottom: 24px; }
-    .step-no { display: grid; place-items: center; flex-shrink: 0; width: 26px; height: 26px; border-radius: 8px; background: var(--brand-soft); color: var(--brand); font-size: 13px; font-weight: 600; margin-top: 2px; }
-    .step-content { flex: 1; min-width: 0; }
-    .step h3 { font-size: 16px; margin-bottom: 12px; }
-    .grid { display: grid; gap: 12px; }
-    .field { min-width: 0; }
-    .field label { display: flex; justify-content: space-between; align-items: center; font-size: 14px; margin-bottom: 6px; }
-    .field label span { font-size: 12px; color: var(--muted); }
-    .control { width: 100%; min-height: 46px; padding: 9px 12px; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 10px; color: var(--ink); font-size: 15px; }
-    
-    .station-input { cursor: pointer; background: var(--surface-2); text-align: left; }
-    .control-wrap { display: flex; position: relative; }
-    .mini-btn { position: absolute; right: 4px; top: 4px; width: 30px; height: 38px; background: none; border: 0; color: var(--muted); font-size: 20px; z-index: 2; }
-    .mini-btn.active { color: var(--gold); }
-
-    .swap-row { display: grid; grid-template-columns: minmax(0, 1fr) 38px minmax(0, 1fr); gap: 8px; align-items: end; margin-top: 12px; }
-    .swap-btn { width: 38px; height: 46px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; color: var(--brand); font-size: 20px; padding: 0; }
-
-    .quick-strip { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
-    .strip-head { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); margin-bottom: 8px; }
-    .text-btn { border: 0; background: none; color: var(--brand); font-size: 12px; padding: 2px 6px; }
-    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-    .chip { border: 1px solid var(--line-strong); background: var(--surface-2); padding: 6px 12px; border-radius: 9px; font-size: 13px; color: var(--ink); }
-    .chip.highlight { background: var(--brand-soft); border-color: var(--brand); color: var(--brand); font-weight: 500; }
-    .chip.selected { background: #841b3a; border-color: #841b3a; color: #fff; }
-
-    .distance-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 14px; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--surface-2); }
-    .metric { display: flex; flex-direction: column; gap: 2px; }
-    .metric span { color: var(--muted); font-size: 11px; }
-    .metric strong { font-size: 14px; }
-
-    .result-body { padding: 16px; }
-    .empty { text-align: center; padding: 30px 10px 32px; }
-    .empty-icon { display: grid; place-items: center; width: 56px; height: 56px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 16px; margin: 0 auto 14px; font-size: 26px; }
-    .empty h3 { font-size: 18px; margin-bottom: 4px; }
-    .empty p { font-size: 13px; color: var(--muted); }
-    .result-card { border: 1px solid var(--line); border-radius: 13px; overflow: hidden; }
-    .result-top { background: var(--brand-soft); padding: 14px 16px; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-    .result-top h3 { font-size: 16px; line-height: 1.5; }
-    .kicker { font-size: 12px; color: var(--brand); margin-bottom: 3px; font-weight: 500; }
-    .status { display: inline-flex; align-items: center; padding: 4px 9px; border-radius: 7px; font-size: 12px; font-weight: 500; }
-    .status.open { background: var(--success-bg); color: var(--success); }
-    .status.waiting { background: var(--warning-bg); color: var(--warning); }
-    .status.info { background: var(--surface); color: var(--muted); }
-    .result-main { padding: 16px; }
-    .route-line { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 14px; font-weight: 500; background: var(--surface-2); padding: 8px 12px; border-radius: 9px; }
-    .station { flex: 1; text-align: center; }
-    .arrow { color: var(--brand); }
-    .big-result { text-align: center; margin: 18px 0; }
-    .big-result > span { font-size: 13px; color: var(--muted); display: block; }
-    .big-result strong { display: block; font-size: 40px; color: var(--brand); font-weight: 600; line-height: 1.3; margin: 2px 0; }
-    .big-result small { display: block; font-size: 12px; color: var(--muted); }
-    .date-panel { border: 1px solid var(--line); border-left: 4px solid var(--brand); background: var(--surface-2); border-radius: 10px; padding: 13px 15px; margin-bottom: 12px; }
-    .date-panel .label { color: var(--muted); font-size: 12px; }
-    .date-panel .date { font-size: 18px; font-weight: 600; color: var(--ink); margin-top: 3px; }
-    .date-panel .time { font-size: 13px; color: var(--brand); margin-top: 2px; font-weight: 500; }
-    .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-    .result-mini { display: flex; flex-direction: column; gap: 2px; background: var(--surface-2); border-radius: 8px; padding: 9px 11px; }
-    .result-mini span { font-size: 11px; color: var(--muted); }
-    .result-mini strong { font-size: 14px; }
-    .note { border-radius: 9px; padding: 10px 12px; line-height: 1.6; font-size: 12px; margin-top: 12px; }
-    .note.warning { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--line); }
-
-    .reminder-entry { display: flex; align-items: center; gap: 10px; margin-top: 14px; padding: 12px; border-radius: 11px; border: 1px solid var(--line); background: var(--brand-soft); }
-    .reminder-entry svg { width: 23px; height: 23px; color: var(--brand); flex-shrink: 0; }
-    .reminder-entry > div { flex: 1; }
-    .reminder-entry b { font-size: 13px; display: block; }
-    .reminder-entry span { display: block; font-size: 11px; color: var(--muted); }
-    .reminder-entry button { background: #841b3a; border: 0; color: #fff; border-radius: 9px; min-height: 40px; padding: 7px 12px; font-size: 13px; font-weight: 500; }
-    .result-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; margin-top: 12px; }
-    .action-btn { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 42px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); border-radius: 9px; font-size: 13px; text-decoration: none; }
-    .action-btn.primary { background: #841b3a; color: #fff; border-color: #841b3a; font-weight: 500; }
-
-    .side-section { border-top: 1px solid var(--line); padding-top: 14px; }
-    .side-section h3 { font-size: 13px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-    .history-list { display: grid; gap: 6px; }
-    .history-item { display: block; text-align: left; width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface-2); }
-    .history-item b { display: block; font-size: 13px; color: var(--ink); }
-    .history-item span { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-    .footer { max-width: 1080px; margin: 4px auto 0; padding: 18px 20px 26px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); text-align: center; line-height: 1.8; }
-    .footer strong { color: var(--ink); font-weight: 500; }
-
-    /* Dialog Native Overlays */
-    dialog { width: calc(100% - 24px); max-width: 480px; padding: 0; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); color: var(--ink); box-shadow: 0 25px 70px rgba(0,0,0,0.35); }
-    dialog::backdrop { background: rgba(18, 18, 30, 0.58); backdrop-filter: blur(2px); }
-    .dialog-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; padding: 16px 18px 13px; border-bottom: 1px solid var(--line); }
-    .dialog-head h2 { font-size: 18px; }
-    .dialog-head p { font-size: 12px; color: var(--muted); margin-top: 2px; }
-    .dialog-close { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid var(--line); background: var(--surface-2); border-radius: 9px; font-size: 22px; }
-    .dialog-body { padding: 16px 18px; }
-    
-    .station-options { max-height: 50vh; overflow-y: auto; display: grid; gap: 6px; padding: 4px; }
-    .station-option { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border: 1px solid var(--line); background: var(--surface-2); border-radius: 10px; text-align: left; font-size: 15px; }
-    .station-option small { color: var(--muted); font-size: 12px; }
-
-    .toast { position: fixed; z-index: 300; bottom: 22px; left: 50%; transform: translate(-50%, 12px); background: #222734; color: #fff; padding: 10px 18px; border-radius: 11px; font-size: 13px; opacity: 0; visibility: hidden; transition: .2s; text-align: center; }
-    .toast.show { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+    /* ลดภาระ GPU บนมือถือ / ผู้ใช้ที่ขอลดการเคลื่อนไหว */
+    @media (max-width:480px),(prefers-reduced-motion:reduce){
+      .picker-dialog::backdrop,.reminder-dialog::backdrop{backdrop-filter:none;background:rgba(0,0,0,.55)}
+      html{scroll-behavior:auto}
+    }
   </style>
 </head>
 <body>
-<div class="app-shell">
   <header class="topbar">
     <div class="topbar-inner">
       <div class="brand">
@@ -184,6 +236,9 @@
           <span class="brand-sub">ระบบคำนวณวันเปิดจำหน่ายตั๋วล่วงหน้า</span>
         </span>
       </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="themeBtn" type="button" title="สลับโหมดสี" aria-label="สลับโหมดสี"><span id="themeIcon">☾</span></button>
+      </div>
     </div>
   </header>
 
@@ -192,7 +247,7 @@
       <div class="card-head">
         <div>
           <h2>ข้อมูลการเดินทาง</h2>
-          <p>เลือกวันเดินทางและขบวนรถ ระบบคำนวณให้อัตโนมัติ</p>
+          <p>เลือกวันเดินทาง ขบวนรถ และสถานี ระบบคำนวณให้อัตโนมัติ</p>
         </div>
         <span class="line-badge">🚆 สายเหนือ</span>
       </div>
@@ -202,68 +257,64 @@
           <div class="step-content">
             <h3>เลือกวันที่เดินทาง</h3>
             <div class="field">
-              <label for="travelDate">วันที่เดินทาง <span>เลือกจากปฏิทิน</span></label>
-              <input class="control" id="travelDate" type="date" />
+              <label for="travelDatePickerBtn">วันที่เดินทาง <span>ปฏิทิน พ.ศ.</span></label>
+              <input id="travelDate" type="hidden" />
+              <button class="control date-control is-empty" id="travelDatePickerBtn" type="button" aria-haspopup="dialog" aria-controls="thaiDateDialog">
+                <span id="travelDateLabel">กดเลือกวันที่เดินทาง</span>
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-11 4h3"/></svg>
+              </button>
             </div>
           </div>
         </div>
 
-        <div class="step">
+        <div class="step" id="stationStep">
           <div class="step-no">2</div>
           <div class="step-content">
             <h3>เลือกขบวนรถและสถานี</h3>
-            <div class="field" style="margin-bottom: 14px;">
-              <label for="selectedTrain">ขบวนรถไฟ</label>
-              <select class="control" id="selectedTrain">
-                <option value="">- กรุณาเลือกขบวนรถ -</option>
-                <optgroup label="ขบวนรถสำรองที่นั่ง (ด่วนพิเศษ / ด่วน / เร็ว)">
-                  <option value="7/8">7/8 ด่วนพิเศษ (ดีเซลราง) กรุงเทพอภิวัฒน์–เชียงใหม่</option>
-                  <option value="9/10">9/10 ด่วนพิเศษอุตราวิถี กรุงเทพอภิวัฒน์–เชียงใหม่</option>
-                  <option value="13/14">13/14 ด่วนพิเศษ กรุงเทพอภิวัฒน์–เชียงใหม่</option>
-                  <option value="51/52">51/52 ด่วน กรุงเทพอภิวัฒน์–เชียงใหม่</option>
-                  <option value="107/108">107/108 เร็ว กรุงเทพอภิวัฒน์–เด่นชัย</option>
-                  <option value="109/102">109/102 เร็ว กรุงเทพอภิวัฒน์–เชียงใหม่</option>
-                  <option value="111/112">111/112 เร็ว กรุงเทพอภิวัฒน์–เด่นชัย</option>
-                </optgroup>
-                <optgroup label="ขบวนรถไม่สำรองที่นั่ง (ธรรมดา / ท้องถิ่น)">
-                  <option value="201/202">201/202 ธรรมดา กรุงเทพ (หัวลำโพง)–พิษณุโลก</option>
-                  <option value="401/402">401/402 ท้องถิ่น ลพบุรี–พิษณุโลก</option>
-                  <option value="403">403 ท้องถิ่น พิษณุโลก–ศิลาอาสน์</option>
-                  <option value="410">410 ท้องถิ่น ศิลาอาสน์–พิษณุโลก</option>
-                </optgroup>
-              </select>
+            <div class="field">
+              <label for="selectedTrain">ขบวนรถไฟ <span>ด่วนพิเศษ / ด่วน / เร็ว / ธรรมดา / ท้องถิ่น</span></label>
+              <select class="control" id="selectedTrain"></select>
             </div>
 
-            <!-- ส่วนเลือกสถานี (ซ่อนอัตโนมัติหากเป็นรถไม่สำรองที่นั่ง) -->
-            <div id="stationSelectionBox">
-              <div class="quick-strip">
-                <div class="strip-head"><span>📍 ปุ่มลัดสถานีหลัก</span><button class="text-btn" id="clearRouteBtn" type="button">ล้าง</button></div>
-                <div class="chips" id="quickStationChips">
-                  <button type="button" class="chip highlight" data-quick="พิษณุโลก">📌 พิษณุโลก</button>
-                  <button type="button" class="chip" data-quick="กรุงเทพอภิวัฒน์">กรุงเทพอภิวัฒน์</button>
-                  <button type="button" class="chip" data-quick="เชียงใหม่">เชียงใหม่</button>
+            <div class="quick-strip">
+              <div class="strip-head">
+                <span>📍 ปุ่มลัดสถานีหลัก (แตะเพื่อใส่สถานีต้นทาง / สถานีปลายทาง)</span>
+                <button class="text-btn" id="clearRouteBtn" type="button">ล้างสถานี</button>
+              </div>
+              <div class="chips" id="quickStationChips"></div>
+            </div>
+
+            <div class="swap-row">
+              <div class="field">
+                <label for="passOrigin">สถานีต้นทาง <span>ต้นทางผู้โดยสาร</span></label>
+                <div class="control-wrap">
+                  <input class="control station-input" id="passOrigin" readonly role="button" aria-haspopup="dialog" aria-controls="stationPickerDialog" autocomplete="off" placeholder="กดเลือกสถานีต้นทาง" />
+                  <button class="mini-btn" id="favOriginBtn" type="button" title="บันทึกสถานีโปรด">☆</button>
                 </div>
               </div>
-
-              <div class="swap-row">
-                <div class="field">
-                  <label for="passOrigin">สถานีต้นทาง</label>
-                  <div class="control-wrap">
-                    <input class="control station-input" id="passOrigin" readonly placeholder="แตะเพื่อเลือกสถานี" />
-                    <button class="mini-btn" id="favOriginBtn" type="button" title="บันทึกสถานีโปรด">☆</button>
-                  </div>
-                </div>
-                <button class="swap-btn" id="swapStationsBtn" type="button" title="สลับสถานี">⇄</button>
-                <div class="field">
-                  <label for="passDest">สถานีปลายทาง</label>
-                  <div class="control-wrap">
-                    <input class="control station-input" id="passDest" readonly placeholder="แตะเพื่อเลือกสถานี" />
-                    <button class="mini-btn" id="favDestBtn" type="button" title="บันทึกสถานีโปรด">☆</button>
-                  </div>
+              <button class="swap-btn" id="swapStationsBtn" type="button" title="สลับสถานีต้นทางและสถานีปลายทาง">⇄</button>
+              <div class="field">
+                <label for="passDest">สถานีปลายทาง <span>ปลายทางผู้โดยสาร</span></label>
+                <div class="control-wrap">
+                  <input class="control station-input" id="passDest" readonly role="button" aria-haspopup="dialog" aria-controls="stationPickerDialog" autocomplete="off" placeholder="กดเลือกสถานีปลายทาง" />
+                  <button class="mini-btn" id="favDestBtn" type="button" title="บันทึกสถานีโปรด">☆</button>
                 </div>
               </div>
             </div>
 
+            <div class="quick-strip" id="favoriteStrip">
+              <div class="strip-head">
+                <span>⭐ สถานีที่บันทึกไว้เพิ่มเติม</span>
+                <button class="text-btn" id="clearFavoritesBtn" type="button">ล้างทั้งหมด</button>
+              </div>
+              <div class="chips" id="favoriteChips"></div>
+            </div>
+
+            <div class="distance-summary hidden" id="distanceSummary">
+              <div class="metric"><span>ระยะขบวนรถ</span><strong id="totalKmText">-</strong></div>
+              <div class="metric"><span>ระยะเดินทาง</span><strong id="passengerKmText">-</strong></div>
+              <div class="metric"><span>สัดส่วนระยะทาง</span><strong id="percentageText">-</strong></div>
+            </div>
           </div>
         </div>
       </div>
@@ -276,16 +327,10 @@
           <p>ตรวจสอบวันแรกที่เปิดให้จองล่วงหน้า</p>
         </div>
       </div>
-      <div class="result-body" id="bookingResult">
-        <div class="empty">
-          <div class="empty-icon">🚆</div>
-          <h3>พร้อมคำนวณวันเปิดจอง</h3>
-          <p>เลือกวันที่และขบวนรถเพื่อดูผลลัพธ์</p>
-        </div>
-      </div>
+      <div class="result-body" id="bookingResult" role="status" aria-live="polite" aria-atomic="true"></div>
       <div class="card-body" style="padding-top:0">
         <div class="side-section">
-          <h3><span>🕘 ประวัติล่าสุด</span><button class="text-btn" id="clearBookingHistoryBtn" type="button">ล้าง</button></h3>
+          <h3><span>🕘 ประวัติที่เช็กล่าสุด</span><button class="text-btn" id="clearBookingHistoryBtn" type="button">ล้าง</button></h3>
           <div class="history-list" id="bookingHistory"></div>
         </div>
       </div>
@@ -294,207 +339,917 @@
 
   <footer class="footer">
     <strong>พัฒนาโดย : vtomet</strong><br>
-    สถานีรถไฟพิษณุโลก · สายด่วน 1690
+    สถานีรถไฟพิษณุโลก · ผลคำนวณใช้ประกอบการวางแผนเบื้องต้น โปรดตรวจสอบเงื่อนไขเพิ่มเติม สายด่วน 1690
   </footer>
-</div>
 
-<!-- Modal เลือกสถานี (ใช้ระบบ Dialog มาตรฐานของเบราว์เซอร์ มั่นใจว่ากดได้แน่นอน) -->
-<dialog id="stationPickerDialog">
-  <div class="dialog-head">
-    <div><h2 id="stationPickerTitle">เลือกสถานี</h2><p>แตะเลือกสถานีจากรายการด้านล่าง</p></div>
-    <button class="dialog-close" id="closeStationPickerBtn" type="button">×</button>
-  </div>
-  <div class="dialog-body">
-    <div style="margin-bottom: 10px;">
-      <input class="control" id="stationSearch" type="search" placeholder="พิมพ์ค้นหาชื่อสถานี..." autocomplete="off">
+  <!-- Reminder dialog -->
+  <dialog class="reminder-dialog" id="reminderDialog" aria-labelledby="reminderTitle">
+    <div class="dialog-head">
+      <div>
+        <h2 id="reminderTitle">ตั้งเตือนวันเปิดจอง</h2>
+        <p>เพิ่มนัดหมายแจ้งเตือนลงในปฏิทินมือถือ</p>
+      </div>
+      <button class="dialog-close" id="closeReminderBtn" type="button" aria-label="ปิดหน้าตั้งเตือน">×</button>
     </div>
-    <div class="station-options" id="stationOptions"></div>
-  </div>
-</dialog>
+    <div class="dialog-body">
+      <div class="reminder-route" id="reminderRoute"></div>
+      <div class="grid grid-2">
+        <div class="field">
+          <label for="reminderLead">เตือนเมื่อไหร่</label>
+          <select class="control" id="reminderLead">
+            <option value="0">วันเปิดจอง</option>
+            <option value="1">ก่อนเปิดจอง 1 วัน</option>
+            <option value="2">ก่อนเปิดจอง 2 วัน</option>
+            <option value="custom">เลือกวันเอง</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="reminderTime">เวลาที่ต้องการเตือน</label>
+          <input class="control" id="reminderTime" type="time" required value="08:30" />
+        </div>
+      </div>
+      <div class="field hidden" id="reminderCustomBox" style="margin-top:12px">
+        <label for="reminderDatePickerBtn">วันที่ต้องการเตือน</label>
+        <input id="reminderDate" type="hidden" />
+        <button class="control date-control is-empty" id="reminderDatePickerBtn" type="button" aria-haspopup="dialog" aria-controls="thaiDateDialog">
+          <span id="reminderDateLabel">กดเลือกวันที่</span>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-11 4h3"/></svg>
+        </button>
+      </div>
+      <div class="reminder-preview" id="reminderPreview" aria-live="polite"></div>
+      <div class="reminder-error hidden" id="reminderError" role="alert"></div>
+      <div class="reminder-buttons">
+        <button class="action-btn primary" type="button" id="googleCalendarBtn">📅 เพิ่มใน Google Calendar (แนะนำ)</button>
+        <button class="action-btn" type="button" id="copyReminderBtn">📋 คัดลอกข้อความแจ้งเตือนไว้ส่งในแชท</button>
+      </div>
+      <div class="reminder-handoff hidden" id="reminderHandoff" role="status" aria-live="polite"></div>
+    </div>
+  </dialog>
 
-<div class="toast" id="toast"></div>
+  <!-- Station picker dialog -->
+  <dialog class="picker-dialog" id="stationPickerDialog" aria-labelledby="stationPickerTitle">
+    <div class="dialog-head">
+      <div>
+        <h2 id="stationPickerTitle">เลือกสถานี</h2>
+        <p id="stationPickerContext">กรุณาเลือกสถานี</p>
+      </div>
+      <button class="dialog-close" id="closeStationPickerBtn" type="button" aria-label="ปิดรายการสถานี">×</button>
+    </div>
+    <div class="station-picker-body">
+      <div class="station-search">
+        <label class="sr-only" for="stationSearch">ค้นหาชื่อสถานี</label>
+        <input class="control" id="stationSearch" type="search" placeholder="พิมพ์ค้นหาชื่อสถานี..." autocomplete="off" inputmode="search">
+        <button class="search-clear hidden" id="clearStationSearchBtn" type="button" aria-label="ล้างคำค้นหา">×</button>
+      </div>
+      <p class="station-count" id="stationCount" aria-live="polite"></p>
+      <div class="station-options" id="stationOptions" role="group" aria-label="รายการสถานี"></div>
+    </div>
+  </dialog>
+
+  <!-- Thai date picker dialog -->
+  <dialog class="picker-dialog" id="thaiDateDialog" aria-labelledby="thaiDateTitle">
+    <div class="dialog-head">
+      <div>
+        <h2 id="thaiDateTitle">เลือกวันที่เดินทาง</h2>
+        <p>เดือนภาษาไทย · ปี พ.ศ.</p>
+      </div>
+      <button class="dialog-close" id="closeThaiDateBtn" type="button" aria-label="ปิดปฏิทิน">×</button>
+    </div>
+    <div class="date-picker-body">
+      <div class="calendar-nav">
+        <button class="icon-btn" id="thaiCalendarPrev" type="button" aria-label="เดือนก่อนหน้า">‹</button>
+        <div class="calendar-selects">
+          <select class="control" id="thaiCalendarMonth" aria-label="เดือน"></select>
+          <select class="control" id="thaiCalendarYear" aria-label="ปี พ.ศ."></select>
+        </div>
+        <button class="icon-btn" id="thaiCalendarNext" type="button" aria-label="เดือนถัดไป">›</button>
+      </div>
+      <div class="calendar-weekdays" aria-hidden="true">
+        <span>อา.</span><span>จ.</span><span>อ.</span><span>พ.</span><span>พฤ.</span><span>ศ.</span><span>ส.</span>
+      </div>
+      <div class="calendar-days" id="thaiCalendarDays" role="group" aria-label="เลือกวัน"></div>
+      <div class="calendar-key">กรอบสีคือวันนี้ · วันที่จางคือวันที่ผ่านมาแล้ว</div>
+      <div class="calendar-footer">
+        <span id="thaiCalendarSelection" aria-live="polite"></span>
+        <button class="action-btn" id="thaiCalendarToday" type="button">เลือกวันนี้</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 'use strict';
+/* ================= 1) ค่าคงที่ ================= */
+const APP_CONFIG = Object.freeze({
+  dticketUrl: 'https://dticket.railway.co.th/DTicketPublicWeb/home/Home?openExternalBrowser=1',
+  hotline: '1690',
+  historyLimit: 6
+});
+const BOOKING_RULES = Object.freeze({
+  standardOpenTime: '08:30',
+  nonReservedText: 'ซื้อตั๋วในวันเดินทาง ก่อนขบวนรถออกไม่เกิน 2 ชั่วโมง'
+});
+const QUICK_STATIONS = Object.freeze(['พิษณุโลก', 'กรุงเทพอภิวัฒน์', 'เชียงใหม่']);
+const REMINDER_ZONE = 'Asia/Bangkok';
+const DAY_MS = 86400000;
+const THAI_MONTHS = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const STATION_FIELD_LABELS = { passOrigin: 'สถานีต้นทาง', passDest: 'สถานีปลายทาง' };
+const LS_KEY = { history: 'plkNorthBookingHistory', fav: 'plkNorthFavoriteStations', theme: 'plkNorthTheme' };
 
-const APP_CONFIG = { dticketUrl: 'https://dticket.railway.co.th/DTicketPublicWeb/home/Home?openExternalBrowser=1' };
-const BOOKING_RULES = { standardOpenTime: '08:30', nonReservedText: 'ซื้อตั๋วในวันเดินทาง ก่อนขบวนรถออกไม่เกิน 2 ชั่วโมง' };
-const QUICK_STATIONS = ['พิษณุโลก', 'กรุงเทพอภิวัฒน์', 'เชียงใหม่'];
-
+/* ================= 2) ข้อมูลสถานี / ขบวนรถ ================= */
 const northStations = [
-  { name: "กรุงเทพ (หัวลำโพง)", km: 0 }, { name: "สามเสน", km: 5 }, { name: "ชุมทางบางซื่อ", km: 7 },
-  { name: "กรุงเทพอภิวัฒน์", km: 8 }, { name: "บางเขน", km: 13 }, { name: "หลักสี่", km: 18 },
-  { name: "ดอนเมือง", km: 22 }, { name: "หลักหก", km: 26 }, { name: "รังสิต", km: 30 },
-  { name: "คลองหนึ่ง", km: 34 }, { name: "เชียงราก", km: 37 }, { name: "มหาวิทยาลัยธรรมศาสตร์", km: 40 },
-  { name: "นวนคร", km: 44 }, { name: "เชียงรากน้อย", km: 46 }, { name: "คลองพุทรา", km: 51 },
-  { name: "บางปะอิน", km: 58 }, { name: "บ้านโพ", km: 62 }, { name: "อยุธยา", km: 71 },
-  { name: "บ้านม้า", km: 74 }, { name: "มาบพระจันทร์", km: 78 }, { name: "พระแก้ว", km: 85 },
-  { name: "ชุมทางบ้านภาชี", km: 90 }, { name: "หนองวิวัฒน์", km: 96 }, { name: "ท่าเรือ", km: 103 },
-  { name: "บ้านหมอ", km: 109 }, { name: "หนองโดน", km: 116 }, { name: "บ้านกลับ", km: 122 },
-  { name: "บ้านป่าหวาย", km: 128 }, { name: "ลพบุรี", km: 133 }, { name: "ลพบุรี 2 (ท่าวุ้ง)", km: 134 },
-  { name: "โคกกะเทียม", km: 140 }, { name: "หนองเต่า", km: 150 }, { name: "หนองทรายขาว", km: 154 },
-  { name: "บ้านหมี่", km: 161 }, { name: "ห้วยแก้ว", km: 166 }, { name: "จันเสน", km: 174 },
-  { name: "ช่องแค", km: 180 }, { name: "ทะเลหว้า", km: 188 }, { name: "บ้านตาคลี", km: 193 },
-  { name: "หนองโพ", km: 211 }, { name: "หัวงิ้ว", km: 217 }, { name: "เนินมะกอก", km: 224 },
-  { name: "เขาทอง", km: 235 }, { name: "นครสวรรค์", km: 246 }, { name: "ปากน้ำโพ", km: 250 },
-  { name: "ทับกฤช", km: 263 }, { name: "คลองปลากด", km: 271 }, { name: "ชุมแสง", km: 280 },
-  { name: "วังกระพี้", km: 290 }, { name: "บางมูลนาก", km: 297 }, { name: "หอไกร", km: 303 },
-  { name: "ดงตะขบ", km: 309 }, { name: "ตะพานหิน", km: 319 }, { name: "ห้วยเกตุ", km: 324 },
-  { name: "หัวดง", km: 332 }, { name: "วังกรด", km: 339 }, { name: "พิจิตร", km: 347 },
-  { name: "บางกระทุ่ม", km: 362 }, { name: "แม่เทียบ", km: 370 }, { name: "บ้านใหม่", km: 375 },
-  { name: "บึงพระ", km: 381 }, { name: "พิษณุโลก", km: 389 }, { name: "บ้านเต็งหนาม", km: 393 },
-  { name: "บ้านตูม", km: 400 }, { name: "พรหมพิราม", km: 417 }, { name: "หนองตม", km: 423 },
-  { name: "บ้านโคน", km: 432 }, { name: "พิชัย", km: 447 }, { name: "ชุมทางบ้านดารา", km: 458 },
-  { name: "ท่าสัก", km: 461 }, { name: "ตรอน", km: 469 }, { name: "อุตรดิตถ์", km: 485 },
-  { name: "ศิลาอาสน์", km: 488 }, { name: "บ้านด่าน", km: 491 }, { name: "ปางต้นผึ้ง", km: 497 },
-  { name: "เขาพลึง", km: 517 }, { name: "ห้วยไร่", km: 528 }, { name: "เด่นชัย", km: 534 },
-  { name: "ปากปาน", km: 538 }, { name: "แก่งหลวง", km: 546 }, { name: "บ้านปิน", km: 563 },
-  { name: "ผาคัน", km: 578 }, { name: "ปางป๋วย", km: 591 }, { name: "แม่จาง", km: 600 },
-  { name: "แม่เมาะ", km: 609 }, { name: "ศาลาผาลาด", km: 622 }, { name: "แม่ทะ", km: 628 },
-  { name: "หนองวัวเฒ่า", km: 637 }, { name: "นครลำปาง", km: 642 }, { name: "บ่อแฮ้ว", km: 647 },
-  { name: "ห้างฉัตร", km: 658 }, { name: "ปางม่วง", km: 663 }, { name: "แม่ตานน้อย", km: 671 },
-  { name: "ขุนตาน", km: 683 }, { name: "ทาชมภู", km: 688 }, { name: "แม่ทา", km: 692 },
-  { name: "ศาลาแม่ทา", km: 700 }, { name: "หนองหล่ม", km: 713 }, { name: "ลำพูน", km: 729 },
-  { name: "ป่าแดด", km: 736 }, { name: "สารภี", km: 743 }, { name: "เชียงใหม่", km: 751 }
-];
+  ['กรุงเทพ (หัวลำโพง)',0],['สามเสน',5],['ชุมทางบางซื่อ',7],['กรุงเทพอภิวัฒน์',8],['บางเขน',13],['หลักสี่',18],['ดอนเมือง',22],['หลักหก',26],
+  ['รังสิต',30],['คลองหนึ่ง',34],['เชียงราก',37],['มหาวิทยาลัยธรรมศาสตร์',40],['นวนคร',44],['เชียงรากน้อย',46],['คลองพุทรา',51],['บางปะอิน',58],
+  ['บ้านโพ',62],['อยุธยา',71],['บ้านม้า',74],['มาบพระจันทร์',78],['พระแก้ว',85],['ชุมทางบ้านภาชี',90],['หนองวิวัฒน์',96],['ท่าเรือ',103],
+  ['บ้านหมอ',109],['หนองโดน',116],['บ้านกลับ',122],['บ้านป่าหวาย',128],['ลพบุรี',133],['ลพบุรี 2 (ท่าวุ้ง)',134],['โคกกะเทียม',140],['หนองเต่า',150],
+  ['หนองทรายขาว',154],['บ้านหมี่',161],['ห้วยแก้ว',166],['จันเสน',174],['ช่องแค',180],['ทะเลหว้า',188],['บ้านตาคลี',193],['หนองโพ',211],
+  ['หัวงิ้ว',217],['เนินมะกอก',224],['เขาทอง',235],['นครสวรรค์',246],['ปากน้ำโพ',250],['ทับกฤช',263],['คลองปลากด',271],['ชุมแสง',280],
+  ['วังกระพี้',290],['บางมูลนาก',297],['หอไกร',303],['ดงตะขบ',309],['ตะพานหิน',319],['ห้วยเกตุ',324],['หัวดง',332],['วังกรด',339],
+  ['พิจิตร',347],['บางกระทุ่ม',362],['แม่เทียบ',370],['บ้านใหม่',375],['บึงพระ',381],['พิษณุโลก',389],['บ้านเต็งหนาม',393],['บ้านตูม',400],
+  ['พรหมพิราม',417],['หนองตม',423],['บ้านโคน',432],['พิชัย',447],['ชุมทางบ้านดารา',458],['ท่าสัก',461],['ตรอน',469],['อุตรดิตถ์',485],
+  ['ศิลาอาสน์',488],['บ้านด่าน',491],['ปางต้นผึ้ง',497],['เขาพลึง',517],['ห้วยไร่',528],['เด่นชัย',534],['ปากปาน',538],['แก่งหลวง',546],
+  ['บ้านปิน',563],['ผาคัน',578],['ปางป๋วย',591],['แม่จาง',600],['แม่เมาะ',609],['ศาลาผาลาด',622],['แม่ทะ',628],['หนองวัวเฒ่า',637],
+  ['นครลำปาง',642],['บ่อแฮ้ว',647],['ห้างฉัตร',658],['ปางม่วง',663],['แม่ตานน้อย',671],['ขุนตาน',683],['ทาชมภู',688],['แม่ทา',692],
+  ['ศาลาแม่ทา',700],['หนองหล่ม',713],['ลำพูน',729],['ป่าแดด',736],['สารภี',743],['เชียงใหม่',751]
+].map(([name, km]) => ({ name, km }));
 
 const northSchedules = [
-  { id: "7/8", name: "7/8 ด่วนพิเศษ (ดีเซลราง) กรุงเทพอภิวัฒน์–เชียงใหม่", origin: "กรุงเทพอภิวัฒน์", dest: "เชียงใหม่", stops: ["กรุงเทพอภิวัฒน์", "ดอนเมือง", "รังสิต", "อยุธยา", "ลพบุรี 2 (ท่าวุ้ง)", "นครสวรรค์", "ปากน้ำโพ", "ตะพานหิน", "พิจิตร", "พิษณุโลก", "อุตรดิตถ์", "ศิลาอาสน์", "เด่นชัย", "บ้านปิน", "นครลำปาง", "ขุนตาน", "ลำพูน", "เชียงใหม่"] },
-  { id: "9/10", name: "9/10 ด่วนพิเศษอุตราวิถี กรุงเทพอภิวัฒน์–เชียงใหม่", origin: "กรุงเทพอภิวัฒน์", dest: "เชียงใหม่", stops: ["กรุงเทพอภิวัฒน์", "ดอนเมือง", "รังสิต", "อยุธยา", "ลพบุรี 2 (ท่าวุ้ง)", "นครสวรรค์", "พิษณุโลก", "ศิลาอาสน์", "เด่นชัย", "นครลำปาง", "ขุนตาน", "ลำพูน", "เชียงใหม่"] },
-  { id: "13/14", name: "13/14 ด่วนพิเศษ กรุงเทพอภิวัฒน์–เชียงใหม่", origin: "กรุงเทพอภิวัฒน์", dest: "เชียงใหม่", stops: ["กรุงเทพอภิวัฒน์", "ดอนเมือง", "รังสิต", "อยุธยา", "ลพบุรี 2 (ท่าวุ้ง)", "นครสวรรค์", "พิจิตร", "พิษณุโลก", "อุตรดิตถ์", "ศิลาอาสน์", "เด่นชัย", "บ้านปิน", "นครลำปาง", "ขุนตาน", "ลำพูน", "เชียงใหม่"] },
-  { id: "51/52", name: "51/52 ด่วน กรุงเทพอภิวัฒน์–เชียงใหม่", origin: "กรุงเทพอภิวัฒน์", dest: "เชียงใหม่", stops: ["กรุงเทพอภิวัฒน์", "ดอนเมือง", "รังสิต", "อยุธยา", "ลพบุรี 2 (ท่าวุ้ง)", "นครสวรรค์", "ตะพานหิน", "พิจิตร", "พิษณุโลก", "หนองตม", "พิชัย", "อุตรดิตถ์", "ศิลาอาสน์", "เด่นชัย", "บ้านปิน", "แม่เมาะ", "นครลำปาง", "ขุนตาน", "ลำพูน", "เชียงใหม่"] },
-  { id: "107/108", name: "107/108 เร็ว กรุงเทพอภิวัฒน์–เด่นชัย", origin: "กรุงเทพอภิวัฒน์", dest: "เด่นชัย", stops: ["กรุงเทพอภิวัฒน์", "ดอนเมือง", "รังสิต", "อยุธยา", "ชุมทางบ้านภาชี", "ลพบุรี 2 (ท่าวุ้ง)", "บ้านตาคลี", "นครสวรรค์", "ปากน้ำโพ", "ชุมแสง", "บางมูลนาก", "ตะพานหิน", "หัวดง", "พิจิตร", "บางกระทุ่ม", "บ้านใหม่", "พิษณุโลก", "พรหมพิราม", "หนองตม", "บ้านโคน", "พิชัย", "ชุมทางบ้านดารา", "ท่าสัก", "ตรอน", "อุตรดิตถ์", "ศิลาอาสน์", "เด่นชัย"] },
-  { id: "109/102", name: "109/102 เร็ว กรุงเทพอภิวัฒน์–เชียงใหม่", origin: "กรุงเทพอภิวัฒน์", dest: "เชียงใหม่", stops: ["กรุงเทพอภิวัฒน์", "ดอนเมือง", "รังสิต", "อยุธยา", "ชุมทางบ้านภาชี", "ท่าเรือ", "บ้านหมอ", "ลพบุรี 2 (ท่าวุ้ง)", "บ้านหมี่", "จันเสน", "ช่องแค", "บ้านตาคลี", "หนองโพ", "นครสวรรค์", "ปากน้ำโพ", "ชุมแสง", "บางมูลนาก", "ตะพานหิน", "พิจิตร", "บางกระทุ่ม", "พิษณุโลก", "พรหมพิราม", "หนองตม", "พิชัย", "ชุมทางบ้านดารา", "ท่าสัก", "ตรอน", "อุตรดิตถ์", "ศิลาอาสน์", "เด่นชัย", "บ้านปิน", "แม่เมาะ", "นครลำปาง", "ขุนตาน", "ลำพูน", "เชียงใหม่"] },
-  { id: "111/112", name: "111/112 เร็ว กรุงเทพอภิวัฒน์–เด่นชัย", origin: "กรุงเทพอภิวัฒน์", dest: "เด่นชัย", stops: ["กรุงเทพอภิวัฒน์", "ดอนเมือง", "รังสิต", "เชียงราก", "บางปะอิน", "อยุธยา", "มาบพระจันทร์", "พระแก้ว", "ชุมทางบ้านภาชี", "หนองวิวัฒน์", "ท่าเรือ", "บ้านหมอ", "หนองโดน", "ลพบุรี 2 (ท่าวุ้ง)", "บ้านหมี่", "จันเสน", "ช่องแค", "บ้านตาคลี", "หนองโพ", "นครสวรรค์", "ทับกฤช", "ปากน้ำโพ", "ชุมแสง", "บางมูลนาก", "ตะพานหิน", "หัวดง", "วังกรด", "พิจิตร", "บางกระทุ่ม", "พิษณุโลก", "พรหมพิราม", "หนองตม", "พิชัย", "ชุมทางบ้านดารา", "ท่าสัก", "ตรอน", "อุตรดิตถ์", "ศิลาอาสน์", "บ้านด่าน", "ปางต้นผึ้ง", "ห้วยไร่", "เด่นชัย"] },
-  { id: "201/202", name: "201/202 ธรรมดา กรุงเทพ (หัวลำโพง)–พิษณุโลก", origin: "กรุงเทพ (หัวลำโพง)", dest: "พิษณุโลก", stops: ["กรุงเทพ (หัวลำโพง)", "สามเสน", "ชุมทางบางซื่อ", "กรุงเทพอภิวัฒน์", "บางเขน", "หลักสี่", "ดอนเมือง", "รังสิต", "เชียงราก", "บางปะอิน", "อยุธยา", "ชุมทางบ้านภาชี", "ท่าเรือ", "ลพบุรี", "บ้านหมี่", "ช่องแค", "บ้านตาคลี", "นครสวรรค์", "ปากน้ำโพ", "ชุมแสง", "ตะพานหิน", "พิจิตร", "บางกระทุ่ม", "พิษณุโลก"] },
-  { id: "401/402", name: "401/402 ท้องถิ่น ลพบุรี–พิษณุโลก", origin: "ลพบุรี", dest: "พิษณุโลก", stops: ["ลพบุรี", "บ้านป่าหวาย", "บ้านกลับ", "หนองโดน", "บ้านหมอ", "ท่าเรือ", "หนองวิวัฒน์", "ชุมทางบ้านภาชี", "พระแก้ว", "มาบพระจันทร์", "บ้านม้า", "อยุธยา", "บ้านโพ", "บางปะอิน", "คลองพุทรา", "เชียงรากน้อย", "นวนคร", "มหาวิทยาลัยธรรมศาสตร์", "เชียงราก", "คลองหนึ่ง", "รังสิต", "หลักหก", "ดอนเมือง", "หลักสี่", "บางเขน", "กรุงเทพอภิวัฒน์", "ชุมทางบางซื่อ", "สามเสน", "กรุงเทพ (หัวลำโพง)", "ชุมทางบางซื่อ", "กรุงเทพอภิวัฒน์", "บางเขน", "หลักสี่", "ดอนเมือง", "รังสิต", "เชียงราก", "บางปะอิน", "อยุธยา", "ชุมทางบ้านภาชี", "ท่าเรือ", "ลพบุรี", "บ้านหมี่", "ช่องแค", "บ้านตาคลี", "นครสวรรค์", "ปากน้ำโพ", "ชุมแสง", "ตะพานหิน", "พิจิตร", "บางกระทุ่ม", "พิษณุโลก"] },
-  { id: "403", name: "403 ท้องถิ่น พิษณุโลก–ศิลาอาสน์", origin: "พิษณุโลก", dest: "ศิลาอาสน์", stops: ["พิษณุโลก", "บ้านเต็งหนาม", "บ้านตูม", "พรหมพิราม", "หนองตม", "บ้านโคน", "พิชัย", "ชุมทางบ้านดารา", "ท่าสัก", "ตรอน", "อุตรดิตถ์", "ศิลาอาสน์"] },
-  { id: "410", name: "410 ท้องถิ่น ศิลาอาสน์–พิษณุโลก", origin: "ศิลาอาสน์", dest: "พิษณุโลก", stops: ["ศิลาอาสน์", "อุตรดิตถ์", "ตรอน", "ท่าสัก", "ชุมทางบ้านดารา", "พิชัย", "บ้านโคน", "หนองตม", "พรหมพิราม", "บ้านตูม", "บ้านเต็งหนาม", "พิษณุโลก"] }
+  { id: '7/8', name: '7/8 ด่วนพิเศษ (ดีเซลราง) กรุงเทพอภิวัฒน์–เชียงใหม่', origin: 'กรุงเทพอภิวัฒน์', dest: 'เชียงใหม่',
+    stops: ['กรุงเทพอภิวัฒน์','ดอนเมือง','รังสิต','อยุธยา','ลพบุรี 2 (ท่าวุ้ง)','นครสวรรค์','ปากน้ำโพ','ตะพานหิน','พิจิตร','พิษณุโลก','อุตรดิตถ์','ศิลาอาสน์','เด่นชัย','บ้านปิน','นครลำปาง','ขุนตาน','ลำพูน','เชียงใหม่'] },
+  { id: '9/10', name: '9/10 ด่วนพิเศษอุตราวิถี กรุงเทพอภิวัฒน์–เชียงใหม่', origin: 'กรุงเทพอภิวัฒน์', dest: 'เชียงใหม่',
+    stops: ['กรุงเทพอภิวัฒน์','ดอนเมือง','รังสิต','อยุธยา','ลพบุรี 2 (ท่าวุ้ง)','นครสวรรค์','พิษณุโลก','ศิลาอาสน์','เด่นชัย','นครลำปาง','ขุนตาน','ลำพูน','เชียงใหม่'] },
+  { id: '13/14', name: '13/14 ด่วนพิเศษ กรุงเทพอภิวัฒน์–เชียงใหม่', origin: 'กรุงเทพอภิวัฒน์', dest: 'เชียงใหม่',
+    stops: ['กรุงเทพอภิวัฒน์','ดอนเมือง','รังสิต','อยุธยา','ลพบุรี 2 (ท่าวุ้ง)','นครสวรรค์','พิจิตร','พิษณุโลก','อุตรดิตถ์','ศิลาอาสน์','เด่นชัย','บ้านปิน','นครลำปาง','ขุนตาน','ลำพูน','เชียงใหม่'] },
+  { id: '51/52', name: '51/52 ด่วน กรุงเทพอภิวัฒน์–เชียงใหม่', origin: 'กรุงเทพอภิวัฒน์', dest: 'เชียงใหม่',
+    stops: ['กรุงเทพอภิวัฒน์','ดอนเมือง','รังสิต','อยุธยา','ลพบุรี 2 (ท่าวุ้ง)','นครสวรรค์','ตะพานหิน','พิจิตร','พิษณุโลก','หนองตม','พิชัย','อุตรดิตถ์','ศิลาอาสน์','เด่นชัย','บ้านปิน','แม่เมาะ','นครลำปาง','ขุนตาน','ลำพูน','เชียงใหม่'] },
+  { id: '107/108', name: '107/108 เร็ว กรุงเทพอภิวัฒน์–เด่นชัย', origin: 'กรุงเทพอภิวัฒน์', dest: 'เด่นชัย',
+    stops: ['กรุงเทพอภิวัฒน์','ดอนเมือง','รังสิต','อยุธยา','ชุมทางบ้านภาชี','ลพบุรี 2 (ท่าวุ้ง)','บ้านตาคลี','นครสวรรค์','ปากน้ำโพ','ชุมแสง','บางมูลนาก','ตะพานหิน','หัวดง','พิจิตร','บางกระทุ่ม','บ้านใหม่','พิษณุโลก','พรหมพิราม','หนองตม','บ้านโคน','พิชัย','ชุมทางบ้านดารา','ท่าสัก','ตรอน','อุตรดิตถ์','ศิลาอาสน์','เด่นชัย'] },
+  { id: '109/102', name: '109/102 เร็ว กรุงเทพอภิวัฒน์–เชียงใหม่', origin: 'กรุงเทพอภิวัฒน์', dest: 'เชียงใหม่',
+    stops: ['กรุงเทพอภิวัฒน์','ดอนเมือง','รังสิต','อยุธยา','ชุมทางบ้านภาชี','ท่าเรือ','บ้านหมอ','ลพบุรี 2 (ท่าวุ้ง)','บ้านหมี่','จันเสน','ช่องแค','บ้านตาคลี','หนองโพ','นครสวรรค์','ปากน้ำโพ','ชุมแสง','บางมูลนาก','ตะพานหิน','พิจิตร','บางกระทุ่ม','พิษณุโลก','พรหมพิราม','หนองตม','พิชัย','ชุมทางบ้านดารา','ท่าสัก','ตรอน','อุตรดิตถ์','ศิลาอาสน์','เด่นชัย','บ้านปิน','แม่เมาะ','นครลำปาง','ขุนตาน','ลำพูน','เชียงใหม่'] },
+  { id: '111/112', name: '111/112 เร็ว กรุงเทพอภิวัฒน์–เด่นชัย', origin: 'กรุงเทพอภิวัฒน์', dest: 'เด่นชัย',
+    stops: ['กรุงเทพอภิวัฒน์','ดอนเมือง','รังสิต','เชียงราก','บางปะอิน','อยุธยา','มาบพระจันทร์','พระแก้ว','ชุมทางบ้านภาชี','หนองวิวัฒน์','ท่าเรือ','บ้านหมอ','หนองโดน','ลพบุรี 2 (ท่าวุ้ง)','บ้านหมี่','จันเสน','ช่องแค','บ้านตาคลี','หนองโพ','นครสวรรค์','ทับกฤช','ปากน้ำโพ','ชุมแสง','บางมูลนาก','ตะพานหิน','หัวดง','วังกรด','พิจิตร','บางกระทุ่ม','พิษณุโลก','พรหมพิราม','หนองตม','พิชัย','ชุมทางบ้านดารา','ท่าสัก','ตรอน','อุตรดิตถ์','ศิลาอาสน์','บ้านด่าน','ปางต้นผึ้ง','ห้วยไร่','เด่นชัย'] },
+  { id: '201/202', name: '201/202 ธรรมดา กรุงเทพ (หัวลำโพง)–พิษณุโลก', origin: 'กรุงเทพ (หัวลำโพง)', dest: 'พิษณุโลก' },
+  { id: '207/208', name: '207/208 ธรรมดา กรุงเทพ (หัวลำโพง)–นครสวรรค์', origin: 'กรุงเทพ (หัวลำโพง)', dest: 'นครสวรรค์' },
+  { id: '209/210', name: '209/210 ธรรมดา กรุงเทพ (หัวลำโพง)–บ้านตาคลี', origin: 'กรุงเทพ (หัวลำโพง)', dest: 'บ้านตาคลี' },
+  { id: '401/402', name: '401/402 ท้องถิ่น ลพบุรี–พิษณุโลก', origin: 'ลพบุรี', dest: 'พิษณุโลก' },
+  { id: '403/404', name: '403/404 ท้องถิ่น พิษณุโลก–ศิลาอาสน์', origin: 'พิษณุโลก', dest: 'ศิลาอาสน์' },
+  { id: '407/408', name: '407/408 ท้องถิ่น นครสวรรค์–เชียงใหม่', origin: 'นครสวรรค์', dest: 'เชียงใหม่' }
 ];
 
-const $ = (id) => document.getElementById(id);
-const DAY_MS = 86400000;
+/* ================= 3) ยูทิลิตี ================= */
+const $ = id => document.getElementById(id);
+const ESC_MAP = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+const esc = v => String(v ?? '').replace(/[&<>"']/g, ch => ESC_MAP[ch]);
+const NUM_INT = new Intl.NumberFormat('th-TH');
+const NUM_DEC = new Intl.NumberFormat('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const money = v => { const n = Number(v); return Number.isFinite(n) ? (Number.isInteger(n) ? NUM_INT : NUM_DEC).format(n) : '0'; };
+const pad2 = n => String(n).padStart(2, '0');
 
-function showToast(msg) { const t = $('toast'); if (!t) return; t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200); }
-function getTrain(id) { return northSchedules.find(t => t.id === id) || null; }
-function getReservationType(train) { return /(ธรรมดา|ชานเมือง|ท้องถิ่น|ที่นั่งอิสระ)/i.test(`${train?.id || ''} ${train?.name || ''}`) ? 'nonreserved' : 'reserved'; }
+const STORAGE = {
+  get(key, fallback) { try { const raw = localStorage.getItem(key); return raw === null ? fallback : JSON.parse(raw); } catch { return fallback; } },
+  set(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch {} }
+};
+
+/* ================= 4) ดัชนีข้อมูล (สร้างครั้งเดียว ค้นหา O(1)) ================= */
+const STATION_KM = new Map(northStations.map(s => [s.name, Number(s.km)]));
+const STATION_NAMES = northStations.map(s => s.name);
+const TRAIN_BY_ID = new Map(northSchedules.map(t => [t.id, t]));
+const NONRESERVED_RE = /(ธรรมดา|ชานเมือง|ท้องถิ่น|ที่นั่งอิสระ)/;
+const activeCache = new Map();
+
+const getKm = name => STATION_KM.get(name) ?? null;
+const exactStation = name => STATION_KM.has(name);
+const getTrain = id => TRAIN_BY_ID.get(id) || null;
+
+function getReservationType(train) {
+  if (!train) return '';
+  return (train._type ??= NONRESERVED_RE.test(`${train.id} ${train.name}`) ? 'nonreserved' : 'reserved');
+}
+
 function activeStationNames(train) {
-  const all = northStations.map(s => s.name);
-  if (!train) return all;
-  if (Array.isArray(train.stops) && train.stops.length) return train.stops.filter(n => all.includes(n));
-  return all;
+  if (!train) return STATION_NAMES;
+  let list = activeCache.get(train.id);
+  if (list) return list;
+  if (train.stops?.length) {
+    list = train.stops.filter(exactStation);
+  } else {
+    const a = getKm(train.origin), b = getKm(train.dest);
+    if (a === null || b === null) list = [];
+    else {
+      const lo = Math.min(a, b), hi = Math.max(a, b);
+      list = STATION_NAMES.filter(n => { const km = STATION_KM.get(n); return km >= lo && km <= hi; });
+    }
+  }
+  activeCache.set(train.id, list);
+  return list; // ใช้ร่วมกันผ่าน cache ห้าม mutate
 }
 
-const state = { lastField: 'passOrigin', lastResult: null, history: [] };
+/* ================= 5) วันที่ (formatter สร้างครั้งเดียว) ================= */
+const BKK_DAY_FMT = new Intl.DateTimeFormat('en-CA', { timeZone: REMINDER_ZONE, year: 'numeric', month: '2-digit', day: '2-digit' });
+const BKK_DT_FMT = new Intl.DateTimeFormat('en-CA', { timeZone: REMINDER_ZONE, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+const TH_DATE_FMT = new Intl.DateTimeFormat('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+const TH_DATE_BKK_FMT = new Intl.DateTimeFormat('th-TH', { timeZone: REMINDER_ZONE, year: 'numeric', month: 'long', day: 'numeric' });
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
+const fmtParts = (fmt, d) => Object.fromEntries(fmt.formatToParts(d).map(p => [p.type, p.value]));
 
-function syncUI() {
-  const train = getTrain($('selectedTrain').value);
-  const isNon = getReservationType(train) === 'nonreserved';
-  $('stationSelectionBox').classList.toggle('hidden', isNon);
-  if (isNon) { $('passOrigin').value = '';$('passDest').value = ''; }
+const bangkokToday = () => { const p = fmtParts(BKK_DAY_FMT, new Date()); return `${p.year}-${p.month}-${p.day}`; };
+const formatDate = date => TH_DATE_FMT.format(date);
+const bangkokDateLabel = iso => TH_DATE_BKK_FMT.format(new Date(iso + 'T12:00:00+07:00'));
+const toLocalISO = (d = new Date()) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+const calendarStamp = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
+
+function parseLocalDate(value) {
+  if (!DATE_RE.test(value || '')) return null;
+  const [y, m, d] = value.split('-').map(Number);
+  const date = new Date(y, m - 1, d);
+  return date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d ? date : null;
+}
+function localDateOnly(date) {
+  return date ? new Date(date.getFullYear(), date.getMonth(), date.getDate()) : parseLocalDate(bangkokToday());
+}
+const daysUntil = date => Math.round((localDateOnly(date) - localDateOnly()) / DAY_MS);
+function shiftISODate(iso, days) {
+  if (!parseLocalDate(iso)) return null;
+  const d = new Date(iso + 'T12:00:00Z');
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+function bangkokInstant(iso, time) {
+  if (!parseLocalDate(iso) || !TIME_RE.test(time || '')) return null;
+  return new Date(`${iso}T${time}:00+07:00`);
+}
+function thaiDateText(iso) {
+  const d = parseLocalDate(iso);
+  return d ? `${d.getDate()} ${THAI_MONTHS[d.getMonth()]} ${d.getFullYear() + 543}` : '';
 }
 
-function calculateBooking() {
-  syncUI();
-  const dateVal = $('travelDate').value;
-  const train = getTrain($('selectedTrain').value);
-  const resBox = $('bookingResult');
+/* ================= 6) State & Elements ================= */
+const state = {
+  lastStationField: 'passOrigin',
+  lastBookingResult: null,
+  bookingHistory: STORAGE.get(LS_KEY.history, []),
+  favorites: STORAGE.get(LS_KEY.fav, [])
+};
+const el = {
+  travelDate: $('travelDate'), selectedTrain: $('selectedTrain'),
+  passOrigin: $('passOrigin'), passDest: $('passDest'),
+  distanceSummary: $('distanceSummary'), totalKmText: $('totalKmText'),
+  passengerKmText: $('passengerKmText'), percentageText: $('percentageText'),
+  bookingResult: $('bookingResult'), bookingHistory: $('bookingHistory'),
+  quickStationChips: $('quickStationChips'), favoriteChips: $('favoriteChips'),
+  favOriginBtn: $('favOriginBtn'), favDestBtn: $('favDestBtn'),
+  stationSearch: $('stationSearch'), stationOptions: $('stationOptions'),
+  toast: $('toast')
+};
+const thaiPicker = { field: null, year: 0, month: 0 };
+let stationPickerField = null;
+let reminderResult = null;
 
-  if (!dateVal) { resBox.innerHTML = '<div class="empty"><h3>กรุณาเลือกวันที่เดินทาง</h3></div>'; return; }
-  if (!train) { resBox.innerHTML = '<div class="empty"><h3>กรุณาเลือกขบวนรถไฟ</h3></div>'; return; }
+const pickerStationNames = () => activeStationNames(getTrain(el.selectedTrain.value));
 
-  const travelDate = new Date(dateVal + 'T00:00:00');
-  const today = new Date(); today.setHours(0,0,0,0);
-  if (travelDate < today) { resBox.innerHTML = '<div class="empty"><h3>วันที่เดินทางผ่านไปแล้ว</h3></div>'; return; }
+/* ================= 7) คำนวณวันจอง ================= */
+function getBookingInputs() {
+  const train = getTrain(el.selectedTrain.value);
+  const origin = el.passOrigin.value.trim(), destination = el.passDest.value.trim();
+  const t1 = getKm(train?.origin), t2 = getKm(train?.dest), p1 = getKm(origin), p2 = getKm(destination);
+  const fin = Number.isFinite;
+  let total = NaN, passenger = NaN, routeValid = true;
+  if (fin(t1) && fin(t2)) total = Math.abs(t2 - t1);
+  if (fin(p1) && fin(p2)) passenger = Math.abs(p2 - p1);
+  if (fin(t1) && fin(t2) && fin(p1) && fin(p2)) {
+    const lo = Math.min(t1, t2), hi = Math.max(t1, t2);
+    routeValid = p1 >= lo && p1 <= hi && p2 >= lo && p2 <= hi;
+  }
+  return { travelDate: parseLocalDate(el.travelDate.value), train, reservationType: getReservationType(train), total, passenger, routeValid, origin, destination };
+}
+const getBookingSnapshot = () => ({ date: el.travelDate.value, train: el.selectedTrain.value, origin: el.passOrigin.value, dest: el.passDest.value });
 
-  if (getReservationType(train) === 'nonreserved') {
-    resBox.innerHTML = `
-      <div class="result-card">
-        <div class="result-top"><div><div class="kicker">${train.name}</div><h3>ไม่ต้องจองล่วงหน้า</h3></div><span class="status info">🎫 ซื้อวันเดินทาง</span></div>
-        <div class="result-main">
-          <div class="big-result"><strong>ซื้อในวันเดินทาง</strong><small>ก่อนรถออกไม่เกิน 2 ชั่วโมง</small></div>
-          <div class="date-panel"><div class="label">วันที่เดินทาง</div><div class="date">${travelDate.toLocaleDateString('th-TH', {dateStyle:'long'})}</div></div>
-          <div class="note warning">ขบวนรถธรรมดา/ท้องถิ่น ไม่ต้องจองล่วงหน้า ติดต่อซื้อตั๋วที่สถานีในวันเดินทางได้เลย</div>
-          <div class="reminder-entry"><div><b>ติดต่อสอบถาม</b><span>สถานีรถไฟพิษณุโลก · โทร 1690</span></div><a class="action-btn primary" href="${APP_CONFIG.dticketUrl}" target="_blank">เว็บไซต์ D-Ticket</a></div>
-        </div>
-      </div>`;
+function bookingMessage(icon, title, html) {
+  state.lastBookingResult = null;
+  el.distanceSummary.classList.add('hidden');
+  el.bookingResult.innerHTML = `<div class="empty"><div class="empty-icon">${icon}</div><h3>${title}</h3><p>${html}</p></div>`;
+}
+const bookingEmpty = (msg = 'เลือกวันที่เดินทาง ขบวนรถ และสถานีต้นทาง–ปลายทางให้ครบ') => bookingMessage('🚆', 'พร้อมคำนวณวันเปิดจอง', `${esc(msg)}<br>ผลลัพธ์จะแสดงอัตโนมัติทันที`);
+const bookingError = msg => bookingMessage('⚠️', 'ข้อมูลยังไม่ครบถ้วน', esc(msg));
+
+function updateDistanceSummary(total, passenger) {
+  if (!(Number.isFinite(total) && Number.isFinite(passenger) && total > 0 && passenger > 0)) {
+    el.distanceSummary.classList.add('hidden');
     return;
   }
+  el.distanceSummary.classList.remove('hidden');
+  el.totalKmText.textContent = `${money(total)} กม.`;
+  el.passengerKmText.textContent = `${money(passenger)} กม.`;
+  el.percentageText.textContent = `${(passenger / total * 100).toFixed(2)}%`;
+}
 
-  const orig = $('passOrigin').value, dest =$('passDest').value;
-  if (!orig || !dest) { resBox.innerHTML = '<div class="empty"><h3>กรุณาเลือกสถานีต้นทางและปลายทาง</h3></div>'; return; }
-  if (orig === dest) { resBox.innerHTML = '<div class="empty"><h3>สถานีต้นทางและปลายทางต้องไม่เหมือนกัน</h3></div>'; return; }
+const routeMarkup = d => `<div class="route-line"><div class="station">${esc(d.origin)}</div><div class="arrow">➜</div><div class="station">${esc(d.destination)}</div></div>`;
 
-  const km1 = northStations.find(s => s.name === orig)?.km;
-  const km2 = northStations.find(s => s.name === dest)?.km;
-  const tStart = northStations.find(s => s.name === train.origin)?.km ?? 0;
-  const tEnd = northStations.find(s => s.name === train.dest)?.km ?? 751;
-  const totalKm = Math.abs(tEnd - tStart);
-  const passKm = Math.abs(km2 - km1);
-
-  const p = (passKm / totalKm) * 100;
-  const days = p >= 60 ? 90 : p >= 25 ? 30 : 1;
-  const bookDate = new Date(travelDate); bookDate.setDate(bookDate.getDate() - days);
-
-  resBox.innerHTML = `
-    <div class="result-card">
-      <div class="result-top"><div><div class="kicker">${train.name}</div><h3>${orig} → ${dest}</h3></div><span class="status open">✓ คำนวณแล้ว</span></div>
-      <div class="result-main">
-        <div class="route-line"><div class="station">${orig}</div><div class="arrow">➜</div><div class="station">${dest}</div></div>
-        <div class="big-result"><span>จองล่วงหน้าได้สูงสุด</span><strong>${days} วัน</strong><small>สัดส่วนระยะทาง ${p.toFixed(2)}% ของขบวน</small></div>
-        <div class="date-panel"><div class="label">วันแรกที่เริ่มเปิดขายตั๋ว</div><div class="date">${bookDate.toLocaleDateString('th-TH', {dateStyle:'long'})}</div><div class="time">เวลา 08:30 น. เป็นต้นไป</div></div>
-        <div class="result-actions">
-          <a class="action-btn primary" href="${APP_CONFIG.dticketUrl}" target="_blank">จอง D-Ticket</a>
-          <button class="action-btn" type="button" onclick="navigator.clipboard.writeText('จองตั๋ว ${train.name} เส้นทาง ${orig} ไป ${dest} เดินทางวันที่ ${travelDate.toLocaleDateString(\'th-TH\')} เปิดจองวันที่ ${bookDate.toLocaleDateString(\'th-TH\')}'); showToast('คัดลอกข้อความแล้ว');">คัดลอกผล</button>
-        </div>
-      </div>
+function bookingActions(non) {
+  return `
+    <div class="reminder-entry">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg>
+      <div><b>${non ? 'ตั้งเตือนวันเดินทาง' : 'ตั้งเตือนวันเปิดจอง'}</b><span>เพิ่มลง Google Calendar หรือคัดลอกเก็บไว้</span></div>
+      <button type="button" data-action="remind-booking">ตั้งเตือน</button>
+    </div>
+    <div class="result-actions">
+      <a class="action-btn primary" href="${APP_CONFIG.dticketUrl}" target="_blank" rel="noopener noreferrer">จองตั๋ว D-Ticket</a>
+      <button class="action-btn" type="button" data-action="copy-booking">คัดลอกผล</button>
+      <button class="action-btn" type="button" data-action="share-booking">แชร์ต่อ</button>
     </div>`;
 }
 
-/* Modal เลือกสถานีมาตรฐาน */
-let currentField = null;
-function openPicker(field) {
-  currentField = field;
-  state.lastField = field;
-  const train = getTrain($('selectedTrain').value);
-  const names = activeStationNames(train);
-  const q = $('stationSearch').value.trim().toLowerCase();
-  const filtered = names.filter(n => n.toLowerCase().includes(q));
+const bookingDaysFromPercentage = p => p >= 60 ? 90 : p >= 25 ? 30 : 1;
 
-  $('stationPickerTitle').textContent = field === 'passOrigin' ? 'เลือกสถานีต้นทาง' : 'เลือกสถานีปลายทาง';
-  $('stationOptions').innerHTML = filtered.map(n => `<button type="button" class="station-option" onclick="selectStation('${n}')"><span>${n === 'พิษณุโลก' ? '📌 ' : ''}${n}</span><small>กม. ${northStations.find(s=>s.name===n)?.km}</small></button>`).join('');
+function statusForOpenDate(openDate, openTime = '08:30') {
+  if (new Date() >= bangkokInstant(toLocalISO(openDate), openTime)) {
+    return { kind: 'open', text: 'เปิดจองแล้ว', detail: 'สามารถตรวจสอบที่นั่งใน D-Ticket หรือที่สถานีได้ทันที' };
+  }
+  const diff = daysUntil(openDate);
+  if (diff === 0) return { kind: 'waiting', text: `เปิดวันนี้ ${openTime} น.`, detail: 'ยังไม่ถึงเวลาเปิดจอง' };
+  if (diff === 1) return { kind: 'waiting', text: `เปิดพรุ่งนี้ ${openTime} น.`, detail: 'เตรียมทำรายการล่วงหน้าได้' };
+  return { kind: 'waiting', text: `อีก ${Math.max(diff, 0).toLocaleString('th-TH')} วัน`, detail: `เริ่มเปิดจอง ${formatDate(openDate)} เวลา ${openTime} น.` };
+}
+
+function calculateBooking() {
+  syncDateControls();
+  renderQuickChips();
+  renderFavoriteButtons();
+  const d = getBookingInputs();
+
+  if (!d.travelDate) return bookingEmpty('กรุณากดเลือก "วันที่เดินทาง" ในขั้นตอนที่ 1');
+  if (d.travelDate < localDateOnly()) return bookingError('วันที่เดินทางผ่านไปแล้ว กรุณาเลือกวันนี้หรือวันในอนาคต');
+  if (!d.train) return bookingEmpty('กรุณาเลือก "ขบวนรถไฟ" ในขั้นตอนที่ 2');
+  if (!d.origin || !d.destination) return bookingEmpty('กรุณาเลือก "สถานีต้นทาง" และ "สถานีปลายทาง"');
+  if (!exactStation(d.origin) || !exactStation(d.destination)) return bookingError('กรุณาเลือกสถานีจากรายการที่กำหนด');
+  if (d.origin === d.destination) return bookingError('สถานีต้นทางและสถานีปลายทางต้องเป็นคนละสถานีกัน');
+
+  const stops = activeStationNames(d.train);
+  if (!stops.includes(d.origin) || !stops.includes(d.destination)) return bookingError('สถานีที่เลือกไม่อยู่ในจุดจอดหรือช่วงวิ่งของขบวนรถนี้');
+
+  if (d.reservationType === 'nonreserved') return renderNonReservedResult(d);
+
+  if (!Number.isFinite(d.total) || !Number.isFinite(d.passenger)) return bookingEmpty('กรุณาเลือกขบวนรถและสถานีให้ครบถ้วน');
+  if (!d.routeValid) return bookingError('สถานีต้นทางและสถานีปลายทางต้องอยู่ภายในช่วงวิ่งของขบวนรถ');
+  if (d.total <= 0 || d.passenger <= 0) return bookingError('ระยะทางต้องมากกว่า 0 กิโลเมตร');
+  if (d.passenger > d.total) return bookingError('ระยะทางผู้โดยสารต้องไม่เกินระยะทางวิ่งทั้งหมดของขบวน');
+
+  updateDistanceSummary(d.total, d.passenger);
+  renderStandardBooking(d);
+}
+
+function renderNonReservedResult(d) {
+  updateDistanceSummary(d.total, d.passenger);
+  const travelText = formatDate(d.travelDate);
+  const result = {
+    type: 'nonreserved', createdAt: new Date().toISOString(), travelDate: toLocalISO(d.travelDate),
+    origin: d.origin, destination: d.destination, trainId: d.train.id, trainName: d.train.name,
+    headline: 'ซื้อในวันเดินทาง', summary: BOOKING_RULES.nonReservedText,
+    copyText: `🚆 ${d.train.name}\n📍 ${d.origin} → ${d.destination}\n📅 เดินทางวันที่ ${travelText}\n🎫 ${BOOKING_RULES.nonReservedText}\n☎️ สอบถามเพิ่มเติม สถานีรถไฟพิษณุโลก หรือสายด่วน ${APP_CONFIG.hotline}`
+  };
+  state.lastBookingResult = result;
+  el.bookingResult.innerHTML = `
+    <div class="result-card">
+      <div class="result-top">
+        <div><div class="kicker">${esc(result.trainName)}</div><h3>ไม่ต้องจองล่วงหน้า</h3></div>
+        <span class="status info">🎫 ซื้อวันเดินทาง</span>
+      </div>
+      <div class="result-main">
+        ${routeMarkup(d)}
+        <div class="big-result">
+          <span>การจำหน่ายตั๋ว</span>
+          <strong style="font-size:32px">ซื้อในวันเดินทาง</strong>
+          <small>จำหน่ายที่สถานี ก่อนขบวนรถออกไม่เกิน 2 ชั่วโมง</small>
+        </div>
+        <div class="date-panel"><div class="label">วันที่เดินทาง</div><div class="date">${travelText}</div></div>
+        <div class="note warning">ขบวนรถธรรมดาและรถท้องถิ่นเป็นแบบไม่สำรองที่นั่ง สามารถติดต่อซื้อตั๋วที่ช่องจำหน่ายตั๋วสถานีในวันเดินทางได้เลยครับ</div>
+        ${bookingActions(true)}
+      </div>
+    </div>`;
+  saveBookingHistory(result);
+}
+
+function renderStandardBooking(d) {
+  const percentage = d.passenger / d.total * 100;
+  const pct = percentage.toFixed(2);
+  const days = bookingDaysFromPercentage(percentage);
+  const bookingDate = new Date(d.travelDate);
+  bookingDate.setDate(bookingDate.getDate() - days);
+  const openTime = BOOKING_RULES.standardOpenTime;
+  const status = statusForOpenDate(bookingDate, openTime);
+  const bookingText = formatDate(bookingDate);
+
+  const result = {
+    type: 'standard', createdAt: new Date().toISOString(), travelDate: toLocalISO(d.travelDate),
+    origin: d.origin, destination: d.destination, trainId: d.train.id, trainName: d.train.name,
+    total: d.total, passenger: d.passenger, percentage, days,
+    bookingDate: toLocalISO(bookingDate), openTime,
+    headline: `จองล่วงหน้า ${days} วัน`,
+    summary: `เริ่มจอง ${bookingText} เวลา ${openTime} น.`,
+    copyText: `🚆 ${d.train.name}\n📍 ${d.origin} → ${d.destination}\n📅 วันเดินทาง: ${formatDate(d.travelDate)}\n📏 ระยะทาง: ${money(d.passenger)} / ${money(d.total)} กม. (${pct}%)\n✅ จองล่วงหน้าได้: ${days} วัน\n🗓️ วันแรกที่ซื้อตั๋วได้: ${bookingText} เวลา ${openTime} น.`
+  };
+  state.lastBookingResult = result;
+
+  el.bookingResult.innerHTML = `
+    <div class="result-card">
+      <div class="result-top">
+        <div><div class="kicker">${esc(result.trainName)}</div><h3>${esc(d.origin)} → ${esc(d.destination)}</h3></div>
+        <span class="status ${status.kind}">${status.kind === 'open' ? '✓' : '⏳'} ${esc(status.text)}</span>
+      </div>
+      <div class="result-main">
+        ${routeMarkup(d)}
+        <div class="big-result">
+          <span>สามารถซื้อตั๋วล่วงหน้าได้สูงสุด</span>
+          <strong>${days} วัน</strong>
+          <small>คำนวณจากสัดส่วนระยะทาง ${pct}% ของระยะขบวนรถ</small>
+        </div>
+        <div class="date-panel">
+          <div class="label">วันแรกที่เริ่มเปิดขายตั๋ว</div>
+          <div class="date">${bookingText}</div>
+          <div class="time">ตั้งแต่เวลา ${openTime} น. เป็นต้นไป</div>
+        </div>
+        <div class="result-grid">
+          <div class="result-mini"><span>ระยะทางขบวนรถ</span><strong>${money(d.total)} กม.</strong></div>
+          <div class="result-mini"><span>ระยะทางผู้โดยสาร</span><strong>${money(d.passenger)} กม.</strong></div>
+        </div>
+        <div class="note warning">${esc(status.detail)} · ซื้อได้ที่สถานีรถไฟทุกแห่ง หรือผ่านแอป/เว็บ D-Ticket</div>
+        ${bookingActions(false)}
+      </div>
+    </div>`;
+  saveBookingHistory(result);
+}
+
+/* ================= 8) ประวัติ / สถานีโปรด / ปุ่มลัด ================= */
+function saveBookingHistory(r) {
+  if (!r) return;
+  const key = [r.type, r.travelDate, r.origin, r.destination, r.trainId, r.days].join('|');
+  if (state.bookingHistory[0]?.key === key) return; // รายการเดิมอยู่บนสุดแล้ว ไม่ต้องเขียนซ้ำ
+  state.bookingHistory = [{
+    key,
+    title: `${r.headline} (${r.origin} → ${r.destination})`,
+    subtitle: `ขบวน ${r.trainId} • เดินทาง ${formatDate(parseLocalDate(r.travelDate))}`,
+    restore: getBookingSnapshot()
+  }, ...state.bookingHistory.filter(x => x.key !== key)].slice(0, APP_CONFIG.historyLimit);
+  STORAGE.set(LS_KEY.history, state.bookingHistory);
+  renderHistories();
+}
+
+function renderHistories() {
+  el.bookingHistory.innerHTML = state.bookingHistory.length
+    ? state.bookingHistory.map((x, i) => `<button type="button" class="history-item" data-history="${i}"><b>${esc(x.title)}</b><span>${esc(x.subtitle)}</span></button>`).join('')
+    : '<div class="note info" style="margin-top:0">ยังไม่มีประวัติการคำนวณ</div>';
+}
+
+function restoreBooking(s) {
+  if (!s) return;
+  el.travelDate.value = s.date || '';
+  el.selectedTrain.value = s.train || '';
+  el.passOrigin.value = s.origin || '';
+  el.passDest.value = s.dest || '';
+  syncStationConstraints();
+  calculateBooking();
+  showToast('เรียกคืนข้อมูลแล้ว');
+}
+
+function selectQuickStation(name) {
+  const train = getTrain(el.selectedTrain.value);
+  if (train && !activeStationNames(train).includes(name)) {
+    showToast(`ขบวน ${train.id} ไม่ได้จอดหรือไม่ได้วิ่งผ่านสถานี${name}`);
+    return;
+  }
+  const o = el.passOrigin.value, dst = el.passDest.value;
+  const target = !o ? el.passOrigin
+    : (!dst && o !== name) ? el.passDest
+    : state.lastStationField === 'passDest' ? el.passDest : el.passOrigin;
+  target.value = name;
+  state.lastStationField = target === el.passOrigin ? 'passDest' : 'passOrigin';
+  calculateBooking();
+}
+
+function saveFavorites() {
+  STORAGE.set(LS_KEY.fav, state.favorites);
+  renderFavorites();
+}
+
+function toggleFavorite(station) {
+  if (!station || !exactStation(station)) return showToast('กรุณาเลือกสถานีก่อนกดบันทึก');
+  const i = state.favorites.indexOf(station);
+  if (i >= 0) {
+    state.favorites.splice(i, 1);
+    showToast('นำออกจากสถานีโปรดแล้ว');
+  } else {
+    state.favorites = [station, ...state.favorites.filter(n => n !== station)].slice(0, 10);
+    showToast('บันทึกสถานีโปรดแล้ว');
+  }
+  saveFavorites();
+  renderFavoriteButtons();
+}
+
+function renderFavorites() {
+  el.favoriteChips.innerHTML = state.favorites.length
+    ? state.favorites.map(n => `<button class="chip" type="button" data-favorite="${esc(n)}">${esc(n)}</button>`).join('')
+    : '<span class="chip muted">กด ☆ ท้ายช่องสถานีเพื่อบันทึกสถานีที่ใช้บ่อย</span>';
+}
+
+function renderFavoriteButtons() {
+  for (const [btn, val] of [[el.favOriginBtn, el.passOrigin.value], [el.favDestBtn, el.passDest.value]]) {
+    const on = !!val && state.favorites.includes(val);
+    btn.classList.toggle('active', on);
+    btn.textContent = on ? '★' : '☆';
+  }
+}
+
+function renderQuickChips() {
+  const train = getTrain(el.selectedTrain.value);
+  const allowed = activeStationNames(train);
+  const o = el.passOrigin.value, dst = el.passDest.value;
+  el.quickStationChips.innerHTML = QUICK_STATIONS.map(n => {
+    const plk = n === 'พิษณุโลก';
+    const cls = `chip${plk ? ' highlight' : ''}${o === n || dst === n ? ' selected' : ''}`;
+    return `<button type="button" class="${cls}" data-quick="${esc(n)}"${train && !allowed.includes(n) ? ' disabled' : ''}>${plk ? '📌 ' : ''}${esc(n)}</button>`;
+  }).join('');
+}
+
+// ล้างสถานีที่ไม่อยู่ในขบวน (การ render ปล่อยให้ calculateBooking ทำ)
+function syncStationConstraints() {
+  const train = getTrain(el.selectedTrain.value);
+  if (!train) return;
+  const allowed = activeStationNames(train);
+  if (el.passOrigin.value && !allowed.includes(el.passOrigin.value)) el.passOrigin.value = '';
+  if (el.passDest.value && !allowed.includes(el.passDest.value)) el.passDest.value = '';
+}
+
+function initTrains() {
+  el.selectedTrain.innerHTML = '<option value="">- กรุณาเลือกขบวนรถ -</option>' +
+    northSchedules.map(t => `<option value="${esc(t.id)}">${esc(t.name)}</option>`).join('');
+}
+
+/* ================= 9) หน้าต่างเลือกสถานี ================= */
+function openStationPicker(field) {
+  if (!STATION_FIELD_LABELS[field]) return;
+  stationPickerField = field;
+  state.lastStationField = field;
+  $('stationPickerTitle').textContent = 'เลือก' + STATION_FIELD_LABELS[field];
+  const train = getTrain(el.selectedTrain.value);
+  $('stationPickerContext').textContent = train ? train.name : 'แสดงสถานีทั้งหมด';
+  el.stationSearch.value = '';
+  renderStationPicker();
   $('stationPickerDialog').showModal();
 }
 
-function selectStation(name) {
-  $(currentField).value = name;
+function renderStationPicker() {
+  if (!stationPickerField) return;
+  const all = pickerStationNames();
+  const query = el.stationSearch.value.trim().toLowerCase();
+  const names = query ? all.filter(n => n.toLowerCase().includes(query)) : all;
+  const pinnedSet = new Set([...QUICK_STATIONS, ...state.favorites]);
+  const selected = $(stationPickerField).value;
+  const pinned = [], remaining = [];
+  for (const n of names) (pinnedSet.has(n) ? pinned : remaining).push(n);
+
+  const option = n => `<button type="button" class="station-option" data-station="${esc(n)}" aria-pressed="${n === selected}"><span>${n === 'พิษณุโลก' ? '📌 ' : ''}${esc(n)}</span><small>${n === selected ? '✓ เลือกอยู่' : `กม. ${money(getKm(n))}`}</small></button>`;
+
+  el.stationOptions.innerHTML = !names.length
+    ? '<div class="station-no-results">ไม่พบชื่อสถานีที่ค้นหา</div>'
+    : (pinned.length ? `<div class="station-group">📍 สถานีหลัก / สถานีโปรด</div>${pinned.map(option).join('')}<div class="station-group">สถานีทั้งหมดในเส้นทาง</div>` : '') + remaining.map(option).join('');
+
+  $('stationCount').textContent = query ? `พบ ${names.length} สถานี` : `มี ${all.length} สถานีในเส้นทางนี้ · แตะเลือกได้เลย`;
+  $('clearStationSearchBtn').classList.toggle('hidden', !query);
+}
+
+function choosePickerStation(name) {
+  if (!stationPickerField || !pickerStationNames().includes(name)) return;
+  $(stationPickerField).value = name;
   $('stationPickerDialog').close();
   calculateBooking();
 }
 
-/* Event Bindings */
-$('travelDate').value = new Date().toISOString().slice(0, 10);
-$('travelDate').addEventListener('change', calculateBooking);$('selectedTrain').addEventListener('change', calculateBooking);
+/* ================= 10) ปฏิทินไทย ================= */
+const DATE_FIELD_EMPTY = { travelDate: 'กดเลือกวันที่เดินทาง', reminderDate: 'กดเลือกวันที่' };
 
-$('passOrigin').addEventListener('click', () => openPicker('passOrigin'));
-$('passDest').addEventListener('click', () => openPicker('passDest'));$('closeStationPickerBtn').addEventListener('click', () => $('stationPickerDialog').close());$('stationSearch').addEventListener('input', () => openPicker(currentField));
+function syncDateControls() {
+  for (const id in DATE_FIELD_EMPTY) {
+    const text = thaiDateText($(id).value);
+    $(id + 'Label').textContent = text || DATE_FIELD_EMPTY[id];
+    $(id + 'PickerBtn').classList.toggle('is-empty', !text);
+  }
+}
+
+function pickerDateBounds() {
+  const f = $(thaiPicker.field);
+  return { min: f.min || bangkokToday(), max: f.max || '' };
+}
+const pickerDateAllowed = (iso, b = pickerDateBounds()) => !!parseLocalDate(iso) && iso >= b.min && (!b.max || iso <= b.max);
+function calendarMonthAllowed(year, month, b = pickerDateBounds()) {
+  const ym = `${year}-${pad2(month + 1)}-`;
+  return `${ym}${pad2(new Date(year, month + 1, 0).getDate())}` >= b.min && (!b.max || `${ym}01` <= b.max);
+}
+
+function openThaiDatePicker(field) {
+  if (!(field in DATE_FIELD_EMPTY)) return;
+  thaiPicker.field = field;
+  const f = $(field), min = f.min || bangkokToday(), max = f.max || '';
+  let iso = parseLocalDate(f.value) ? f.value : bangkokToday();
+  if (iso < min) iso = min;
+  if (max && iso > max) iso = max;
+  const d = parseLocalDate(iso);
+  thaiPicker.year = d.getFullYear();
+  thaiPicker.month = d.getMonth();
+  $('thaiDateTitle').textContent = field === 'travelDate' ? 'เลือกวันที่เดินทาง' : 'เลือกวันที่ต้องการเตือน';
+  renderThaiCalendar();
+  $('thaiDateDialog').showModal();
+}
+
+function renderThaiCalendar() {
+  const { field, year: y, month: m } = thaiPicker;
+  if (!field) return;
+  const b = pickerDateBounds(), selected = $(field).value, today = bangkokToday();
+
+  const monthSel = $('thaiCalendarMonth');
+  monthSel.innerHTML = THAI_MONTHS.map((n, i) => `<option value="${i}"${calendarMonthAllowed(y, i, b) ? '' : ' disabled'}>${n}</option>`).join('');
+  monthSel.value = String(m);
+
+  // สร้างรายการปีใหม่เฉพาะเมื่อช่วงปีเปลี่ยน
+  const minYear = Number(b.min.slice(0, 4)), maxYear = b.max ? Number(b.max.slice(0, 4)) : Math.max(minYear + 2, y);
+  const yearSel = $('thaiCalendarYear'), range = `${minYear}-${maxYear}`;
+  if (yearSel.dataset.range !== range) {
+    let years = '';
+    for (let yr = minYear; yr <= maxYear; yr++) years += `<option value="${yr}">พ.ศ. ${yr + 543}</option>`;
+    yearSel.innerHTML = years;
+    yearSel.dataset.range = range;
+  }
+  yearSel.value = String(y);
+
+  const first = new Date(y, m, 1).getDay(), count = new Date(y, m + 1, 0).getDate(), ym = `${y}-${pad2(m + 1)}-`;
+  let markup = '<span aria-hidden="true"></span>'.repeat(first);
+  for (let day = 1; day <= count; day++) {
+    const iso = ym + pad2(day);
+    markup += `<button type="button" class="calendar-day${iso === today ? ' is-today' : ''}" data-date="${iso}" aria-pressed="${iso === selected}"${pickerDateAllowed(iso, b) ? '' : ' disabled'}>${day}</button>`;
+  }
+  $('thaiCalendarDays').innerHTML = markup;
+
+  const prev = new Date(y, m - 1, 1), next = new Date(y, m + 1, 1);
+  $('thaiCalendarPrev').disabled = !calendarMonthAllowed(prev.getFullYear(), prev.getMonth(), b);
+  $('thaiCalendarNext').disabled = !calendarMonthAllowed(next.getFullYear(), next.getMonth(), b);
+  $('thaiCalendarToday').disabled = !pickerDateAllowed(today, b);
+  const selText = thaiDateText(selected);
+  $('thaiCalendarSelection').textContent = selText ? `เลือก: ${selText}` : 'แตะวันที่เพื่อเลือก';
+}
+
+function moveThaiCalendar(delta) {
+  const d = new Date(thaiPicker.year, thaiPicker.month + delta, 1);
+  if (!calendarMonthAllowed(d.getFullYear(), d.getMonth())) return;
+  thaiPicker.year = d.getFullYear();
+  thaiPicker.month = d.getMonth();
+  renderThaiCalendar();
+}
+
+function chooseThaiDate(iso) {
+  if (!thaiPicker.field || !pickerDateAllowed(iso)) return;
+  $(thaiPicker.field).value = iso;
+  $('thaiDateDialog').close();
+  if (thaiPicker.field === 'travelDate') calculateBooking();
+  else updateReminderPreview();
+}
+
+/* ================= 11) ตั้งเตือน ================= */
+const bookingReminderDate = r => r?.bookingDate || (r?.type === 'nonreserved' ? r.travelDate : null);
+
+function openBookingReminder() {
+  const r = state.lastBookingResult, date = bookingReminderDate(r);
+  if (!r || !date) return showToast('กรุณาคำนวณวันเปิดจองให้ครบก่อน');
+  reminderResult = { ...r };
+  const non = r.type === 'nonreserved', word = non ? 'เดินทาง' : 'เปิดจอง', openTime = r.openTime || '08:30';
+  $('reminderTitle').textContent = non ? 'ตั้งเตือนวันเดินทาง' : 'ตั้งเตือนวันเปิดจองตั๋ว';
+  const lead = $('reminderLead');
+  lead.options[0].textContent = `วัน${word}`;
+  lead.options[1].textContent = `ก่อน${word} 1 วัน`;
+  lead.options[2].textContent = `ก่อน${word} 2 วัน`;
+  lead.value = '0';
+
+  const rd = $('reminderDate');
+  rd.min = bangkokToday();
+  rd.max = r.travelDate;
+  rd.value = date;
+  $('reminderTime').value = openTime;
+  $('reminderRoute').innerHTML = `
+    <b>${esc(r.origin)} → ${esc(r.destination)}</b>
+    <span>เดินทาง ${bangkokDateLabel(r.travelDate)} · ${esc(r.trainName)}</span>
+    <span>${non ? 'ซื้อตั๋วที่สถานีในวันเดินทาง' : `เริ่มเปิดจอง ${bangkokDateLabel(date)} เวลา ${esc(openTime)} น.`}</span>`;
+
+  if (bangkokInstant(date, openTime) <= new Date()) {
+    lead.value = 'custom';
+    const p = fmtParts(BKK_DT_FMT, new Date(Date.now() + 3600000));
+    rd.value = `${p.year}-${p.month}-${p.day}`;
+    $('reminderTime').value = `${p.hour}:${p.minute}`;
+  }
+  $('reminderHandoff').classList.add('hidden');
+  updateReminderPreview();
+  $('reminderDialog').showModal();
+}
+
+function reminderInputs() {
+  const lead = $('reminderLead').value;
+  const date = lead === 'custom' ? $('reminderDate').value : shiftISODate(bookingReminderDate(reminderResult), -Number(lead));
+  const time = $('reminderTime').value;
+  return { date, time, at: bangkokInstant(date, time) };
+}
+
+function reminderValidation(p) {
+  if (!p.date || !p.at || !Number.isFinite(p.at.getTime())) return 'กรุณาเลือกวันและเวลาให้ครบ';
+  if (p.at.getTime() <= Date.now()) return 'วันเวลานี้ผ่านไปแล้ว กรุณาเลือกวันเองหรือปรับเวลาให้เป็นอนาคต';
+  if (p.date > reminderResult.travelDate) return 'วันที่เตือนต้องไม่เกินวันที่เดินทาง';
+  return '';
+}
+
+function updateReminderPreview() {
+  syncDateControls();
+  if (!reminderResult) return;
+  $('reminderCustomBox').classList.toggle('hidden', $('reminderLead').value !== 'custom');
+  const p = reminderInputs(), error = reminderValidation(p);
+  $('reminderPreview').innerHTML = `
+    <span>เวลาที่จะตั้งเตือน</span>
+    <strong>${p.at ? `${bangkokDateLabel(p.date)} · เวลา ${esc(p.time)} น.` : 'กรุณาระบุวันและเวลา'}</strong>
+    <small>เขตเวลาประเทศไทย (UTC+7)</small>`;
+  $('reminderError').textContent = error;
+  $('reminderError').classList.toggle('hidden', !error);
+  $('googleCalendarBtn').disabled = !!error;
+  $('copyReminderBtn').disabled = !!error;
+}
+
+function openGoogleCalendar() {
+  if (!reminderResult) return;
+  const p = reminderInputs();
+  if (reminderValidation(p)) return updateReminderPreview();
+  const r = reminderResult;
+  const end = new Date(p.at.getTime() + 15 * 60000);
+  const url = new URL('https://calendar.google.com/calendar/render');
+  url.search = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: `เตือนจองตั๋วรถไฟ: ${r.origin} → ${r.destination}`,
+    dates: `${calendarStamp(p.at)}/${calendarStamp(end)}`,
+    details: `${r.copyText}\n\nจองตั๋วออนไลน์: https://dticket.railway.co.th/`,
+    location: r.origin,
+    ctz: REMINDER_ZONE,
+    openExternalBrowser: '1'
+  });
+  window.open(url.toString(), '_blank', 'noopener,noreferrer');
+  const h = $('reminderHandoff');
+  h.textContent = 'เปิดหน้า Google Calendar แล้ว กรุณากดปุ่ม "บันทึก (Save)" ในแอปปฏิทินของคุณเพื่อยืนยันการแจ้งเตือนครับ';
+  h.classList.remove('hidden');
+}
+
+function copyReminderText() {
+  if (!reminderResult) return;
+  const p = reminderInputs();
+  copyText(`⏰ ตั้งเตือนจองตั๋ว: ${bangkokDateLabel(p.date)} เวลา ${p.time} น.\n${reminderResult.copyText}`).then(() => {
+    showToast('คัดลอกข้อความเตือนแล้ว ส่งเก็บไว้ในแชท LINE ได้เลย');
+    $('reminderDialog').close();
+  });
+}
+
+/* ================= 12) ทั่วไป ================= */
+function copyText(text) {
+  const fallback = () => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } finally { ta.remove(); }
+  };
+  if (navigator.clipboard?.writeText) return navigator.clipboard.writeText(text).catch(fallback);
+  fallback();
+  return Promise.resolve();
+}
+
+function shareBooking() {
+  const r = state.lastBookingResult;
+  if (!r) return;
+  if (navigator.share) navigator.share({ title: 'เช็กวันจองตั๋วรถไฟล่วงหน้า', text: r.copyText }).catch(() => {});
+  else copyText(r.copyText).then(() => showToast('คัดลอกข้อความแล้ว วางส่งในแชทได้เลย'));
+}
+
+function showToast(message) {
+  el.toast.textContent = message;
+  el.toast.classList.add('show');
+  clearTimeout(showToast.t);
+  showToast.t = setTimeout(() => el.toast.classList.remove('show'), 2200);
+}
+
+const themeMeta = document.querySelector('meta[name="theme-color"]');
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  STORAGE.set(LS_KEY.theme, theme);
+  $('themeIcon').textContent = theme === 'dark' ? '☀' : '☾';
+  themeMeta.setAttribute('content', theme === 'dark' ? '#1a202c' : '#841b3a');
+}
+
+/* ================= 13) Event (ผูกครั้งเดียว ใช้ delegation) ================= */
+function delegate(container, attr, handler) {
+  container.addEventListener('click', e => {
+    const btn = e.target.closest(`[${attr}]`);
+    if (btn && !btn.disabled && container.contains(btn)) handler(btn);
+  });
+}
+delegate(el.quickStationChips, 'data-quick', b => selectQuickStation(b.dataset.quick));
+delegate(el.favoriteChips, 'data-favorite', b => selectQuickStation(b.dataset.favorite));
+delegate(el.bookingHistory, 'data-history', b => {
+  const item = state.bookingHistory[Number(b.dataset.history)];
+  if (item) restoreBooking(item.restore);
+});
+delegate(el.bookingResult, 'data-action', b => {
+  const action = b.dataset.action;
+  if (action === 'remind-booking') openBookingReminder();
+  else if (action === 'copy-booking') copyText(state.lastBookingResult?.copyText || '').then(() => showToast('คัดลอกผลคำนวณแล้ว ส่งในแชท LINE ได้เลย'));
+  else if (action === 'share-booking') shareBooking();
+});
+delegate(el.stationOptions, 'data-station', b => choosePickerStation(b.dataset.station));
+delegate($('thaiCalendarDays'), 'data-date', b => chooseThaiDate(b.dataset.date));
+
+el.selectedTrain.addEventListener('change', () => { syncStationConstraints(); calculateBooking(); });
 
 $('swapStationsBtn').addEventListener('click', () => {
-  const a = $('passOrigin').value; $('passOrigin').value = $('passDest').value; $('passDest').value = a;
-  calculateBooking(); showToast('สลับสถานีแล้ว');
+  [el.passOrigin.value, el.passDest.value] = [el.passDest.value, el.passOrigin.value];
+  calculateBooking();
+  showToast('สลับสถานีต้นทาง–ปลายทางแล้ว');
 });
-$('clearRouteBtn').addEventListener('click', () => { $('passOrigin').value = '';$('passDest').value = ''; calculateBooking(); });
+$('clearRouteBtn').addEventListener('click', () => {
+  el.passOrigin.value = el.passDest.value = '';
+  state.lastStationField = 'passOrigin';
+  calculateBooking();
+});
+el.favOriginBtn.addEventListener('click', () => toggleFavorite(el.passOrigin.value));
+el.favDestBtn.addEventListener('click', () => toggleFavorite(el.passDest.value));
+$('clearFavoritesBtn').addEventListener('click', () => {
+  state.favorites = [];
+  saveFavorites();
+  renderFavoriteButtons();
+  showToast('ล้างสถานีโปรดแล้ว');
+});
+$('clearBookingHistoryBtn').addEventListener('click', () => {
+  state.bookingHistory = [];
+  STORAGE.set(LS_KEY.history, []);
+  renderHistories();
+  showToast('ล้างประวัติแล้ว');
+});
+$('themeBtn').addEventListener('click', () => applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
 
-document.querySelectorAll('[data-quick]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const name = btn.dataset.quick;
-    const target = !$('passOrigin').value ? $('passOrigin') :$('passDest');
-    target.value = name;
-    calculateBooking();
+// Station picker
+for (const id in STATION_FIELD_LABELS) $(id).addEventListener('click', () => openStationPicker(id));
+let pickerRaf = 0;
+el.stationSearch.addEventListener('input', () => {
+  cancelAnimationFrame(pickerRaf);
+  pickerRaf = requestAnimationFrame(renderStationPicker); // render ไม่เกิน 1 ครั้งต่อเฟรม
+});
+$('clearStationSearchBtn').addEventListener('click', () => { el.stationSearch.value = ''; renderStationPicker(); el.stationSearch.focus(); });
+$('closeStationPickerBtn').addEventListener('click', () => $('stationPickerDialog').close());
+
+// Thai calendar
+$('travelDatePickerBtn').addEventListener('click', () => openThaiDatePicker('travelDate'));
+$('reminderDatePickerBtn').addEventListener('click', () => openThaiDatePicker('reminderDate'));
+$('closeThaiDateBtn').addEventListener('click', () => $('thaiDateDialog').close());
+$('thaiCalendarPrev').addEventListener('click', () => moveThaiCalendar(-1));
+$('thaiCalendarNext').addEventListener('click', () => moveThaiCalendar(1));
+$('thaiCalendarMonth').addEventListener('change', e => {
+  const m = Number(e.target.value);
+  if (calendarMonthAllowed(thaiPicker.year, m)) { thaiPicker.month = m; renderThaiCalendar(); }
+});
+$('thaiCalendarYear').addEventListener('change', e => { thaiPicker.year = Number(e.target.value); renderThaiCalendar(); });
+$('thaiCalendarToday').addEventListener('click', () => chooseThaiDate(bangkokToday()));
+
+// Reminder
+$('closeReminderBtn').addEventListener('click', () => $('reminderDialog').close());
+$('reminderLead').addEventListener('change', updateReminderPreview);
+$('reminderTime').addEventListener('input', updateReminderPreview);
+$('googleCalendarBtn').addEventListener('click', openGoogleCalendar);
+$('copyReminderBtn').addEventListener('click', copyReminderText);
+
+// คลิกพื้นหลังเพื่อปิด dialog
+for (const id of ['stationPickerDialog', 'thaiDateDialog', 'reminderDialog']) {
+  const dlg = $(id);
+  dlg.addEventListener('click', e => {
+    if (e.target !== dlg) return;
+    const r = dlg.getBoundingClientRect();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close();
   });
-});
+}
 
-calculateBooking();
+/* ================= 14) BOOT ================= */
+(function boot() {
+  initTrains();
+  el.travelDate.min = bangkokToday();
+  renderFavorites();
+  renderHistories();
+  applyTheme(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
+  syncDateControls();
+  renderQuickChips();
+  renderFavoriteButtons();
+  bookingEmpty();
+})();
 </script>
 </body>
 </html>
