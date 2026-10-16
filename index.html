@@ -826,7 +826,7 @@
             <!-- ปุ่มลัดสถานีหลัก (Quick Chips) -->
             <div class="quick-strip">
               <div class="strip-head">
-                <span>📍 ปุ่มลัดสถานีหลัก (แตะเพื่อใส่สถานีขึ้น / สถานีลง)</span>
+                <span>📍 ปุ่มลัดสถานีหลัก (แตะเพื่อใส่สถานีต้นทาง / สถานีปลายทาง)</span>
                 <button class="text-btn" id="clearRouteBtn" type="button">ล้างสถานี</button>
               </div>
               <div class="chips" id="quickStationChips"></div>
@@ -834,13 +834,13 @@
 
             <div class="swap-row">
               <div class="field">
-                <label for="passOrigin">สถานีขึ้น <span>ต้นทางผู้โดยสาร</span></label>
+                <label for="passOrigin">สถานีต้นทาง <span>ต้นทางผู้โดยสาร</span></label>
                 <div class="control-wrap">
                   <input class="control station-input" id="passOrigin" readonly role="button" aria-haspopup="dialog" aria-controls="stationPickerDialog" autocomplete="off" placeholder="กดเลือกสถานีขึ้น" />
                   <button class="mini-btn" id="favOriginBtn" type="button" title="บันทึกสถานีโปรด">☆</button>
                 </div>
               </div>
-              <button class="swap-btn" id="swapStationsBtn" type="button" title="สลับสถานีขึ้นและสถานีลง">⇄</button>
+              <button class="swap-btn" id="swapStationsBtn" type="button" title="สลับสถานีต้นทางและสถานีปลายทาง">⇄</button>
               <div class="field">
                 <label for="passDest">สถานีลง <span>ปลายทางผู้โดยสาร</span></label>
                 <div class="control-wrap">
