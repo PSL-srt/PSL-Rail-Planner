@@ -1118,6 +1118,7 @@ function esc(value) {
 }
 function showToast(message) {
   const el = $('toast');
+  if (!el) return;
   el.textContent = message;
   el.classList.add('show');
   clearTimeout(showToast.t);
@@ -1218,7 +1219,6 @@ function syncStationConstraints() {
   const train = getTrain(el.selectedTrain.value);
   const isNonReserved = getReservationType(train) === 'nonreserved';
   
-  // ซ่อนกล่องเลือกสถานีทันทีหากเป็นรถไม่สำรองที่นั่ง
   el.stationSelectionBox.classList.toggle('hidden', isNonReserved);
 
   if (isNonReserved) {
@@ -1286,6 +1286,7 @@ function toggleFavorite(station) {
 }
 function renderFavorites() {
   const box = $('favoriteChips');
+  if (!box) return;
   if (!state.favorites.length) {
     box.innerHTML = '<span class="chip muted">กด ☆ ท้ายช่องสถานีเพื่อบันทึกสถานีที่ใช้บ่อย</span>';
     return;
@@ -1380,7 +1381,6 @@ function calculateBooking() {
   if (d.travelDate < localDateOnly()) return bookingError('วันที่เดินทางผ่านไปแล้ว กรุณาเลือกวันนี้หรือวันในอนาคต');
   if (!d.train) return bookingEmpty('กรุณาเลือก "ขบวนรถไฟ" ในขั้นตอนที่ 2');
 
-  // หากเป็นรถไม่สำรองที่นั่ง ให้แสดงผลทันทีโดยไม่ต้องเลือกสถานี
   if (d.reservationType === 'nonreserved') return renderNonReservedResult(d);
 
   if (!d.origin || !d.destination) return bookingEmpty('กรุณาเลือก "สถานีต้นทาง" และ "สถานีปลายทาง"');
@@ -1566,6 +1566,7 @@ function saveBookingHistory(r) {
   renderHistories();
 }
 function renderHistories() {
+  if (!el.bookingHistory) return;
   if (!state.bookingHistory.length) {
     el.bookingHistory.innerHTML = '<div class="note info" style="margin-top:0">ยังไม่มีประวัติการคำนวณ</div>';
     return;
@@ -1767,7 +1768,9 @@ function thaiDateText(iso) {
 }
 function syncDateControls() {
   ['travelDate', 'reminderDate'].forEach(id => {
-    const text = thaiDateText($(id).value), button = $(id + 'PickerBtn');$(id + 'Label').textContent = text || 'กดเลือกวันที่เดินทาง';
+    const text = thaiDateText($(id).value), button =$(id + 'PickerBtn');
+    if (!button) return;
+    $(id + 'Label').textContent = text || 'กดเลือกวันที่เดินทาง';
     button.classList.toggle('is-empty', !text);
   });
 }
@@ -1901,7 +1904,10 @@ $('themeBtn').addEventListener('click', () => applyTheme(document.documentElemen
 el.passOriginBtn.addEventListener('click', () => openStationPicker('passOrigin'));
 el.passDestBtn.addEventListener('click', () => openStationPicker('passDest'));
 
-$('stationSearch').addEventListener('input', renderStationPicker);$('clearStationSearchBtn').addEventListener('click', () => { $('stationSearch'].value = ''; renderStationPicker();$('stationSearch'].focus(); });
+$('stationSearch').addEventListener('input', renderStationPicker);$('clearStationSearchBtn').addEventListener('click', () => { 
+  const searchInput = $('stationSearch');
+  if (searchInput) { searchInput.value = ''; renderStationPicker(); searchInput.focus(); }
+});
 $('stationOptions').addEventListener('click', e => { const btn = e.target.closest('button[data-station]'); if (btn) choosePickerStation(btn.dataset.station); });$('closeStationPickerBtn').addEventListener('click', () => closeModal('stationPickerDialog'));
 
 $('travelDatePickerBtn').addEventListener('click', () => openThaiDatePicker('travelDate'));$('reminderDatePickerBtn').addEventListener('click', () => openThaiDatePicker('reminderDate'));
@@ -1918,7 +1924,7 @@ $('thaiCalendarDays').addEventListener('click', e => { const btn = e.target.clos
 
 $('closeReminderBtn').addEventListener('click', () => closeModal('reminderDialog'));
 ['reminderLead', 'reminderTime'].forEach(id => {
-  $(id).addEventListener('input', updateReminderPreview);$(id).addEventListener('change', updateReminderPreview);
+  $(id)?.addEventListener('input', updateReminderPreview);$(id)?.addEventListener('change', updateReminderPreview);
 });
 $('googleCalendarBtn').addEventListener('click', openGoogleCalendar);$('copyReminderBtn').addEventListener('click', copyReminderText);
 
