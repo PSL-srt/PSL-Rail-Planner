@@ -74,9 +74,10 @@
       font-size: 16px;
       -webkit-tap-highlight-color: transparent;
     }
+    body.modal-open { overflow: hidden; }
     button, input, select { font: inherit; touch-action: manipulation; }
     button { cursor: pointer; color: inherit; }
-    button:disabled { cursor: not-allowed; opacity: .55; }
+    button:disabled { cursor: not-allowed; opacity: .5; }
     button:focus-visible, a:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
     input:focus, select:focus { outline: none; border-color: var(--brand); box-shadow: var(--focus); }
     h1, h2, h3, p { margin: 0; }
@@ -219,17 +220,21 @@
       font-size: 15px;
       transition: border-color .15s;
     }
-    .control::placeholder { color: var(--muted-2); opacity: 1; }
-    .station-input[readonly] {
-      cursor: pointer;
+    .station-picker-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-align: left;
+      padding-right: 40px;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='none' stroke='%23727a89' stroke-width='2'%3E%3Cpath d='m4 6 5 5 5-5'/%3E%3C/svg%3E");
-      background-position: right 10px center;
+      background-position: right 36px center;
       background-repeat: no-repeat;
-      padding-right: 34px;
+      overflow: hidden;
       text-overflow: ellipsis;
+      white-space: nowrap;
     }
+    .station-picker-trigger.is-empty { color: var(--muted-2); }
     .control-wrap { display: flex; position: relative; }
-    .control-wrap .station-input[readonly] { background-position: right 36px center; padding-right: 60px; }
     .mini-btn {
       position: absolute;
       right: 4px;
@@ -240,6 +245,7 @@
       border: 0;
       color: var(--muted);
       font-size: 20px;
+      z-index: 2;
     }
     .mini-btn.active { color: var(--gold); }
     .date-control {
@@ -289,13 +295,13 @@
     .chip {
       border: 1px solid var(--line-strong);
       background: var(--surface-2);
-      padding: 5px 11px;
+      padding: 6px 12px;
       border-radius: 9px;
       font-size: 13px;
       color: var(--ink);
       transition: all .15s;
     }
-    .chip:hover { border-color: var(--brand); color: var(--brand); }
+    .chip:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); }
     .chip.highlight {
       background: var(--brand-soft);
       border-color: var(--brand);
@@ -412,7 +418,7 @@
     .result-mini strong { font-size: 14px; }
     .note { border-radius: 9px; padding: 10px 12px; line-height: 1.6; font-size: 12px; margin-top: 12px; }
     .note.info { background: var(--surface-2); color: var(--muted); border: 1px solid var(--line); }
-    .note.warning { background: var(--warning-bg); color: var(--warning); border: 1px solid color-mix(in srgb, var(--warning) 18%, transparent); }
+    .note.warning { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--line); }
 
     .reminder-entry {
       display: flex;
@@ -490,34 +496,45 @@
     }
     .footer strong { color: var(--ink); font-weight: 500; }
 
-    /* Dialogs (Reminder, Station Picker, Thai Calendar) */
-    .picker-dialog, .reminder-dialog {
-      width: calc(100% - 24px);
-      max-width: 500px;
-      margin: auto;
-      padding: 0;
+    /* Universal Modal Overlay (Works 100% in LINE WebView) */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(18, 18, 30, 0.58);
+      backdrop-filter: blur(2px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal-box {
+      width: 100%;
+      max-width: 480px;
       border: 1px solid var(--line);
       border-radius: 18px;
       background: var(--surface);
       color: var(--ink);
-      box-shadow: 0 25px 70px #0004;
-      max-height: calc(100dvh - 24px);
-      overflow: auto;
-    }
-    .picker-dialog::backdrop, .reminder-dialog::backdrop {
-      background: #12121e88;
-      backdrop-filter: blur(3px);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+      max-height: calc(100dvh - 28px);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
     .dialog-head {
       display: flex;
       justify-content: space-between;
       gap: 12px;
       align-items: flex-start;
-      padding: 18px 20px 14px;
+      padding: 16px 18px 13px;
       border-bottom: 1px solid var(--line);
+      flex-shrink: 0;
     }
-    .dialog-head h2 { font-size: 19px; line-height: 1.4; }
-    .dialog-head p { font-size: 13px; color: var(--muted); margin-top: 3px; }
+    .dialog-head h2 { font-size: 18px; line-height: 1.4; }
+    .dialog-head p { font-size: 12px; color: var(--muted); margin-top: 2px; }
     .dialog-close {
       flex-shrink: 0;
       width: 34px;
@@ -530,9 +547,9 @@
       font-size: 22px;
       line-height: 1;
     }
-    .dialog-body { padding: 18px 20px; }
-    .station-picker-body { padding: 14px 18px 18px; display: flex; flex-direction: column; }
-    .station-search { position: relative; }
+    .dialog-body { padding: 16px 18px; overflow-y: auto; }
+    .station-picker-body { padding: 14px 18px 18px; display: flex; flex-direction: column; overflow: hidden; flex: 1; }
+    .station-search { position: relative; flex-shrink: 0; }
     .station-search .control { padding-right: 40px; }
     .search-clear {
       position: absolute;
@@ -545,11 +562,11 @@
       color: var(--muted);
       font-size: 22px;
     }
-    .station-count { font-size: 12px; color: var(--muted); margin: 9px 0 6px; }
+    .station-count { font-size: 12px; color: var(--muted); margin: 9px 0 6px; flex-shrink: 0; }
     .station-options {
       overflow-y: auto;
-      overscroll-behavior: contain;
-      max-height: min(400px, 52dvh);
+      -webkit-overflow-scrolling: touch;
+      max-height: 52dvh;
       display: grid;
       gap: 6px;
       padding: 2px;
@@ -579,13 +596,13 @@
     .station-no-results { padding: 20px 10px; text-align: center; color: var(--muted); font-size: 14px; }
 
     /* Thai Date Picker */
-    .date-picker-body { padding: 16px 18px 18px; }
+    .date-picker-body { padding: 16px 18px 18px; overflow-y: auto; }
     .calendar-nav { display: flex; align-items: center; gap: 7px; margin-bottom: 12px; }
     .calendar-selects { display: grid; grid-template-columns: 1.3fr 1fr; gap: 6px; flex: 1; }
     .calendar-selects .control { min-height: 42px; padding: 7px; font-size: 14px; }
     .calendar-weekdays, .calendar-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
     .calendar-weekdays { color: var(--muted); text-align: center; font-size: 12px; margin-bottom: 6px; }
-    .calendar-days { min-height: 240px; align-content: start; }
+    .calendar-days { min-height: 236px; align-content: start; }
     .calendar-day {
       display: grid;
       place-items: center;
@@ -612,7 +629,7 @@
     .calendar-footer span { font-size: 12px; color: var(--muted); }
     .calendar-key { margin-top: 10px; font-size: 11px; color: var(--muted); }
 
-    /* Reminder Dialog Content */
+    /* Reminder Modal Content */
     .reminder-route {
       margin-bottom: 14px;
       padding: 11px 13px;
@@ -658,7 +675,7 @@
 
     .toast {
       position: fixed;
-      z-index: 150;
+      z-index: 200;
       bottom: 22px;
       left: 50%;
       transform: translate(-50%, 12px);
@@ -730,7 +747,7 @@
             <div class="field">
               <label for="travelDatePickerBtn">วันที่เดินทาง <span>ปฏิทิน พ.ศ.</span></label>
               <input id="travelDate" type="hidden" />
-              <button class="control date-control is-empty" id="travelDatePickerBtn" type="button" aria-haspopup="dialog" aria-controls="thaiDateDialog">
+              <button class="control date-control is-empty" id="travelDatePickerBtn" type="button">
                 <span id="travelDateLabel">กดเลือกวันที่เดินทาง</span>
                 <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-11 4h3"/></svg>
               </button>
@@ -744,7 +761,26 @@
             <h3>เลือกขบวนรถและสถานี</h3>
             <div class="field">
               <label for="selectedTrain">ขบวนรถไฟ <span>ด่วนพิเศษ / ด่วน / เร็ว / ธรรมดา / ท้องถิ่น</span></label>
-              <select class="control" id="selectedTrain"></select>
+              <select class="control" id="selectedTrain">
+                <option value="">- กรุณาเลือกขบวนรถ -</option>
+                <optgroup label="ขบวนรถสำรองที่นั่ง (ด่วนพิเศษ / ด่วน / เร็ว)">
+                  <option value="7/8">7/8 ด่วนพิเศษ (ดีเซลราง) กรุงเทพอภิวัฒน์–เชียงใหม่</option>
+                  <option value="9/10">9/10 ด่วนพิเศษอุตราวิถี กรุงเทพอภิวัฒน์–เชียงใหม่</option>
+                  <option value="13/14">13/14 ด่วนพิเศษ กรุงเทพอภิวัฒน์–เชียงใหม่</option>
+                  <option value="51/52">51/52 ด่วน กรุงเทพอภิวัฒน์–เชียงใหม่</option>
+                  <option value="107/108">107/108 เร็ว กรุงเทพอภิวัฒน์–เด่นชัย</option>
+                  <option value="109/102">109/102 เร็ว กรุงเทพอภิวัฒน์–เชียงใหม่</option>
+                  <option value="111/112">111/112 เร็ว กรุงเทพอภิวัฒน์–เด่นชัย</option>
+                </optgroup>
+                <optgroup label="ขบวนรถไม่สำรองที่นั่ง (ธรรมดา / ท้องถิ่น)">
+                  <option value="201/202">201/202 ธรรมดา กรุงเทพ (หัวลำโพง)–พิษณุโลก</option>
+                  <option value="207/208">207/208 ธรรมดา กรุงเทพ (หัวลำโพง)–นครสวรรค์</option>
+                  <option value="209/210">209/210 ธรรมดา กรุงเทพ (หัวลำโพง)–บ้านตาคลี</option>
+                  <option value="401/402">401/402 ท้องถิ่น ลพบุรี–พิษณุโลก</option>
+                  <option value="403/404">403/404 ท้องถิ่น พิษณุโลก–ศิลาอาสน์</option>
+                  <option value="407/408">407/408 ท้องถิ่น นครสวรรค์–เชียงใหม่</option>
+                </optgroup>
+              </select>
             </div>
 
             <!-- ปุ่มลัดสถานีหลัก (Quick Chips) -->
@@ -753,22 +789,32 @@
                 <span>📍 ปุ่มลัดสถานีหลัก (แตะเพื่อใส่สถานีต้นทาง / สถานีปลายทาง)</span>
                 <button class="text-btn" id="clearRouteBtn" type="button">ล้างสถานี</button>
               </div>
-              <div class="chips" id="quickStationChips"></div>
+              <div class="chips" id="quickStationChips">
+                <button type="button" class="chip highlight" data-quick="พิษณุโลก">📌 พิษณุโลก</button>
+                <button type="button" class="chip" data-quick="กรุงเทพอภิวัฒน์">กรุงเทพอภิวัฒน์</button>
+                <button type="button" class="chip" data-quick="เชียงใหม่">เชียงใหม่</button>
+              </div>
             </div>
 
             <div class="swap-row">
               <div class="field">
-                <label for="passOrigin">สถานีต้นทาง <span>ต้นทางผู้โดยสาร</span></label>
+                <label for="passOriginBtn">สถานีต้นทาง <span>ต้นทางผู้โดยสาร</span></label>
                 <div class="control-wrap">
-                  <input class="control station-input" id="passOrigin" readonly role="button" aria-haspopup="dialog" aria-controls="stationPickerDialog" autocomplete="off" placeholder="กดเลือกสถานีต้นทาง" />
+                  <input id="passOrigin" type="hidden" value="" />
+                  <button class="control station-picker-trigger is-empty" id="passOriginBtn" type="button">
+                    <span id="passOriginLabel">กดเลือกสถานีต้นทาง</span>
+                  </button>
                   <button class="mini-btn" id="favOriginBtn" type="button" title="บันทึกสถานีโปรด">☆</button>
                 </div>
               </div>
               <button class="swap-btn" id="swapStationsBtn" type="button" title="สลับสถานีต้นทางและสถานีปลายทาง">⇄</button>
               <div class="field">
-                <label for="passDest">สถานีปลายทาง <span>ปลายทางผู้โดยสาร</span></label>
+                <label for="passDestBtn">สถานีปลายทาง <span>ปลายทางผู้โดยสาร</span></label>
                 <div class="control-wrap">
-                  <input class="control station-input" id="passDest" readonly role="button" aria-haspopup="dialog" aria-controls="stationPickerDialog" autocomplete="off" placeholder="กดเลือกสถานีปลายทาง" />
+                  <input id="passDest" type="hidden" value="" />
+                  <button class="control station-picker-trigger is-empty" id="passDestBtn" type="button">
+                    <span id="passDestLabel">กดเลือกสถานีปลายทาง</span>
+                  </button>
                   <button class="mini-btn" id="favDestBtn" type="button" title="บันทึกสถานีโปรด">☆</button>
                 </div>
               </div>
@@ -799,7 +845,13 @@
           <p>ตรวจสอบวันแรกที่เปิดให้จองล่วงหน้า</p>
         </div>
       </div>
-      <div class="result-body" id="bookingResult" role="status" aria-live="polite" aria-atomic="true"></div>
+      <div class="result-body" id="bookingResult" role="status" aria-live="polite" aria-atomic="true">
+        <div class="empty">
+          <div class="empty-icon">🚆</div>
+          <h3>พร้อมคำนวณวันเปิดจอง</h3>
+          <p>เลือกวันที่เดินทาง ขบวนรถ และสถานีต้นทาง–ปลายทางให้ครบ<br>ผลลัพธ์จะแสดงอัตโนมัติทันที</p>
+        </div>
+      </div>
       <div class="card-body" style="padding-top:0">
         <div class="side-section">
           <h3><span>🕘 ประวัติที่เช็กล่าสุด</span><button class="text-btn" id="clearBookingHistoryBtn" type="button">ล้าง</button></h3>
@@ -815,99 +867,105 @@
   </footer>
 </div>
 
-<!-- Dialog: ตั้งเตือนปฏิทิน -->
-<dialog class="reminder-dialog" id="reminderDialog" aria-labelledby="reminderTitle">
-  <div class="dialog-head">
-    <div>
-      <h2 id="reminderTitle">ตั้งเตือนวันเปิดจอง</h2>
-      <p>เพิ่มนัดหมายแจ้งเตือนลงในปฏิทินมือถือ</p>
-    </div>
-    <button class="dialog-close" id="closeReminderBtn" type="button" aria-label="ปิดหน้าตั้งเตือน">×</button>
-  </div>
-  <div class="dialog-body">
-    <div class="reminder-route" id="reminderRoute"></div>
-    <div class="grid grid-2">
-      <div class="field">
-        <label for="reminderLead">เตือนเมื่อไหร่</label>
-        <select class="control" id="reminderLead">
-          <option value="0">วันเปิดจอง</option>
-          <option value="1">ก่อนเปิดจอง 1 วัน</option>
-          <option value="2">ก่อนเปิดจอง 2 วัน</option>
-          <option value="custom">เลือกวันเอง</option>
-        </select>
+<!-- Modal 1: ตั้งเตือนปฏิทิน -->
+<div class="modal-overlay" id="reminderDialog" role="dialog" aria-modal="true" aria-labelledby="reminderTitle">
+  <div class="modal-box">
+    <div class="dialog-head">
+      <div>
+        <h2 id="reminderTitle">ตั้งเตือนวันเปิดจอง</h2>
+        <p>เพิ่มนัดหมายแจ้งเตือนลงในปฏิทินมือถือ</p>
       </div>
-      <div class="field">
-        <label for="reminderTime">เวลาที่ต้องการเตือน</label>
-        <input class="control" id="reminderTime" type="time" required value="08:30" />
+      <button class="dialog-close" id="closeReminderBtn" type="button" aria-label="ปิดหน้าตั้งเตือน">×</button>
+    </div>
+    <div class="dialog-body">
+      <div class="reminder-route" id="reminderRoute"></div>
+      <div class="grid grid-2">
+        <div class="field">
+          <label for="reminderLead">เตือนเมื่อไหร่</label>
+          <select class="control" id="reminderLead">
+            <option value="0">วันเปิดจอง</option>
+            <option value="1">ก่อนเปิดจอง 1 วัน</option>
+            <option value="2">ก่อนเปิดจอง 2 วัน</option>
+            <option value="custom">เลือกวันเอง</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="reminderTime">เวลาที่ต้องการเตือน</label>
+          <input class="control" id="reminderTime" type="time" required value="08:30" />
+        </div>
       </div>
+      <div class="field hidden" id="reminderCustomBox" style="margin-top:12px">
+        <label for="reminderDatePickerBtn">วันที่ต้องการเตือน</label>
+        <input id="reminderDate" type="hidden" />
+        <button class="control date-control is-empty" id="reminderDatePickerBtn" type="button">
+          <span id="reminderDateLabel">กดเลือกวันที่</span>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-11 4h3"/></svg>
+        </button>
+      </div>
+      <div class="reminder-preview" id="reminderPreview" aria-live="polite"></div>
+      <div class="reminder-error hidden" id="reminderError" role="alert"></div>
+      <div class="reminder-buttons">
+        <button class="action-btn primary" type="button" id="googleCalendarBtn">📅 เพิ่มใน Google Calendar (แนะนำ)</button>
+        <button class="action-btn" type="button" id="copyReminderBtn">📋 คัดลอกข้อความแจ้งเตือนไว้ส่งในแชท</button>
+      </div>
+      <div class="reminder-handoff hidden" id="reminderHandoff" role="status" aria-live="polite"></div>
     </div>
-    <div class="field hidden" id="reminderCustomBox" style="margin-top:12px">
-      <label for="reminderDatePickerBtn">วันที่ต้องการเตือน</label>
-      <input id="reminderDate" type="hidden" />
-      <button class="control date-control is-empty" id="reminderDatePickerBtn" type="button" aria-haspopup="dialog" aria-controls="thaiDateDialog">
-        <span id="reminderDateLabel">กดเลือกวันที่</span>
-        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-11 4h3"/></svg>
-      </button>
-    </div>
-    <div class="reminder-preview" id="reminderPreview" aria-live="polite"></div>
-    <div class="reminder-error hidden" id="reminderError" role="alert"></div>
-    <div class="reminder-buttons">
-      <button class="action-btn primary" type="button" id="googleCalendarBtn">📅 เพิ่มใน Google Calendar (แนะนำ)</button>
-      <button class="action-btn" type="button" id="copyReminderBtn">📋 คัดลอกข้อความแจ้งเตือนไว้ส่งในแชท</button>
-    </div>
-    <div class="reminder-handoff hidden" id="reminderHandoff" role="status" aria-live="polite"></div>
   </div>
-</dialog>
+</div>
 
-<!-- Dialog: เลือกสถานี -->
-<dialog class="picker-dialog" id="stationPickerDialog" aria-labelledby="stationPickerTitle">
-  <div class="dialog-head">
-    <div>
-      <h2 id="stationPickerTitle">เลือกสถานี</h2>
-      <p id="stationPickerContext">กรุณาเลือกสถานี</p>
-    </div>
-    <button class="dialog-close" id="closeStationPickerBtn" type="button" aria-label="ปิดรายการสถานี">×</button>
-  </div>
-  <div class="station-picker-body">
-    <div class="station-search">
-      <label class="sr-only" for="stationSearch">ค้นหาชื่อสถานี</label>
-      <input class="control" id="stationSearch" type="search" placeholder="พิมพ์ค้นหาชื่อสถานี..." autocomplete="off" inputmode="search">
-      <button class="search-clear hidden" id="clearStationSearchBtn" type="button" aria-label="ล้างคำค้นหา">×</button>
-    </div>
-    <p class="station-count" id="stationCount" aria-live="polite"></p>
-    <div class="station-options" id="stationOptions" role="group" aria-label="รายการสถานี"></div>
-  </div>
-</dialog>
-
-<!-- Dialog: ปฏิทินไทย พ.ศ. -->
-<dialog class="picker-dialog" id="thaiDateDialog" aria-labelledby="thaiDateTitle">
-  <div class="dialog-head">
-    <div>
-      <h2 id="thaiDateTitle">เลือกวันที่เดินทาง</h2>
-      <p>เดือนภาษาไทย · ปี พ.ศ.</p>
-    </div>
-    <button class="dialog-close" id="closeThaiDateBtn" type="button" aria-label="ปิดปฏิทิน">×</button>
-  </div>
-  <div class="date-picker-body">
-    <div class="calendar-nav">
-      <button class="icon-btn" id="thaiCalendarPrev" type="button" aria-label="เดือนก่อนหน้า">‹</button>
-      <div class="calendar-selects">
-        <select class="control" id="thaiCalendarMonth" aria-label="เดือน"></select>
-        <select class="control" id="thaiCalendarYear" aria-label="ปี พ.ศ."></select>
+<!-- Modal 2: เลือกสถานี -->
+<div class="modal-overlay" id="stationPickerDialog" role="dialog" aria-modal="true" aria-labelledby="stationPickerTitle">
+  <div class="modal-box">
+    <div class="dialog-head">
+      <div>
+        <h2 id="stationPickerTitle">เลือกสถานี</h2>
+        <p id="stationPickerContext">กรุณาเลือกสถานี</p>
       </div>
-      <button class="icon-btn" id="thaiCalendarNext" type="button" aria-label="เดือนถัดไป">›</button>
+      <button class="dialog-close" id="closeStationPickerBtn" type="button" aria-label="ปิดรายการสถานี">×</button>
     </div>
-    <div class="calendar-weekdays" aria-hidden="true">
-      <span>อา.</span><span>จ.</span><span>อ.</span><span>พ.</span><span>พฤ.</span><span>ศ.</span><span>ส.</span>
-    </div>
-    <div class="calendar-days" id="thaiCalendarDays" role="group" aria-label="เลือกวัน"></div>
-    <p class="calendar-key">กรอบสีคือวันนี้ · วันที่จางคือวันที่ผ่านมาแล้ว</p>
-    <div class="calendar-footer">
-      <span id="thaiCalendarSelection" aria-live="polite"></span>
-      <button class="action-btn" id="thaiCalendarToday" type="button">เลือกวันนี้</button>
+    <div class="station-picker-body">
+      <div class="station-search">
+        <label class="sr-only" for="stationSearch">ค้นหาชื่อสถานี</label>
+        <input class="control" id="stationSearch" type="search" placeholder="พิมพ์ค้นหาชื่อสถานี..." autocomplete="off" inputmode="search">
+        <button class="search-clear hidden" id="clearStationSearchBtn" type="button" aria-label="ล้างคำค้นหา">×</button>
+      </div>
+      <p class="station-count" id="stationCount" aria-live="polite"></p>
+      <div class="station-options" id="stationOptions" role="group" aria-label="รายการสถานี"></div>
     </div>
   </div>
-</dialog>
+</div>
+
+<!-- Modal 3: ปฏิทินไทย พ.ศ. -->
+<div class="modal-overlay" id="thaiDateDialog" role="dialog" aria-modal="true" aria-labelledby="thaiDateTitle">
+  <div class="modal-box">
+    <div class="dialog-head">
+      <div>
+        <h2 id="thaiDateTitle">เลือกวันที่เดินทาง</h2>
+        <p>เดือนภาษาไทย · ปี พ.ศ.</p>
+      </div>
+      <button class="dialog-close" id="closeThaiDateBtn" type="button" aria-label="ปิดปฏิทิน">×</button>
+    </div>
+    <div class="date-picker-body">
+      <div class="calendar-nav">
+        <button class="icon-btn" id="thaiCalendarPrev" type="button" aria-label="เดือนก่อนหน้า">‹</button>
+        <div class="calendar-selects">
+          <select class="control" id="thaiCalendarMonth" aria-label="เดือน"></select>
+          <select class="control" id="thaiCalendarYear" aria-label="ปี พ.ศ."></select>
+        </div>
+        <button class="icon-btn" id="thaiCalendarNext" type="button" aria-label="เดือนถัดไป">›</button>
+      </div>
+      <div class="calendar-weekdays" aria-hidden="true">
+        <span>อา.</span><span>จ.</span><span>อ.</span><span>พ.</span><span>พฤ.</span><span>ศ.</span><span>ส.</span>
+      </div>
+      <div class="calendar-days" id="thaiCalendarDays" role="group" aria-label="เลือกวัน"></div>
+      <p class="calendar-key">กรอบสีคือวันนี้ · วันที่จางคือวันที่ผ่านมาแล้ว</p>
+      <div class="calendar-footer">
+        <span id="thaiCalendarSelection" aria-live="polite"></span>
+        <button class="action-btn" id="thaiCalendarToday" type="button">เลือกวันนี้</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -928,7 +986,6 @@ const BOOKING_RULES = Object.freeze({
   nonReservedText: 'ซื้อตั๋วในวันเดินทาง ก่อนขบวนรถออกไม่เกิน 2 ชั่วโมง'
 });
 
-/* ปุ่มลัดสถานีหลัก */
 const QUICK_STATIONS = Object.freeze([
   'พิษณุโลก',
   'กรุงเทพอภิวัฒน์',
@@ -976,7 +1033,6 @@ const northStations = [
 ];
 
 const northSchedules = [
-  /* ขบวนสำรองที่นั่ง (ด่วนพิเศษ / ด่วน / เร็ว) */
   { id: "7/8", name: "7/8 ด่วนพิเศษ (ดีเซลราง) กรุงเทพอภิวัฒน์–เชียงใหม่", origin: "กรุงเทพอภิวัฒน์", dest: "เชียงใหม่",
     stops: ["กรุงเทพอภิวัฒน์", "ดอนเมือง", "รังสิต", "อยุธยา", "ลพบุรี 2 (ท่าวุ้ง)", "นครสวรรค์", "ปากน้ำโพ", "ตะพานหิน", "พิจิตร", "พิษณุโลก", "อุตรดิตถ์", "ศิลาอาสน์", "เด่นชัย", "บ้านปิน", "นครลำปาง", "ขุนตาน", "ลำพูน", "เชียงใหม่"] },
   { id: "9/10", name: "9/10 ด่วนพิเศษอุตราวิถี กรุงเทพอภิวัฒน์–เชียงใหม่", origin: "กรุงเทพอภิวัฒน์", dest: "เชียงใหม่",
@@ -991,8 +1047,6 @@ const northSchedules = [
     stops: ["กรุงเทพอภิวัฒน์", "ดอนเมือง", "รังสิต", "อยุธยา", "ชุมทางบ้านภาชี", "ท่าเรือ", "บ้านหมอ", "ลพบุรี 2 (ท่าวุ้ง)", "บ้านหมี่", "จันเสน", "ช่องแค", "บ้านตาคลี", "หนองโพ", "นครสวรรค์", "ปากน้ำโพ", "ชุมแสง", "บางมูลนาก", "ตะพานหิน", "พิจิตร", "บางกระทุ่ม", "พิษณุโลก", "พรหมพิราม", "หนองตม", "พิชัย", "ชุมทางบ้านดารา", "ท่าสัก", "ตรอน", "อุตรดิตถ์", "ศิลาอาสน์", "เด่นชัย", "บ้านปิน", "แม่เมาะ", "นครลำปาง", "ขุนตาน", "ลำพูน", "เชียงใหม่"] },
   { id: "111/112", name: "111/112 เร็ว กรุงเทพอภิวัฒน์–เด่นชัย", origin: "กรุงเทพอภิวัฒน์", dest: "เด่นชัย",
     stops: ["กรุงเทพอภิวัฒน์", "ดอนเมือง", "รังสิต", "เชียงราก", "บางปะอิน", "อยุธยา", "มาบพระจันทร์", "พระแก้ว", "ชุมทางบ้านภาชี", "หนองวิวัฒน์", "ท่าเรือ", "บ้านหมอ", "หนองโดน", "ลพบุรี 2 (ท่าวุ้ง)", "บ้านหมี่", "จันเสน", "ช่องแค", "บ้านตาคลี", "หนองโพ", "นครสวรรค์", "ทับกฤช", "ปากน้ำโพ", "ชุมแสง", "บางมูลนาก", "ตะพานหิน", "หัวดง", "วังกรด", "พิจิตร", "บางกระทุ่ม", "พิษณุโลก", "พรหมพิราม", "หนองตม", "พิชัย", "ชุมทางบ้านดารา", "ท่าสัก", "ตรอน", "อุตรดิตถ์", "ศิลาอาสน์", "บ้านด่าน", "ปางต้นผึ้ง", "ห้วยไร่", "เด่นชัย"] },
-
-  /* ขบวนไม่สำรองที่นั่ง (รถธรรมดา / รถท้องถิ่นผ่านพิษณุโลก) */
   { id: "201/202", name: "201/202 ธรรมดา กรุงเทพ (หัวลำโพง)–พิษณุโลก", origin: "กรุงเทพ (หัวลำโพง)", dest: "พิษณุโลก" },
   { id: "207/208", name: "207/208 ธรรมดา กรุงเทพ (หัวลำโพง)–นครสวรรค์", origin: "กรุงเทพ (หัวลำโพง)", dest: "นครสวรรค์" },
   { id: "209/210", name: "209/210 ธรรมดา กรุงเทพ (หัวลำโพง)–บ้านตาคลี", origin: "กรุงเทพ (หัวลำโพง)", dest: "บ้านตาคลี" },
@@ -1002,11 +1056,12 @@ const northSchedules = [
 ];
 
 /* =========================================================
-   3) UTILITIES
+   3) SAFE UTILITIES & MODAL CONTROLLER
    ========================================================= */
 const $ = (id) => document.getElementById(id);
 const DAY_MS = 86400000;
 const REMINDER_ZONE = 'Asia/Bangkok';
+const THAI_MONTHS = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
 
 const STORAGE = {
   get(key, fallback) {
@@ -1018,11 +1073,31 @@ const STORAGE = {
   }
 };
 
-function bangkokToday() {
-  const p = new Intl.DateTimeFormat('en-CA', { timeZone: REMINDER_ZONE, year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
-  const v = k => p.find(x => x.type === k).value;
-  return `${v('year')}-${v('month')}-${v('day')}`;
+function openModal(id) {
+  const modal = $(id);
+  if (!modal) return;
+  modal.classList.add('open');
+  document.body.classList.add('modal-open');
 }
+
+function closeModal(id) {
+  const modal = $(id);
+  if (!modal) return;
+  modal.classList.remove('open');
+  if (!document.querySelector('.modal-overlay.open')) {
+    document.body.classList.remove('modal-open');
+  }
+}
+
+/* คำนวณวันปัจจุบันตามเวลาประเทศไทย (UTC+7) โดยไม่พึ่งพา en-CA locale */
+function bangkokToday() {
+  const now = new Date(Date.now() + 7 * 3600000);
+  const y = now.getUTCFullYear();
+  const m = String(now.getUTCMonth() + 1).padStart(2, '0');
+  const d = String(now.getUTCDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
 function parseLocalDate(value) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value || '')) return null;
   const [y, m, d] = value.split('-').map(Number);
@@ -1037,7 +1112,8 @@ function toLocalISO(date = new Date()) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 function formatDate(date) {
-  return date.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+  if (!date) return '';
+  return `${date.getDate()} ${THAI_MONTHS[date.getMonth()]} ${date.getFullYear() + 543}`;
 }
 function money(value) {
   const n = Number(value);
@@ -1124,6 +1200,10 @@ const el = {
   selectedTrain: $('selectedTrain'),
   passOrigin: $('passOrigin'),
   passDest: $('passDest'),
+  passOriginBtn: $('passOriginBtn'),
+  passDestBtn: $('passDestBtn'),
+  passOriginLabel: $('passOriginLabel'),
+  passDestLabel: $('passDestLabel'),
   distanceSummary: $('distanceSummary'),
   totalKmText: $('totalKmText'),
   passengerKmText: $('passengerKmText'),
@@ -1134,16 +1214,15 @@ const el = {
 };
 
 /* =========================================================
-   5) INITIALIZATION & QUICK CHIPS
+   5) STATION UI & QUICK CHIPS
    ========================================================= */
-function initTrains() {
-  el.selectedTrain.innerHTML = '<option value="">- กรุณาเลือกขบวนรถ -</option>';
-  northSchedules.forEach(t => {
-    const o = document.createElement('option');
-    o.value = t.id;
-    o.textContent = t.name;
-    el.selectedTrain.appendChild(o);
-  });
+function syncStationButtons() {
+  const orig = el.passOrigin.value;
+  const dest = el.passDest.value;
+  el.passOriginLabel.textContent = orig || 'กดเลือกสถานีต้นทาง';
+  el.passOriginBtn.classList.toggle('is-empty', !orig);
+  el.passDestLabel.textContent = dest || 'กดเลือกสถานีปลายทาง';
+  el.passDestBtn.classList.toggle('is-empty', !dest);
 }
 
 function syncStationConstraints() {
@@ -1153,6 +1232,7 @@ function syncStationConstraints() {
     if (el.passOrigin.value && !allowed.includes(el.passOrigin.value)) el.passOrigin.value = '';
     if (el.passDest.value && !allowed.includes(el.passDest.value)) el.passDest.value = '';
   }
+  syncStationButtons();
   renderQuickChips();
   renderFavoriteButtons();
 }
@@ -1174,6 +1254,7 @@ function selectQuickStation(stationName) {
   }
   targetField.value = stationName;
   state.lastStationField = targetField === el.passOrigin ? 'passDest' : 'passOrigin';
+  syncStationButtons();
   calculateBooking();
 }
 
@@ -1186,9 +1267,6 @@ function renderQuickChips() {
     const isDisabled = train && !allowed.includes(name);
     return `<button type="button" class="chip ${isPlk ? 'highlight' : ''} ${isSelected ? 'selected' : ''}" data-quick="${esc(name)}" ${isDisabled ? 'disabled' : ''}>${isPlk ? '📌 ' : ''}${esc(name)}</button>`;
   }).join('');
-  el.quickStationChips.querySelectorAll('[data-quick]').forEach(btn => {
-    btn.addEventListener('click', () => selectQuickStation(btn.dataset.quick));
-  });
 }
 
 /* =========================================================
@@ -1219,9 +1297,6 @@ function renderFavorites() {
     return;
   }
   box.innerHTML = state.favorites.map(name => `<button class="chip" type="button" data-favorite="${esc(name)}">${esc(name)}</button>`).join('');
-  box.querySelectorAll('[data-favorite]').forEach(btn => {
-    btn.addEventListener('click', () => selectQuickStation(btn.dataset.favorite));
-  });
 }
 function renderFavoriteButtons() {
   const a = state.favorites.includes(el.passOrigin.value);
@@ -1290,6 +1365,7 @@ function updateDistanceSummary(total, passenger) {
 
 function calculateBooking() {
   syncDateControls();
+  syncStationButtons();
   renderQuickChips();
   renderFavoriteButtons();
   const d = getBookingInputs();
@@ -1494,9 +1570,6 @@ function renderHistories() {
       <b>${esc(x.title)}</b>
       <span>${esc(x.subtitle)}</span>
     </button>`).join('');
-  el.bookingHistory.querySelectorAll('[data-history]').forEach(b => {
-    b.addEventListener('click', () => restoreBooking(state.bookingHistory[Number(b.dataset.history)].restore));
-  });
 }
 function restoreBooking(s) {
   if (!s) return;
@@ -1510,7 +1583,7 @@ function restoreBooking(s) {
 }
 
 /* =========================================================
-   9) CALENDAR REMINDER (OPTIMIZED FOR LINE IN-APP BROWSER)
+   9) CALENDAR REMINDER
    ========================================================= */
 let reminderResult = null;
 function bookingReminderDate(r) {
@@ -1526,7 +1599,7 @@ function calendarStamp(d) {
   return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
 }
 function bangkokDateLabel(iso) {
-  return new Intl.DateTimeFormat('th-TH', { timeZone: REMINDER_ZONE, year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(iso + 'T12:00:00+07:00'));
+  return formatDate(parseLocalDate(iso));
 }
 
 function openBookingReminder() {
@@ -1541,9 +1614,11 @@ function openBookingReminder() {
   lead.options[2].textContent = non ? 'ก่อนเดินทาง 2 วัน' : 'ก่อนเปิดจอง 2 วัน';
   lead.value = '0';
 
-  $('reminderDate').min = bangkokToday();$('reminderDate').max = r.travelDate;
+  $('reminderDate').min = bangkokToday();
+  $('reminderDate').max = r.travelDate;
   $('reminderDate').value = date;
-  $('reminderTime').value = r.openTime \vert{}\vert{} '08:30';$('reminderRoute').innerHTML = `
+  $('reminderTime').value = r.openTime || '08:30';
+  $('reminderRoute').innerHTML = `
     <b>${esc(r.origin)} → ${esc(r.destination)}</b>
     <span>เดินทาง ${bangkokDateLabel(r.travelDate)} · ${esc(r.trainName)}</span>
     <span>${non ? 'ซื้อตั๋วที่สถานีในวันเดินทาง' : `เริ่มเปิดจอง ${bangkokDateLabel(date)} เวลา ${esc(r.openTime || '08:30')} น.`}</span>`;
@@ -1551,15 +1626,18 @@ function openBookingReminder() {
   const hasPassed = bangkokInstant(date, r.openTime || '08:30') <= new Date();
   if (hasPassed) {
     lead.value = 'custom';
-    const soon = new Date(Date.now() + 60 * 60 * 1000);
-    const p = new Intl.DateTimeFormat('en-CA', { timeZone: REMINDER_ZONE, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(soon);
-    const v = k => p.find(x => x.type === k).value;
-    $('reminderDate').value = `${v('year')}-${v('month')}-${v('day')}`;
-    $('reminderTime').value = `${v('hour')}:${v('minute')}`;
+    const soon = new Date(Date.now() + 8 * 3600000);
+    const y = soon.getUTCFullYear();
+    const m = String(soon.getUTCMonth() + 1).padStart(2, '0');
+    const d = String(soon.getUTCDate()).padStart(2, '0');
+    const hh = String(soon.getUTCHours()).padStart(2, '0');
+    const mm = String(soon.getUTCMinutes()).padStart(2, '0');
+    $('reminderDate').value = `${y}-${m}-${d}`;
+    $('reminderTime').value = `${hh}:${mm}`;
   }
   $('reminderHandoff').classList.add('hidden');
   updateReminderPreview();
-  $('reminderDialog').showModal();
+  openModal('reminderDialog');
 }
 
 function reminderInputs() {
@@ -1620,12 +1698,12 @@ function copyReminderText() {
   const text = `⏰ ตั้งเตือนจองตั๋ว: ${bangkokDateLabel(p.date)} เวลา ${p.time} น.\n${reminderResult.copyText}`;
   copyText(text).then(() => {
     showToast('คัดลอกข้อความเตือนแล้ว ส่งเก็บไว้ในแชท LINE ได้เลย');
-    $('reminderDialog').close();
+    closeModal('reminderDialog');
   });
 }
 
 /* =========================================================
-   10) STATION PICKER DIALOG
+   10) STATION PICKER MODAL
    ========================================================= */
 let stationPickerField = null;
 const STATION_FIELD_LABELS = {
@@ -1644,17 +1722,17 @@ function openStationPicker(field) {
   state.lastStationField = field;
   $('stationPickerTitle').textContent = 'เลือก' + STATION_FIELD_LABELS[field];
   const train = getTrain(el.selectedTrain.value);
-  $('stationPickerContext').textContent = train ? train.name : 'แสดงสถานีทั้งหมด';
+  $('stationPickerContext').textContent = train ? train.name : 'แสดงสถานีทั้งหมดในเส้นทาง';
   $('stationSearch').value = '';
   renderStationPicker();
-  $('stationPickerDialog').showModal();
+  openModal('stationPickerDialog');
 }
 
 function renderStationPicker() {
   if (!stationPickerField) return;
   const all = pickerStationNames();
-  const query = $('stationSearch').value.trim().toLocaleLowerCase('th-TH');
-  const names = all.filter(n => n.toLocaleLowerCase('th-TH').includes(query));
+  const query = $('stationSearch').value.trim().toLowerCase();
+  const names = all.filter(n => n.toLowerCase().includes(query));
   const pinned = names.filter(n => QUICK_STATIONS.includes(n) || state.favorites.includes(n));
   const remaining = names.filter(n => !pinned.includes(n));
   const selected = $(stationPickerField).value;
@@ -1679,14 +1757,14 @@ function choosePickerStation(name) {
   if (!stationPickerField || !pickerStationNames().includes(name)) return;
   const field = $(stationPickerField);
   field.value = name;
-  $('stationPickerDialog').close();
+  closeModal('stationPickerDialog');
+  syncStationButtons();
   calculateBooking();
 }
 
 /* =========================================================
-   11) THAI BUDDHIST ERA CALENDAR DIALOG
+   11) THAI BUDDHIST ERA CALENDAR MODAL
    ========================================================= */
-const THAI_MONTHS = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
 const thaiPicker = { field: null, year: 0, month: 0 };
 
 function thaiDateText(iso) {
@@ -1701,7 +1779,7 @@ function syncDateControls() {
 }
 function pickerDateBounds() {
   const f = $(thaiPicker.field);
-  return { min: f.min || bangkokToday(), max: f.max || '' };
+  return { min: f?.min || bangkokToday(), max: f?.max || '' };
 }
 function pickerDateAllowed(iso) {
   const b = pickerDateBounds();
@@ -1725,7 +1803,7 @@ function openThaiDatePicker(field) {
   thaiPicker.month = d.getMonth();
   $('thaiDateTitle').textContent = field === 'travelDate' ? 'เลือกวันที่เดินทาง' : 'เลือกวันที่ต้องการเตือน';
   renderThaiCalendar();
-  $('thaiDateDialog').showModal();
+  openModal('thaiDateDialog');
 }
 function renderThaiCalendar() {
   if (!thaiPicker.field) return;
@@ -1764,7 +1842,7 @@ function chooseThaiDate(iso) {
   const field = $(thaiPicker.field);
   field.value = iso;
   syncDateControls();
-  $('thaiDateDialog').close();
+  closeModal('thaiDateDialog');
   if (thaiPicker.field === 'travelDate') calculateBooking();
   else updateReminderPreview();
 }
@@ -1776,15 +1854,32 @@ function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
   STORAGE.set('plkNorthTheme', theme);
   $('themeIcon').textContent = theme === 'dark' ? '☀' : '☾';
-  document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'dark' ? '#1a202c' : '#841b3a');
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#1a202c' : '#841b3a');
 }
 
 el.selectedTrain.addEventListener('change', () => { syncStationConstraints(); calculateBooking(); });
+
+/* Event Delegation สำหรับปุ่มลัดและประวัติ */
+el.quickStationChips.addEventListener('click', e => {
+  const btn = e.target.closest('button[data-quick]');
+  if (btn && !btn.disabled) selectQuickStation(btn.dataset.quick);
+});
+
+$('favoriteChips').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-favorite]');
+  if (btn) selectQuickStation(btn.dataset.favorite);
+});
+
+el.bookingHistory.addEventListener('click', e => {
+  const btn = e.target.closest('button[data-history]');
+  if (btn) restoreBooking(state.bookingHistory[Number(btn.dataset.history)]?.restore);
+});
 
 $('swapStationsBtn').addEventListener('click', () => {
   const a = el.passOrigin.value;
   el.passOrigin.value = el.passDest.value;
   el.passDest.value = a;
+  syncStationButtons();
   calculateBooking();
   showToast('สลับสถานีต้นทาง–ปลายทางแล้ว');
 });
@@ -1793,6 +1888,7 @@ $('clearRouteBtn').addEventListener('click', () => {
   el.passOrigin.value = '';
   el.passDest.value = '';
   state.lastStationField = 'passOrigin';
+  syncStationButtons();
   calculateBooking();
 });
 
@@ -1812,19 +1908,15 @@ $('clearBookingHistoryBtn').addEventListener('click', () => {
 
 $('themeBtn').addEventListener('click', () => applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
 
-/* Dialog Bindings */
-Object.keys(STATION_FIELD_LABELS).forEach(id => {
-  $(id).addEventListener('click', () => openStationPicker(id));
-});
-$('stationSearch').addEventListener('input', renderStationPicker);
-$('clearStationSearchBtn').addEventListener('click', () => {$('stationSearch').value = ''; renderStationPicker(); $('stationSearch').focus(); });$('stationOptions').addEventListener('click', e => {
-  const btn = e.target.closest('button[data-station]');
-  if (btn) choosePickerStation(btn.dataset.station);
-});
-$('closeStationPickerBtn').addEventListener('click', () =>$('stationPickerDialog').close());
+/* Modal Bindings */
+el.passOriginBtn.addEventListener('click', () => openStationPicker('passOrigin'));
+el.passDestBtn.addEventListener('click', () => openStationPicker('passDest'));
 
-$('travelDatePickerBtn').addEventListener('click', () => openThaiDatePicker('travelDate'));
-$('reminderDatePickerBtn').addEventListener('click', () => openThaiDatePicker('reminderDate'));$('closeThaiDateBtn').addEventListener('click', () => $('thaiDateDialog').close());$('thaiCalendarPrev').addEventListener('click', () => moveThaiCalendar(-1));
+$('stationSearch').addEventListener('input', renderStationPicker);$('clearStationSearchBtn').addEventListener('click', () => { $('stationSearch').value = ''; renderStationPicker();$('stationSearch').focus(); });
+$('stationOptions').addEventListener('click', e => { const btn = e.target.closest('button[data-station]'); if (btn) choosePickerStation(btn.dataset.station); });$('closeStationPickerBtn').addEventListener('click', () => closeModal('stationPickerDialog'));
+
+$('travelDatePickerBtn').addEventListener('click', () => openThaiDatePicker('travelDate'));$('reminderDatePickerBtn').addEventListener('click', () => openThaiDatePicker('reminderDate'));
+$('closeThaiDateBtn').addEventListener('click', () => closeModal('thaiDateDialog'));$('thaiCalendarPrev').addEventListener('click', () => moveThaiCalendar(-1));
 $('thaiCalendarNext').addEventListener('click', () => moveThaiCalendar(1));$('thaiCalendarMonth').addEventListener('change', () => {
   const m = Number($('thaiCalendarMonth').value);
   if (calendarMonthAllowed(thaiPicker.year, m)) { thaiPicker.month = m; renderThaiCalendar(); }
@@ -1835,17 +1927,16 @@ $('thaiCalendarYear').addEventListener('change', () => {
 });
 $('thaiCalendarDays').addEventListener('click', e => { const btn = e.target.closest('button[data-date]'); if (btn && !btn.disabled) chooseThaiDate(btn.dataset.date); });$('thaiCalendarToday').addEventListener('click', () => chooseThaiDate(bangkokToday()));
 
-$('closeReminderBtn').addEventListener('click', () =>$('reminderDialog').close());
+$('closeReminderBtn').addEventListener('click', () => closeModal('reminderDialog'));
 ['reminderLead', 'reminderTime'].forEach(id => {
   $(id).addEventListener('input', updateReminderPreview);$(id).addEventListener('change', updateReminderPreview);
 });
 $('googleCalendarBtn').addEventListener('click', openGoogleCalendar);$('copyReminderBtn').addEventListener('click', copyReminderText);
 
+/* ปิด Modal เมื่อแตะพื้นที่สีดำด้านนอก */
 ['stationPickerDialog', 'thaiDateDialog', 'reminderDialog'].forEach(id => {
   $(id).addEventListener('click', e => {
-    if (e.target !== $(id)) return;
-    const b = e.target.getBoundingClientRect();
-    if (e.clientX < b.left || e.clientX > b.right || e.clientY < b.top || e.clientY > b.bottom) e.target.close();
+    if (e.target === $(id)) closeModal(id);
   });
 });
 
@@ -1853,12 +1944,11 @@ $('googleCalendarBtn').addEventListener('click', openGoogleCalendar);$('copyRemi
    13) BOOT
    ========================================================= */
 (function boot() {
-  initTrains();
   el.travelDate.min = bangkokToday();
   syncStationConstraints();
   renderFavorites();
   renderHistories();
-  applyTheme(STORAGE.get('plkNorthTheme', matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+  applyTheme(STORAGE.get('plkNorthTheme', matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
   syncDateControls();
   bookingEmpty();
 })();
