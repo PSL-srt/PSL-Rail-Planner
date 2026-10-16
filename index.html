@@ -1721,7 +1721,8 @@ function openStationPicker(field) {
   $('stationPickerTitle').textContent = 'เลือก' + STATION_FIELD_LABELS[field];
   const train = getTrain(el.selectedTrain.value);
   $('stationPickerContext').textContent = train ? train.name : 'แสดงสถานีทั้งหมดในเส้นทาง';
-  $('stationSearch').value = '';
+  const searchInput = $('stationSearch');
+  if (searchInput) searchInput.value = '';
   renderStationPicker();
   openModal('stationPickerDialog');
 }
@@ -1729,7 +1730,8 @@ function openStationPicker(field) {
 function renderStationPicker() {
   if (!stationPickerField) return;
   const all = pickerStationNames();
-  const query = $('stationSearch').value.trim().toLowerCase();
+  const searchInput = $('stationSearch');
+  const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
   const names = all.filter(n => n.toLowerCase().includes(query));
   const pinned = names.filter(n => QUICK_STATIONS.includes(n) || state.favorites.includes(n));
   const remaining = names.filter(n => !pinned.includes(n));
@@ -1743,12 +1745,20 @@ function renderStationPicker() {
     </button>`;
   }
 
-  $('stationOptions').innerHTML = names.length
-    ? (pinned.length ? `<div class="station-group">📍 สถานีหลัก / สถานีโปรด</div>${pinned.map(option).join('')}<div class="station-group">สถานีทั้งหมดในเส้นทาง</div>` : '') + remaining.map(option).join('')
-    : '<div class="station-no-results">ไม่พบชื่อสถานีที่ค้นหา</div>';
+  const optionsContainer = $('stationOptions');
+  if (optionsContainer) {
+    optionsContainer.innerHTML = names.length
+      ? (pinned.length ? `<div class="station-group">📍 สถานีหลัก / สถานีโปรด</div>${pinned.map(option).join('')}<div class="station-group">สถานีทั้งหมดในเส้นทาง</div>` : '') + remaining.map(option).join('')
+      : '<div class="station-no-results">ไม่พบชื่อสถานีที่ค้นหา</div>';
+  }
 
-  $('stationCount').textContent = query ? `พบ ${names.length} สถานี` : `มี ${all.length} สถานีในเส้นทางนี้ · แตะเลือกได้เลย`;
-  $('clearStationSearchBtn').classList.toggle('hidden', !query);
+  const countContainer = $('stationCount');
+  if (countContainer) {
+    countContainer.textContent = query ? `พบ ${names.length} สถานี` : `มี ${all.length} สถานีในเส้นทางนี้ · แตะเลือกได้เลย`;
+  }
+  
+  const clearBtn = $('clearStationSearchBtn');
+  if (clearBtn) clearBtn.classList.toggle('hidden', !query);
 }
 
 function choosePickerStation(name) {
@@ -1770,7 +1780,8 @@ function syncDateControls() {
   ['travelDate', 'reminderDate'].forEach(id => {
     const text = thaiDateText($(id).value), button =$(id + 'PickerBtn');
     if (!button) return;
-    $(id + 'Label').textContent = text || 'กดเลือกวันที่เดินทาง';
+    const label = $(id + 'Label');
+    if (label) label.textContent = text || 'กดเลือกวันที่เดินทาง';
     button.classList.toggle('is-empty', !text);
   });
 }
@@ -1791,27 +1802,35 @@ function calendarMonthAllowed(year, month) {
 function openThaiDatePicker(field) {
   if (!['travelDate', 'reminderDate'].includes(field)) return;
   thaiPicker.field = field;
-  const f = $(field), min = f.min || bangkokToday(), max = f.max || '';
-  let iso = parseLocalDate(f.value) ? f.value : bangkokToday();
+  const f = $(field), min = f?.min || bangkokToday(), max = f?.max || '';
+  let iso = parseLocalDate(f?.value) ? f.value : bangkokToday();
   if (iso < min) iso = min;
   if (max && iso > max) iso = max;
   const d = parseLocalDate(iso);
   thaiPicker.year = d.getFullYear();
   thaiPicker.month = d.getMonth();
-  $('thaiDateTitle').textContent = field === 'travelDate' ? 'เลือกวันที่เดินทาง' : 'เลือกวันที่ต้องการเตือน';
+  const titleEl = $('thaiDateTitle');
+  if (titleEl) titleEl.textContent = field === 'travelDate' ? 'เลือกวันที่เดินทาง' : 'เลือกวันที่ต้องการเตือน';
   renderThaiCalendar();
   openModal('thaiDateDialog');
 }
 function renderThaiCalendar() {
   if (!thaiPicker.field) return;
-  const y = thaiPicker.year, m = thaiPicker.month, b = pickerDateBounds(), selected = $(thaiPicker.field).value, today = bangkokToday();$('thaiCalendarMonth').innerHTML = THAI_MONTHS.map((n, i) => `<option value="${i}"${calendarMonthAllowed(y, i) ? '' : ' disabled'}>${n}</option>`).join('');
-  $('thaiCalendarMonth').value = String(m);
+  const y = thaiPicker.year, m = thaiPicker.month, b = pickerDateBounds(), selected = $(thaiPicker.field).value, today = bangkokToday();
+  const monthSelect = $('thaiCalendarMonth');
+  if (monthSelect) {
+    monthSelect.innerHTML = THAI_MONTHS.map((n, i) => `<option value="${i}"${calendarMonthAllowed(y, i) ? '' : ' disabled'}>${n}</option>`).join('');
+    monthSelect.value = String(m);
+  }
 
   const minYear = Number(b.min.slice(0, 4)), maxYear = b.max ? Number(b.max.slice(0, 4)) : Math.max(minYear + 2, y);
   let years = '';
   for (let year = minYear; year <= maxYear; year++) years += `<option value="${year}">พ.ศ. ${year + 543}</option>`;
-  $('thaiCalendarYear').innerHTML = years;
-  $('thaiCalendarYear').value = String(y);
+  const yearSelect = $('thaiCalendarYear');
+  if (yearSelect) {
+    yearSelect.innerHTML = years;
+    yearSelect.value = String(y);
+  }
 
   const first = new Date(y, m, 1).getDay(), count = new Date(y, m + 1, 0).getDate();
   let markup = '';
@@ -1821,11 +1840,19 @@ function renderThaiCalendar() {
     const isToday = iso === today;
     markup += `<button type="button" class="calendar-day${isToday ? ' is-today' : ''}" data-date="${iso}" aria-pressed="${iso === selected}"${pickerDateAllowed(iso) ? '' : ' disabled'}>${day}</button>`;
   }
-  $('thaiCalendarDays').innerHTML = markup;
+  const daysContainer = $('thaiCalendarDays');
+  if (daysContainer) daysContainer.innerHTML = markup;
 
   const prev = new Date(y, m - 1, 1), next = new Date(y, m + 1, 1);
-  $('thaiCalendarPrev').disabled = !calendarMonthAllowed(prev.getFullYear(), prev.getMonth());$('thaiCalendarNext').disabled = !calendarMonthAllowed(next.getFullYear(), next.getMonth());
-  $('thaiCalendarToday').disabled = !pickerDateAllowed(today);$('thaiCalendarSelection').textContent = thaiDateText(selected) ? `เลือก: ${thaiDateText(selected)}` : 'แตะวันที่เพื่อเลือก';
+  const prevBtn = $('thaiCalendarPrev');
+  const nextBtn = $('thaiCalendarNext');
+  const todayBtn = $('thaiCalendarToday');
+  const selectionEl = $('thaiCalendarSelection');
+
+  if (prevBtn) prevBtn.disabled = !calendarMonthAllowed(prev.getFullYear(), prev.getMonth());
+  if (nextBtn) nextBtn.disabled = !calendarMonthAllowed(next.getFullYear(), next.getMonth());
+  if (todayBtn) todayBtn.disabled = !pickerDateAllowed(today);
+  if (selectionEl) selectionEl.textContent = thaiDateText(selected) ? `เลือก: ${thaiDateText(selected)}` : 'แตะวันที่เพื่อเลือก';
 }
 function moveThaiCalendar(delta) {
   const d = new Date(thaiPicker.year, thaiPicker.month + delta, 1);
@@ -1837,7 +1864,7 @@ function moveThaiCalendar(delta) {
 function chooseThaiDate(iso) {
   if (!thaiPicker.field || !pickerDateAllowed(iso)) return;
   const field = $(thaiPicker.field);
-  field.value = iso;
+  if (field) field.value = iso;
   syncDateControls();
   closeModal('thaiDateDialog');
   if (thaiPicker.field === 'travelDate') calculateBooking();
@@ -1847,7 +1874,8 @@ function chooseThaiDate(iso) {
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
   STORAGE.set('plkNorthTheme', theme);
-  $('themeIcon').textContent = theme === 'dark' ? '☀' : '☾';
+  const icon = $('themeIcon');
+  if (icon) icon.textContent = theme === 'dark' ? '☀' : '☾';
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#1a202c' : '#841b3a');
 }
 
@@ -1935,13 +1963,15 @@ $('googleCalendarBtn').addEventListener('click', openGoogleCalendar);$('copyRemi
 });
 
 (function boot() {
-  el.travelDate.min = bangkokToday();
+  const todayIso = bangkokToday();
+  el.travelDate.min = todayIso;
+  el.travelDate.value = todayIso; // ตั้งค่าเริ่มต้นเป็นวันนี้อัตโนมัติ
   syncStationConstraints();
   renderFavorites();
   renderHistories();
   applyTheme(STORAGE.get('plkNorthTheme', matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
   syncDateControls();
-  bookingEmpty();
+  calculateBooking(); // คำนวณทันทีเมื่อเปิดเว็บ
 })();
 </script>
 </body>
