@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <meta name="color-scheme" content="light dark" />
-  <meta name="description" content="ระบบคำนวณวันเปิดจองตั๋วรถไฟล่วงหน้า (สายเหนือ) สถานีรถไฟพิษณุโลก" />
+  <meta name="description" content="ระบบคำนวณวันเปิดจองตั๋วรถไฟล่วงหน้า สถานีรถไฟพิษณุโลก" />
   <title>สถานีรถไฟพิษณุโลก | เช็กวันจองตั๋วล่วงหน้า</title>
   <style>
     :root {
@@ -198,7 +198,6 @@
     .step h3 { font-size: 16px; margin-bottom: 12px; }
     .grid { display: grid; gap: 12px; }
     .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .field { min-width: 0; }
     .field label {
       display: flex;
@@ -253,31 +252,6 @@
     .date-control svg { width: 20px; height: 20px; flex-shrink: 0; color: var(--brand); }
     .date-control.is-empty span { color: var(--muted-2); }
 
-    .mode-switch {
-      display: flex;
-      gap: 4px;
-      background: var(--surface-3);
-      padding: 4px;
-      border-radius: 10px;
-      border: 1px solid var(--line);
-    }
-    .mode-switch button {
-      flex: 1;
-      border: 0;
-      border-radius: 7px;
-      background: none;
-      color: var(--muted);
-      padding: 7px;
-      font-size: 14px;
-      min-height: 38px;
-    }
-    .mode-switch button.active {
-      background: var(--surface);
-      color: var(--brand);
-      box-shadow: 0 2px 5px #0000000d;
-      font-weight: 500;
-    }
-
     .swap-row {
       display: grid;
       grid-template-columns: minmax(0, 1fr) 38px minmax(0, 1fr);
@@ -295,16 +269,6 @@
       font-size: 20px;
       padding: 0;
     }
-
-    .advanced {
-      background: var(--surface-2);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 13px;
-      margin-top: 12px;
-    }
-    .advanced-title { display: flex; flex-direction: column; margin-bottom: 10px; font-size: 13px; }
-    .advanced-title span + span { color: var(--muted); font-size: 12px; }
 
     /* Quick Chips & Favorites */
     .quick-strip {
@@ -712,10 +676,6 @@
     }
     .toast.show { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
 
-    @media (min-width: 900px) {
-      .advanced .grid-3, .step .grid-3 { grid-template-columns: 1fr 1fr; }
-      .advanced .field:first-child, .step .grid-3 .field:first-child { grid-column: 1 / -1; }
-    }
     @media (max-width: 820px) {
       .workspace { grid-template-columns: 1fr; padding: 14px 14px 22px; gap: 16px; }
       .sticky { position: static; }
@@ -728,7 +688,6 @@
       .card-head { padding: 15px 16px 12px; }
       .card-body { padding: 16px; }
       .step .grid-2 { grid-template-columns: 1fr; gap: 12px; }
-      .grid-3 { grid-template-columns: 1fr !important; }
       .step-content .swap-row { grid-template-columns: minmax(0, 1fr) 34px; gap: 10px; }
       .step-content .swap-row > .field:last-child { grid-column: 1 / 2; }
       .step-content .swap-row > .swap-btn { grid-column: 2; grid-row: 1 / 3; align-self: center; width: 34px; }
@@ -743,7 +702,7 @@
         <span class="brand-mark" aria-hidden="true">PLK</span>
         <span class="brand-text">
           <span class="brand-title">สถานีรถไฟพิษณุโลก | เช็กวันจองตั๋วล่วงหน้า</span>
-          <span class="brand-sub">ระบบคำนวณวันเปิดจำหน่ายตั๋วล่วงหน้า (สายเหนือ)</span>
+          <span class="brand-sub">ระบบคำนวณวันเปิดจำหน่ายตั๋วล่วงหน้า</span>
         </span>
       </div>
       <div class="top-actions">
@@ -759,7 +718,7 @@
       <div class="card-head">
         <div>
           <h2>ข้อมูลการเดินทาง</h2>
-          <p>เลือกวันเดินทางและสถานี ระบบคำนวณให้อัตโนมัติ</p>
+          <p>เลือกวันเดินทาง ขบวนรถ และสถานี ระบบคำนวณให้อัตโนมัติ</p>
         </div>
         <span class="line-badge">🚆 สายเหนือ</span>
       </div>
@@ -767,23 +726,14 @@
         <div class="step">
           <div class="step-no">1</div>
           <div class="step-content">
-            <h3>วันที่เดินทางและวิธีกรอกข้อมูล</h3>
-            <div class="grid grid-2">
-              <div class="field">
-                <label for="travelDatePickerBtn">วันที่เดินทาง <span>ปฏิทิน พ.ศ.</span></label>
-                <input id="travelDate" type="hidden" />
-                <button class="control date-control is-empty" id="travelDatePickerBtn" type="button" aria-haspopup="dialog" aria-controls="thaiDateDialog">
-                  <span id="travelDateLabel">กดเลือกวันที่เดินทาง</span>
-                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-11 4h3"/></svg>
-                </button>
-              </div>
-              <div class="field">
-                <label>รูปแบบการคำนวณ</label>
-                <div class="mode-switch">
-                  <button class="active" id="stationModeBtn" type="button">เลือกสถานี</button>
-                  <button id="manualModeBtn" type="button">กรอกระยะทางเอง</button>
-                </div>
-              </div>
+            <h3>เลือกวันที่เดินทาง</h3>
+            <div class="field">
+              <label for="travelDatePickerBtn">วันที่เดินทาง <span>ปฏิทิน พ.ศ.</span></label>
+              <input id="travelDate" type="hidden" />
+              <button class="control date-control is-empty" id="travelDatePickerBtn" type="button" aria-haspopup="dialog" aria-controls="thaiDateDialog">
+                <span id="travelDateLabel">กดเลือกวันที่เดินทาง</span>
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-11 4h3"/></svg>
+              </button>
             </div>
           </div>
         </div>
@@ -791,36 +741,10 @@
         <div class="step" id="stationStep">
           <div class="step-no">2</div>
           <div class="step-content">
-            <h3>เลือกขบวนรถและสถานีสายเหนือ</h3>
+            <h3>เลือกขบวนรถและสถานี</h3>
             <div class="field">
-              <label for="selectedTrain">ขบวนรถไฟสายเหนือ <span>ด่วนพิเศษ / ด่วน / เร็ว / ธรรมดา / ท้องถิ่น</span></label>
-              <select class="control" id="selectedTrain">
-                <option value="">ไม่ระบุขบวน / กำหนดช่วงวิ่งเอง</option>
-              </select>
-            </div>
-
-            <div id="customTrainBox" class="advanced hidden">
-              <div class="advanced-title">
-                <span>กำหนดช่วงวิ่งของขบวนเอง</span>
-                <span>เมื่อไม่ได้เลือกหมายเลขขบวนรถด้านบน</span>
-              </div>
-              <div class="grid grid-3">
-                <div class="field">
-                  <label for="reservationType">ประเภทการจำหน่าย</label>
-                  <select class="control" id="reservationType">
-                    <option value="reserved">สำรองที่นั่ง (ด่วนพิเศษ/ด่วน/เร็ว)</option>
-                    <option value="nonreserved">ไม่สำรองที่นั่ง (ธรรมดา/ท้องถิ่น)</option>
-                  </select>
-                </div>
-                <div class="field">
-                  <label for="trainOrigin">ต้นทางขบวนรถ</label>
-                  <input class="control station-input" id="trainOrigin" readonly role="button" aria-haspopup="dialog" aria-controls="stationPickerDialog" autocomplete="off" value="กรุงเทพ (อภิวัฒน์)" placeholder="กดเลือกสถานี" />
-                </div>
-                <div class="field">
-                  <label for="trainDest">ปลายทางขบวนรถ</label>
-                  <input class="control station-input" id="trainDest" readonly role="button" aria-haspopup="dialog" aria-controls="stationPickerDialog" autocomplete="off" value="เชียงใหม่" placeholder="กดเลือกสถานี" />
-                </div>
-              </div>
+              <label for="selectedTrain">ขบวนรถไฟ <span>ด่วนพิเศษ / ด่วน / เร็ว / ธรรมดา / ท้องถิ่น</span></label>
+              <select class="control" id="selectedTrain"></select>
             </div>
 
             <!-- ปุ่มลัดสถานีหลัก (Quick Chips) -->
@@ -836,7 +760,7 @@
               <div class="field">
                 <label for="passOrigin">สถานีต้นทาง <span>ต้นทางผู้โดยสาร</span></label>
                 <div class="control-wrap">
-                  <input class="control station-input" id="passOrigin" readonly role="button" aria-haspopup="dialog" aria-controls="stationPickerDialog" autocomplete="off" placeholder="กดเลือกสถานีขึ้น" />
+                  <input class="control station-input" id="passOrigin" readonly role="button" aria-haspopup="dialog" aria-controls="stationPickerDialog" autocomplete="off" placeholder="กดเลือกสถานีต้นทาง" />
                   <button class="mini-btn" id="favOriginBtn" type="button" title="บันทึกสถานีโปรด">☆</button>
                 </div>
               </div>
@@ -844,7 +768,7 @@
               <div class="field">
                 <label for="passDest">สถานีปลายทาง <span>ปลายทางผู้โดยสาร</span></label>
                 <div class="control-wrap">
-                  <input class="control station-input" id="passDest" readonly role="button" aria-haspopup="dialog" aria-controls="stationPickerDialog" autocomplete="off" placeholder="กดเลือกสถานีลง" />
+                  <input class="control station-input" id="passDest" readonly role="button" aria-haspopup="dialog" aria-controls="stationPickerDialog" autocomplete="off" placeholder="กดเลือกสถานีปลายทาง" />
                   <button class="mini-btn" id="favDestBtn" type="button" title="บันทึกสถานีโปรด">☆</button>
                 </div>
               </div>
@@ -862,30 +786,6 @@
               <div class="metric"><span>ระยะขบวนรถ</span><strong id="totalKmText">-</strong></div>
               <div class="metric"><span>ระยะเดินทาง</span><strong id="passengerKmText">-</strong></div>
               <div class="metric"><span>สัดส่วนระยะทาง</span><strong id="percentageText">-</strong></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="step hidden" id="manualStep">
-          <div class="step-no">2</div>
-          <div class="step-content">
-            <h3>กรอกระยะทางด้วยตนเอง</h3>
-            <div class="grid grid-3">
-              <div class="field">
-                <label for="manualReservationType">ประเภทการจำหน่าย</label>
-                <select class="control" id="manualReservationType">
-                  <option value="reserved">สำรองที่นั่ง</option>
-                  <option value="nonreserved">ไม่สำรองที่นั่ง</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="totalDistance">ระยะวิ่งทั้งหมด (กม.)</label>
-                <input class="control" id="totalDistance" type="number" min="0" step="1" placeholder="เช่น 751" />
-              </div>
-              <div class="field">
-                <label for="passengerDistance">ระยะเดินทางจริง (กม.)</label>
-                <input class="control" id="passengerDistance" type="number" min="0" step="1" placeholder="เช่น 389" />
-              </div>
             </div>
           </div>
         </div>
@@ -964,7 +864,7 @@
   <div class="dialog-head">
     <div>
       <h2 id="stationPickerTitle">เลือกสถานี</h2>
-      <p id="stationPickerContext">สายเหนือ (กทม.–เชียงใหม่)</p>
+      <p id="stationPickerContext">กรุณาเลือกสถานี</p>
     </div>
     <button class="dialog-close" id="closeStationPickerBtn" type="button" aria-label="ปิดรายการสถานี">×</button>
   </div>
@@ -1015,7 +915,7 @@
 'use strict';
 
 /* =========================================================
-   1) APP CONFIG & NORTHERN LINE RULES
+   1) APP CONFIG & BOOKING RULES
    ========================================================= */
 const APP_CONFIG = Object.freeze({
   dticketUrl: 'https://dticket.railway.co.th/DTicketPublicWeb/home/Home?openExternalBrowser=1',
@@ -1028,7 +928,7 @@ const BOOKING_RULES = Object.freeze({
   nonReservedText: 'ซื้อตั๋วในวันเดินทาง ก่อนขบวนรถออกไม่เกิน 2 ชั่วโมง'
 });
 
-/* ปุ่มลัดสถานีหลัก (แสดง พิษณุโลก เป็นอันดับแรก) */
+/* ปุ่มลัดสถานีหลัก */
 const QUICK_STATIONS = Object.freeze([
   'พิษณุโลก',
   'กรุงเทพอภิวัฒน์',
@@ -1036,11 +936,11 @@ const QUICK_STATIONS = Object.freeze([
 ]);
 
 /* =========================================================
-   2) NORTHERN LINE STATION & TRAIN DATA
+   2) STATION & TRAIN DATA
    ========================================================= */
 const northStations = [
   { name: "กรุงเทพ (หัวลำโพง)", km: 0 }, { name: "สามเสน", km: 5 }, { name: "ชุมทางบางซื่อ", km: 7 },
-  { name: "กรุงเทพ (อภิวัฒน์)", km: 8 }, { name: "บางเขน", km: 13 }, { name: "หลักสี่", km: 18 },
+  { name: "กรุงเทพอภิวัฒน์", km: 8 }, { name: "บางเขน", km: 13 }, { name: "หลักสี่", km: 18 },
   { name: "ดอนเมือง", km: 22 }, { name: "หลักหก", km: 26 }, { name: "รังสิต", km: 30 },
   { name: "คลองหนึ่ง", km: 34 }, { name: "เชียงราก", km: 37 }, { name: "มหาวิทยาลัยธรรมศาสตร์", km: 40 },
   { name: "นวนคร", km: 44 }, { name: "เชียงรากน้อย", km: 46 }, { name: "คลองพุทรา", km: 51 },
@@ -1077,25 +977,25 @@ const northStations = [
 
 const northSchedules = [
   /* ขบวนสำรองที่นั่ง (ด่วนพิเศษ / ด่วน / เร็ว) */
-  { id: "7/8", name: "7/8 ด่วนพิเศษ (ดีเซลราง) กทม.อภิวัฒน์–เชียงใหม่", origin: "กรุงเทพ (อภิวัฒน์)", dest: "เชียงใหม่",
-    stops: ["กรุงเทพ (อภิวัฒน์)", "ดอนเมือง", "รังสิต", "อยุธยา", "ลพบุรี 2 (ท่าวุ้ง)", "นครสวรรค์", "ปากน้ำโพ", "ตะพานหิน", "พิจิตร", "พิษณุโลก", "อุตรดิตถ์", "ศิลาอาสน์", "เด่นชัย", "บ้านปิน", "นครลำปาง", "ขุนตาน", "ลำพูน", "เชียงใหม่"] },
-  { id: "9/10", name: "9/10 ด่วนพิเศษอุตราวิถี กทม.อภิวัฒน์–เชียงใหม่", origin: "กรุงเทพ (อภิวัฒน์)", dest: "เชียงใหม่",
-    stops: ["กรุงเทพ (อภิวัฒน์)", "ดอนเมือง", "รังสิต", "อยุธยา", "ลพบุรี 2 (ท่าวุ้ง)", "นครสวรรค์", "พิษณุโลก", "ศิลาอาสน์", "เด่นชัย", "นครลำปาง", "ขุนตาน", "ลำพูน", "เชียงใหม่"] },
-  { id: "13/14", name: "13/14 ด่วนพิเศษ กทม.อภิวัฒน์–เชียงใหม่", origin: "กรุงเทพ (อภิวัฒน์)", dest: "เชียงใหม่",
-    stops: ["กรุงเทพ (อภิวัฒน์)", "ดอนเมือง", "รังสิต", "อยุธยา", "ลพบุรี 2 (ท่าวุ้ง)", "นครสวรรค์", "พิจิตร", "พิษณุโลก", "อุตรดิตถ์", "ศิลาอาสน์", "เด่นชัย", "บ้านปิน", "นครลำปาง", "ขุนตาน", "ลำพูน", "เชียงใหม่"] },
-  { id: "51/52", name: "51/52 ด่วน กทม.อภิวัฒน์–เชียงใหม่", origin: "กรุงเทพ (อภิวัฒน์)", dest: "เชียงใหม่",
-    stops: ["กรุงเทพ (อภิวัฒน์)", "ดอนเมือง", "รังสิต", "อยุธยา", "ลพบุรี 2 (ท่าวุ้ง)", "นครสวรรค์", "ตะพานหิน", "พิจิตร", "พิษณุโลก", "หนองตม", "พิชัย", "อุตรดิตถ์", "ศิลาอาสน์", "เด่นชัย", "บ้านปิน", "แม่เมาะ", "นครลำปาง", "ขุนตาน", "ลำพูน", "เชียงใหม่"] },
-  { id: "107/108", name: "107/108 เร็ว กทม.อภิวัฒน์–เด่นชัย", origin: "กรุงเทพ (อภิวัฒน์)", dest: "เด่นชัย",
-    stops: ["กรุงเทพ (อภิวัฒน์)", "ดอนเมือง", "รังสิต", "อยุธยา", "ชุมทางบ้านภาชี", "ลพบุรี 2 (ท่าวุ้ง)", "บ้านตาคลี", "นครสวรรค์", "ปากน้ำโพ", "ชุมแสง", "บางมูลนาก", "ตะพานหิน", "หัวดง", "พิจิตร", "บางกระทุ่ม", "บ้านใหม่", "พิษณุโลก", "พรหมพิราม", "หนองตม", "บ้านโคน", "พิชัย", "ชุมทางบ้านดารา", "ท่าสัก", "ตรอน", "อุตรดิตถ์", "ศิลาอาสน์", "เด่นชัย"] },
-  { id: "109/102", name: "109/102 เร็ว กทม.อภิวัฒน์–เชียงใหม่", origin: "กรุงเทพ (อภิวัฒน์)", dest: "เชียงใหม่",
-    stops: ["กรุงเทพ (อภิวัฒน์)", "ดอนเมือง", "รังสิต", "อยุธยา", "ชุมทางบ้านภาชี", "ท่าเรือ", "บ้านหมอ", "ลพบุรี 2 (ท่าวุ้ง)", "บ้านหมี่", "จันเสน", "ช่องแค", "บ้านตาคลี", "หนองโพ", "นครสวรรค์", "ปากน้ำโพ", "ชุมแสง", "บางมูลนาก", "ตะพานหิน", "พิจิตร", "บางกระทุ่ม", "พิษณุโลก", "พรหมพิราม", "หนองตม", "พิชัย", "ชุมทางบ้านดารา", "ท่าสัก", "ตรอน", "อุตรดิตถ์", "ศิลาอาสน์", "เด่นชัย", "บ้านปิน", "แม่เมาะ", "นครลำปาง", "ขุนตาน", "ลำพูน", "เชียงใหม่"] },
-  { id: "111/112", name: "111/112 เร็ว กทม.อภิวัฒน์–เด่นชัย", origin: "กรุงเทพ (อภิวัฒน์)", dest: "เด่นชัย",
-    stops: ["กรุงเทพ (อภิวัฒน์)", "ดอนเมือง", "รังสิต", "เชียงราก", "บางปะอิน", "อยุธยา", "มาบพระจันทร์", "พระแก้ว", "ชุมทางบ้านภาชี", "หนองวิวัฒน์", "ท่าเรือ", "บ้านหมอ", "หนองโดน", "ลพบุรี 2 (ท่าวุ้ง)", "บ้านหมี่", "จันเสน", "ช่องแค", "บ้านตาคลี", "หนองโพ", "นครสวรรค์", "ทับกฤช", "ปากน้ำโพ", "ชุมแสง", "บางมูลนาก", "ตะพานหิน", "หัวดง", "วังกรด", "พิจิตร", "บางกระทุ่ม", "พิษณุโลก", "พรหมพิราม", "หนองตม", "พิชัย", "ชุมทางบ้านดารา", "ท่าสัก", "ตรอน", "อุตรดิตถ์", "ศิลาอาสน์", "บ้านด่าน", "ปางต้นผึ้ง", "ห้วยไร่", "เด่นชัย"] },
+  { id: "7/8", name: "7/8 ด่วนพิเศษ (ดีเซลราง) กรุงเทพอภิวัฒน์–เชียงใหม่", origin: "กรุงเทพอภิวัฒน์", dest: "เชียงใหม่",
+    stops: ["กรุงเทพอภิวัฒน์", "ดอนเมือง", "รังสิต", "อยุธยา", "ลพบุรี 2 (ท่าวุ้ง)", "นครสวรรค์", "ปากน้ำโพ", "ตะพานหิน", "พิจิตร", "พิษณุโลก", "อุตรดิตถ์", "ศิลาอาสน์", "เด่นชัย", "บ้านปิน", "นครลำปาง", "ขุนตาน", "ลำพูน", "เชียงใหม่"] },
+  { id: "9/10", name: "9/10 ด่วนพิเศษอุตราวิถี กรุงเทพอภิวัฒน์–เชียงใหม่", origin: "กรุงเทพอภิวัฒน์", dest: "เชียงใหม่",
+    stops: ["กรุงเทพอภิวัฒน์", "ดอนเมือง", "รังสิต", "อยุธยา", "ลพบุรี 2 (ท่าวุ้ง)", "นครสวรรค์", "พิษณุโลก", "ศิลาอาสน์", "เด่นชัย", "นครลำปาง", "ขุนตาน", "ลำพูน", "เชียงใหม่"] },
+  { id: "13/14", name: "13/14 ด่วนพิเศษ กรุงเทพอภิวัฒน์–เชียงใหม่", origin: "กรุงเทพอภิวัฒน์", dest: "เชียงใหม่",
+    stops: ["กรุงเทพอภิวัฒน์", "ดอนเมือง", "รังสิต", "อยุธยา", "ลพบุรี 2 (ท่าวุ้ง)", "นครสวรรค์", "พิจิตร", "พิษณุโลก", "อุตรดิตถ์", "ศิลาอาสน์", "เด่นชัย", "บ้านปิน", "นครลำปาง", "ขุนตาน", "ลำพูน", "เชียงใหม่"] },
+  { id: "51/52", name: "51/52 ด่วน กรุงเทพอภิวัฒน์–เชียงใหม่", origin: "กรุงเทพอภิวัฒน์", dest: "เชียงใหม่",
+    stops: ["กรุงเทพอภิวัฒน์", "ดอนเมือง", "รังสิต", "อยุธยา", "ลพบุรี 2 (ท่าวุ้ง)", "นครสวรรค์", "ตะพานหิน", "พิจิตร", "พิษณุโลก", "หนองตม", "พิชัย", "อุตรดิตถ์", "ศิลาอาสน์", "เด่นชัย", "บ้านปิน", "แม่เมาะ", "นครลำปาง", "ขุนตาน", "ลำพูน", "เชียงใหม่"] },
+  { id: "107/108", name: "107/108 เร็ว กรุงเทพอภิวัฒน์–เด่นชัย", origin: "กรุงเทพอภิวัฒน์", dest: "เด่นชัย",
+    stops: ["กรุงเทพอภิวัฒน์", "ดอนเมือง", "รังสิต", "อยุธยา", "ชุมทางบ้านภาชี", "ลพบุรี 2 (ท่าวุ้ง)", "บ้านตาคลี", "นครสวรรค์", "ปากน้ำโพ", "ชุมแสง", "บางมูลนาก", "ตะพานหิน", "หัวดง", "พิจิตร", "บางกระทุ่ม", "บ้านใหม่", "พิษณุโลก", "พรหมพิราม", "หนองตม", "บ้านโคน", "พิชัย", "ชุมทางบ้านดารา", "ท่าสัก", "ตรอน", "อุตรดิตถ์", "ศิลาอาสน์", "เด่นชัย"] },
+  { id: "109/102", name: "109/102 เร็ว กรุงเทพอภิวัฒน์–เชียงใหม่", origin: "กรุงเทพอภิวัฒน์", dest: "เชียงใหม่",
+    stops: ["กรุงเทพอภิวัฒน์", "ดอนเมือง", "รังสิต", "อยุธยา", "ชุมทางบ้านภาชี", "ท่าเรือ", "บ้านหมอ", "ลพบุรี 2 (ท่าวุ้ง)", "บ้านหมี่", "จันเสน", "ช่องแค", "บ้านตาคลี", "หนองโพ", "นครสวรรค์", "ปากน้ำโพ", "ชุมแสง", "บางมูลนาก", "ตะพานหิน", "พิจิตร", "บางกระทุ่ม", "พิษณุโลก", "พรหมพิราม", "หนองตม", "พิชัย", "ชุมทางบ้านดารา", "ท่าสัก", "ตรอน", "อุตรดิตถ์", "ศิลาอาสน์", "เด่นชัย", "บ้านปิน", "แม่เมาะ", "นครลำปาง", "ขุนตาน", "ลำพูน", "เชียงใหม่"] },
+  { id: "111/112", name: "111/112 เร็ว กรุงเทพอภิวัฒน์–เด่นชัย", origin: "กรุงเทพอภิวัฒน์", dest: "เด่นชัย",
+    stops: ["กรุงเทพอภิวัฒน์", "ดอนเมือง", "รังสิต", "เชียงราก", "บางปะอิน", "อยุธยา", "มาบพระจันทร์", "พระแก้ว", "ชุมทางบ้านภาชี", "หนองวิวัฒน์", "ท่าเรือ", "บ้านหมอ", "หนองโดน", "ลพบุรี 2 (ท่าวุ้ง)", "บ้านหมี่", "จันเสน", "ช่องแค", "บ้านตาคลี", "หนองโพ", "นครสวรรค์", "ทับกฤช", "ปากน้ำโพ", "ชุมแสง", "บางมูลนาก", "ตะพานหิน", "หัวดง", "วังกรด", "พิจิตร", "บางกระทุ่ม", "พิษณุโลก", "พรหมพิราม", "หนองตม", "พิชัย", "ชุมทางบ้านดารา", "ท่าสัก", "ตรอน", "อุตรดิตถ์", "ศิลาอาสน์", "บ้านด่าน", "ปางต้นผึ้ง", "ห้วยไร่", "เด่นชัย"] },
 
   /* ขบวนไม่สำรองที่นั่ง (รถธรรมดา / รถท้องถิ่นผ่านพิษณุโลก) */
-  { id: "201/202", name: "201/202 ธรรมดา กทม.(หัวลำโพง)–พิษณุโลก", origin: "กรุงเทพ (หัวลำโพง)", dest: "พิษณุโลก" },
-  { id: "207/208", name: "207/208 ธรรมดา กทม.(หัวลำโพง)–นครสวรรค์", origin: "กรุงเทพ (หัวลำโพง)", dest: "นครสวรรค์" },
-  { id: "209/210", name: "209/210 ธรรมดา กทม.(หัวลำโพง)–บ้านตาคลี", origin: "กรุงเทพ (หัวลำโพง)", dest: "บ้านตาคลี" },
+  { id: "201/202", name: "201/202 ธรรมดา กรุงเทพ (หัวลำโพง)–พิษณุโลก", origin: "กรุงเทพ (หัวลำโพง)", dest: "พิษณุโลก" },
+  { id: "207/208", name: "207/208 ธรรมดา กรุงเทพ (หัวลำโพง)–นครสวรรค์", origin: "กรุงเทพ (หัวลำโพง)", dest: "นครสวรรค์" },
+  { id: "209/210", name: "209/210 ธรรมดา กรุงเทพ (หัวลำโพง)–บ้านตาคลี", origin: "กรุงเทพ (หัวลำโพง)", dest: "บ้านตาคลี" },
   { id: "401/402", name: "401/402 ท้องถิ่น ลพบุรี–พิษณุโลก", origin: "ลพบุรี", dest: "พิษณุโลก" },
   { id: "403/404", name: "403/404 ท้องถิ่น พิษณุโลก–ศิลาอาสน์", origin: "พิษณุโลก", dest: "ศิลาอาสน์" },
   { id: "407/408", name: "407/408 ท้องถิ่น นครสวรรค์–เชียงใหม่", origin: "นครสวรรค์", dest: "เชียงใหม่" }
@@ -1213,7 +1113,6 @@ function statusForOpenDate(openDate, openTime = '08:30') {
    4) STATE & DOM REFERENCES
    ========================================================= */
 const state = {
-  bookingMode: 'station',
   lastStationField: 'passOrigin',
   lastBookingResult: null,
   bookingHistory: STORAGE.get('plkNorthBookingHistory', []),
@@ -1222,20 +1121,9 @@ const state = {
 
 const el = {
   travelDate: $('travelDate'),
-  stationModeBtn: $('stationModeBtn'),
-  manualModeBtn: $('manualModeBtn'),
-  stationStep: $('stationStep'),
-  manualStep: $('manualStep'),
   selectedTrain: $('selectedTrain'),
-  customTrainBox: $('customTrainBox'),
-  reservationType: $('reservationType'),
-  trainOrigin: $('trainOrigin'),
-  trainDest: $('trainDest'),
   passOrigin: $('passOrigin'),
   passDest: $('passDest'),
-  manualReservationType: $('manualReservationType'),
-  totalDistance: $('totalDistance'),
-  passengerDistance: $('passengerDistance'),
   distanceSummary: $('distanceSummary'),
   totalKmText: $('totalKmText'),
   passengerKmText: $('passengerKmText'),
@@ -1249,7 +1137,7 @@ const el = {
    5) INITIALIZATION & QUICK CHIPS
    ========================================================= */
 function initTrains() {
-  el.selectedTrain.innerHTML = '<option value="">ไม่ระบุขบวน / กำหนดช่วงวิ่งเอง</option>';
+  el.selectedTrain.innerHTML = '<option value="">- กรุณาเลือกขบวนรถ -</option>';
   northSchedules.forEach(t => {
     const o = document.createElement('option');
     o.value = t.id;
@@ -1261,13 +1149,10 @@ function initTrains() {
 function syncStationConstraints() {
   const train = getTrain(el.selectedTrain.value);
   if (train) {
-    el.trainOrigin.value = train.origin || '';
-    el.trainDest.value = train.dest || '';
     const allowed = activeStationNames(train);
     if (el.passOrigin.value && !allowed.includes(el.passOrigin.value)) el.passOrigin.value = '';
     if (el.passDest.value && !allowed.includes(el.passDest.value)) el.passDest.value = '';
   }
-  el.customTrainBox.classList.toggle('hidden', Boolean(train));
   renderQuickChips();
   renderFavoriteButtons();
 }
@@ -1279,8 +1164,6 @@ function selectQuickStation(stationName) {
     showToast(`ขบวน ${train.id} ไม่ได้จอดหรือไม่ได้วิ่งผ่านสถานี${stationName}`);
     return;
   }
-  /* ลอจิกอัจฉริยะ: ถ้าสถานีขึ้นว่าง ให้ลงสถานีขึ้นก่อน ถ้าไม่ว่างให้ลงสถานีปลายทาง
-  */
   let targetField = el.passOrigin;
   if (!el.passOrigin.value) {
     targetField = el.passOrigin;
@@ -1306,16 +1189,6 @@ function renderQuickChips() {
   el.quickStationChips.querySelectorAll('[data-quick]').forEach(btn => {
     btn.addEventListener('click', () => selectQuickStation(btn.dataset.quick));
   });
-}
-
-function setBookingMode(mode) {
-  state.bookingMode = mode;
-  const isStation = mode === 'station';
-  el.stationModeBtn.classList.toggle('active', isStation);
-  el.manualModeBtn.classList.toggle('active', !isStation);
-  el.stationStep.classList.toggle('hidden', !isStation);
-  el.manualStep.classList.toggle('hidden', isStation);
-  calculateBooking();
 }
 
 /* =========================================================
@@ -1360,28 +1233,15 @@ function renderFavoriteButtons() {
 }
 
 /* =========================================================
-   7) NORTHERN LINE BOOKING CALCULATION ENGINE
+   7) BOOKING CALCULATION ENGINE
    ========================================================= */
 function getBookingInputs() {
   const travelDate = parseLocalDate(el.travelDate.value);
-  if (state.bookingMode === 'manual') {
-    return {
-      mode: 'manual',
-      travelDate,
-      reservationType: el.manualReservationType.value,
-      total: Number.parseFloat(el.totalDistance.value),
-      passenger: Number.parseFloat(el.passengerDistance.value),
-      origin: 'กรอกระยะทางเอง',
-      destination: 'กรอกระยะทางเอง',
-      train: null,
-      routeValid: true
-    };
-  }
   const train = getTrain(el.selectedTrain.value);
   let total = NaN, passenger = NaN, routeValid = true;
   const origin = el.passOrigin.value.trim(), destination = el.passDest.value.trim();
-  const trainOrigin = train?.origin || el.trainOrigin.value.trim();
-  const trainDest = train?.dest || el.trainDest.value.trim();
+  const trainOrigin = train?.origin || '';
+  const trainDest = train?.dest || '';
   const t1 = getKm(trainOrigin), t2 = getKm(trainDest), p1 = getKm(origin), p2 = getKm(destination);
   if ([t1, t2].every(Number.isFinite)) total = Math.abs(t2 - t1);
   if ([p1, p2].every(Number.isFinite)) passenger = Math.abs(p2 - p1);
@@ -1390,10 +1250,9 @@ function getBookingInputs() {
     routeValid = p1 >= min && p1 <= max && p2 >= min && p2 <= max;
   }
   return {
-    mode: 'station',
     travelDate,
     train,
-    reservationType: train ? getReservationType(train) : el.reservationType.value,
+    reservationType: getReservationType(train),
     total,
     passenger,
     routeValid,
@@ -1404,7 +1263,7 @@ function getBookingInputs() {
   };
 }
 
-function bookingEmpty(message = 'เลือกวันที่เดินทาง และสถานีขึ้น–ลงให้ครบ') {
+function bookingEmpty(message = 'เลือกวันที่เดินทาง ขบวนรถ และสถานีต้นทาง–ปลายทางให้ครบ') {
   state.lastBookingResult = null;
   el.distanceSummary.classList.add('hidden');
   el.bookingResult.innerHTML = `<div class="empty"><div class="empty-icon">🚆</div><h3>พร้อมคำนวณวันเปิดจอง</h3><p>${esc(message)}<br>ผลลัพธ์จะแสดงอัตโนมัติทันที</p></div>`;
@@ -1418,7 +1277,7 @@ function bookingError(message) {
 
 function updateDistanceSummary(total, passenger) {
   const valid = Number.isFinite(total) && Number.isFinite(passenger) && total > 0 && passenger > 0;
-  if (!valid || state.bookingMode !== 'station') {
+  if (!valid) {
     el.distanceSummary.classList.add('hidden');
     return;
   }
@@ -1437,27 +1296,20 @@ function calculateBooking() {
 
   if (!d.travelDate) return bookingEmpty('กรุณากดเลือก "วันที่เดินทาง" ในขั้นตอนที่ 1');
   if (d.travelDate < localDateOnly()) return bookingError('วันที่เดินทางผ่านไปแล้ว กรุณาเลือกวันนี้หรือวันในอนาคต');
+  if (!d.train) return bookingEmpty('กรุณาเลือก "ขบวนรถไฟ" ในขั้นตอนที่ 2');
+  if (!d.origin || !d.destination) return bookingEmpty('กรุณาเลือก "สถานีต้นทาง" และ "สถานีปลายทาง"');
+  if (!exactStation(d.origin) || !exactStation(d.destination)) return bookingError('กรุณาเลือกสถานีจากรายการที่กำหนด');
+  if (d.origin === d.destination) return bookingError('สถานีต้นทางและสถานีปลายทางต้องเป็นคนละสถานีกัน');
 
-  if (d.mode === 'station') {
-    if (!d.origin || !d.destination) return bookingEmpty('กรุณาเลือก "สถานีต้นทาง" และ "สถานีปลายทาง"');
-    if (!exactStation(d.origin) || !exactStation(d.destination)) return bookingError('กรุณาเลือกสถานีจากรายการสถานีสายเหนือ');
-    if (d.origin === d.destination) return bookingError('สถานีต้นทางและสถานีปลายทางต้องเป็นคนละสถานีกัน');
-    if (d.train) {
-      const stops = activeStationNames(d.train);
-      if (!stops.includes(d.origin) || !stops.includes(d.destination)) {
-        return bookingError('สถานีที่เลือกไม่อยู่ในจุดจอดหรือช่วงวิ่งของขบวนรถนี้');
-      }
-    }
+  const stops = activeStationNames(d.train);
+  if (!stops.includes(d.origin) || !stops.includes(d.destination)) {
+    return bookingError('สถานีที่เลือกไม่อยู่ในจุดจอดหรือช่วงวิ่งของขบวนรถนี้');
   }
 
-  if (!d.reservationType) return bookingError('กรุณาเลือกประเภทการจำหน่ายของขบวนรถ');
   if (d.reservationType === 'nonreserved') return renderNonReservedResult(d);
 
-  if (d.mode === 'station' && !d.train && (!d.trainOrigin || !d.trainDest)) {
-    return bookingEmpty('กรุณาระบุต้นทางและปลายทางของขบวนรถ');
-  }
-  if (!Number.isFinite(d.total) || !Number.isFinite(d.passenger)) return bookingEmpty('กรุณาระบุข้อมูลระยะทางให้ครบ');
-  if (!d.routeValid) return bookingError('สถานีขึ้นและสถานีลงต้องอยู่ภายในช่วงต้นทาง–ปลายทางของขบวนรถ');
+  if (!Number.isFinite(d.total) || !Number.isFinite(d.passenger)) return bookingEmpty('กรุณาเลือกขบวนรถและสถานีให้ครบถ้วน');
+  if (!d.routeValid) return bookingError('สถานีต้นทางและสถานีปลายทางต้องอยู่ภายในช่วงวิ่งของขบวนรถ');
   if (d.total <= 0 || d.passenger <= 0) return bookingError('ระยะทางต้องมากกว่า 0 กิโลเมตร');
   if (d.passenger > d.total) return bookingError('ระยะทางผู้โดยสารต้องไม่เกินระยะทางวิ่งทั้งหมดของขบวน');
 
@@ -1466,7 +1318,6 @@ function calculateBooking() {
 }
 
 function routeMarkup(d) {
-  if (d.mode !== 'station') return '';
   return `<div class="route-line"><div class="station">${esc(d.origin)}</div><div class="arrow">➜</div><div class="station">${esc(d.destination)}</div></div>`;
 }
 
@@ -1496,11 +1347,11 @@ function renderNonReservedResult(d) {
     travelDate: toLocalISO(d.travelDate),
     origin: d.origin,
     destination: d.destination,
-    trainId: d.train?.id || '',
-    trainName: d.train?.name || 'ขบวนรถธรรมดา / ท้องถิ่น',
+    trainId: d.train.id,
+    trainName: d.train.name,
     headline: 'ซื้อในวันเดินทาง',
     summary: BOOKING_RULES.nonReservedText,
-    copyText: `🚆 ${d.train?.name || 'ขบวนไม่สำรองที่นั่ง (รถธรรมดา/ท้องถิ่น)'}\n📍 ${d.origin} → ${d.destination}\n📅 เดินทางวันที่ ${formatDate(d.travelDate)}\n🎫 ${BOOKING_RULES.nonReservedText}\n☎️ สอบถามเพิ่มเติม สถานีรถไฟพิษณุโลก หรือสายด่วน 1690`
+    copyText: `🚆 ${d.train.name}\n📍 ${d.origin} → ${d.destination}\n📅 เดินทางวันที่ ${formatDate(d.travelDate)}\n🎫 ${BOOKING_RULES.nonReservedText}\n☎️ สอบถามเพิ่มเติม สถานีรถไฟพิษณุโลก หรือสายด่วน 1690`
   };
   state.lastBookingResult = result;
   el.bookingResult.innerHTML = `
@@ -1543,8 +1394,8 @@ function renderStandardBooking(d) {
     travelDate: toLocalISO(d.travelDate),
     origin: d.origin,
     destination: d.destination,
-    trainId: d.train?.id || '',
-    trainName: d.train?.name || 'ขบวนสำรองที่นั่ง (สายเหนือ)',
+    trainId: d.train.id,
+    trainName: d.train.name,
     total: d.total,
     passenger: d.passenger,
     percentage,
@@ -1553,7 +1404,7 @@ function renderStandardBooking(d) {
     openTime: BOOKING_RULES.standardOpenTime,
     headline: `จองล่วงหน้า ${days} วัน`,
     summary: `เริ่มจอง ${formatDate(bookingDate)} เวลา ${BOOKING_RULES.standardOpenTime} น.`,
-    copyText: `🚆 ${d.train?.name || 'ขบวนสำรองที่นั่ง (สายเหนือ)'}\n📍 ${d.origin} → ${d.destination}\n📅 วันเดินทาง: ${formatDate(d.travelDate)}\n📏 ระยะทาง: ${money(d.passenger)} / ${money(d.total)} กม. (${percentage.toFixed(2)}%)\n✅ จองล่วงหน้าได้: ${days} วัน\n🗓️ วันแรกที่ซื้อตั๋วได้: ${formatDate(bookingDate)} เวลา ${BOOKING_RULES.standardOpenTime} น.`
+    copyText: `🚆 ${d.train.name}\n📍 ${d.origin} → ${d.destination}\n📅 วันเดินทาง: ${formatDate(d.travelDate)}\n📏 ระยะทาง: ${money(d.passenger)} / ${money(d.total)} กม. (${percentage.toFixed(2)}%)\n✅ จองล่วงหน้าได้: ${days} วัน\n🗓️ วันแรกที่ซื้อตั๋วได้: ${formatDate(bookingDate)} เวลา ${BOOKING_RULES.standardOpenTime} น.`
   };
   state.lastBookingResult = result;
 
@@ -1602,7 +1453,7 @@ function shareBooking() {
   const r = state.lastBookingResult;
   if (!r) return;
   if (navigator.share) {
-    navigator.share({ title: 'เช็กวันจองตั๋วรถไฟสายเหนือ', text: r.copyText }).catch(() => {});
+    navigator.share({ title: 'เช็กวันจองตั๋วรถไฟล่วงหน้า', text: r.copyText }).catch(() => {});
   } else {
     copyText(r.copyText).then(() => showToast('คัดลอกข้อความแล้ว วางส่งในแชทได้เลย'));
   }
@@ -1613,17 +1464,10 @@ function shareBooking() {
    ========================================================= */
 function getBookingSnapshot() {
   return {
-    mode: state.bookingMode,
     date: el.travelDate.value,
     train: el.selectedTrain.value,
-    reservation: el.reservationType.value,
-    trainOrigin: el.trainOrigin.value,
-    trainDest: el.trainDest.value,
     origin: el.passOrigin.value,
-    dest: el.passDest.value,
-    manualReservation: el.manualReservationType.value,
-    total: el.totalDistance.value,
-    passenger: el.passengerDistance.value
+    dest: el.passDest.value
   };
 }
 function saveBookingHistory(r) {
@@ -1633,7 +1477,7 @@ function saveBookingHistory(r) {
   state.bookingHistory.unshift({
     key,
     title: `${r.headline} (${r.origin} → ${r.destination})`,
-    subtitle: `เดินทาง ${formatDate(parseLocalDate(r.travelDate))} • ${r.summary}`,
+    subtitle: `ขบวน ${r.trainId} • เดินทาง ${formatDate(parseLocalDate(r.travelDate))}`,
     restore: getBookingSnapshot()
   });
   state.bookingHistory = state.bookingHistory.slice(0, APP_CONFIG.historyLimit);
@@ -1656,18 +1500,11 @@ function renderHistories() {
 }
 function restoreBooking(s) {
   if (!s) return;
-  setBookingMode(s.mode || 'station');
   el.travelDate.value = s.date || '';
   el.selectedTrain.value = s.train || '';
   syncStationConstraints();
-  el.reservationType.value = s.reservation || 'reserved';
-  el.trainOrigin.value = s.trainOrigin || 'กรุงเทพ (อภิวัฒน์)';
-  el.trainDest.value = s.trainDest || 'เชียงใหม่';
   el.passOrigin.value = s.origin || '';
   el.passDest.value = s.dest || '';
-  el.manualReservationType.value = s.manualReservation || 'reserved';
-  el.totalDistance.value = s.total || '';
-  el.passengerDistance.value = s.passenger || '';
   calculateBooking();
   showToast('เรียกคืนข้อมูลแล้ว');
 }
@@ -1704,11 +1541,9 @@ function openBookingReminder() {
   lead.options[2].textContent = non ? 'ก่อนเดินทาง 2 วัน' : 'ก่อนเปิดจอง 2 วัน';
   lead.value = '0';
 
-  $('reminderDate').min = bangkokToday();
-  $('reminderDate').max = r.travelDate;
+  $('reminderDate').min = bangkokToday();$('reminderDate').max = r.travelDate;
   $('reminderDate').value = date;
-  $('reminderTime').value = r.openTime || '08:30';
-  $('reminderRoute').innerHTML = `
+  $('reminderTime').value = r.openTime \vert{}\vert{} '08:30';$('reminderRoute').innerHTML = `
     <b>${esc(r.origin)} → ${esc(r.destination)}</b>
     <span>เดินทาง ${bangkokDateLabel(r.travelDate)} · ${esc(r.trainName)}</span>
     <span>${non ? 'ซื้อตั๋วที่สถานีในวันเดินทาง' : `เริ่มเปิดจอง ${bangkokDateLabel(date)} เวลา ${esc(r.openTime || '08:30')} น.`}</span>`;
@@ -1745,15 +1580,14 @@ function reminderValidation(p) {
 function updateReminderPreview() {
   syncDateControls();
   if (!reminderResult) return;
-  $('reminderCustomBox').classList.toggle('hidden', $('reminderLead').value !== 'custom');
+  $('reminderCustomBox').classList.toggle('hidden',$('reminderLead').value !== 'custom');
   const p = reminderInputs(), error = reminderValidation(p);
   $('reminderPreview').innerHTML = `
     <span>เวลาที่จะตั้งเตือน</span>
     <strong>${p.at ? `${bangkokDateLabel(p.date)} · เวลา ${esc(p.time)} น.` : 'กรุณาระบุวันและเวลา'}</strong>
     <small>เขตเวลาประเทศไทย (UTC+7)</small>`;
   $('reminderError').textContent = error;
-  $('reminderError').classList.toggle('hidden', !error);
-  $('googleCalendarBtn').disabled = !!error;
+  $('reminderError').classList.toggle('hidden', !error);$('googleCalendarBtn').disabled = !!error;
   $('copyReminderBtn').disabled = !!error;
 }
 
@@ -1773,7 +1607,7 @@ function openGoogleCalendar() {
   url.searchParams.set('details', details);
   url.searchParams.set('location', r.origin);
   url.searchParams.set('ctz', REMINDER_ZONE);
-  url.searchParams.set('openExternalBrowser', '1'); // บังคับให้ LINE เปิดแอปปฏิทินหรือเบราว์เซอร์หลัก
+  url.searchParams.set('openExternalBrowser', '1');
 
   window.open(url.toString(), '_blank', 'noopener,noreferrer');
   $('reminderHandoff').textContent = 'เปิดหน้า Google Calendar แล้ว กรุณากดปุ่ม "บันทึก (Save)" ในแอปปฏิทินของคุณเพื่อยืนยันการแจ้งเตือนครับ';
@@ -1795,25 +1629,13 @@ function copyReminderText() {
    ========================================================= */
 let stationPickerField = null;
 const STATION_FIELD_LABELS = {
-  trainOrigin: 'ต้นทางขบวนรถ',
-  trainDest: 'ปลายทางขบวนรถ',
   passOrigin: 'สถานีต้นทาง',
   passDest: 'สถานีปลายทาง'
 };
 
-function pickerStationNames(field) {
+function pickerStationNames() {
   const train = getTrain(el.selectedTrain.value);
-  let names = field === 'trainOrigin' || field === 'trainDest' ? stationNames() : activeStationNames(train);
-  if (!train && (field === 'passOrigin' || field === 'passDest')) {
-    const a = getKm(el.trainOrigin.value), b = getKm(el.trainDest.value);
-    if (Number.isFinite(a) && Number.isFinite(b)) {
-      names = names.filter(n => {
-        const km = getKm(n);
-        return km >= Math.min(a, b) && km <= Math.max(a, b);
-      });
-    }
-  }
-  return names;
+  return activeStationNames(train);
 }
 
 function openStationPicker(field) {
@@ -1822,7 +1644,7 @@ function openStationPicker(field) {
   state.lastStationField = field;
   $('stationPickerTitle').textContent = 'เลือก' + STATION_FIELD_LABELS[field];
   const train = getTrain(el.selectedTrain.value);
-  $('stationPickerContext').textContent = train ? train.name : 'สายเหนือ (กทม.–เชียงใหม่)';
+  $('stationPickerContext').textContent = train ? train.name : 'แสดงสถานีทั้งหมด';
   $('stationSearch').value = '';
   renderStationPicker();
   $('stationPickerDialog').showModal();
@@ -1830,7 +1652,7 @@ function openStationPicker(field) {
 
 function renderStationPicker() {
   if (!stationPickerField) return;
-  const all = pickerStationNames(stationPickerField);
+  const all = pickerStationNames();
   const query = $('stationSearch').value.trim().toLocaleLowerCase('th-TH');
   const names = all.filter(n => n.toLocaleLowerCase('th-TH').includes(query));
   const pinned = names.filter(n => QUICK_STATIONS.includes(n) || state.favorites.includes(n));
@@ -1854,7 +1676,7 @@ function renderStationPicker() {
 }
 
 function choosePickerStation(name) {
-  if (!stationPickerField || !pickerStationNames(stationPickerField).includes(name)) return;
+  if (!stationPickerField || !pickerStationNames().includes(name)) return;
   const field = $(stationPickerField);
   field.value = name;
   $('stationPickerDialog').close();
@@ -1957,21 +1779,14 @@ function applyTheme(theme) {
   document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'dark' ? '#1a202c' : '#841b3a');
 }
 
-el.stationModeBtn.addEventListener('click', () => setBookingMode('station'));
-el.manualModeBtn.addEventListener('click', () => setBookingMode('manual'));
 el.selectedTrain.addEventListener('change', () => { syncStationConstraints(); calculateBooking(); });
-
-[el.reservationType, el.manualReservationType, el.totalDistance, el.passengerDistance].forEach(node => {
-  node.addEventListener('input', calculateBooking);
-  node.addEventListener('change', calculateBooking);
-});
 
 $('swapStationsBtn').addEventListener('click', () => {
   const a = el.passOrigin.value;
   el.passOrigin.value = el.passDest.value;
   el.passDest.value = a;
   calculateBooking();
-  showToast('สลับสถานีขึ้น–ลงแล้ว');
+  showToast('สลับสถานีต้นทาง–ปลายทางแล้ว');
 });
 
 $('clearRouteBtn').addEventListener('click', () => {
