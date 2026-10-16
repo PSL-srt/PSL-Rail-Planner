@@ -781,56 +781,60 @@
               </select>
             </div>
 
-            <!-- ปุ่มลัดสถานีหลัก -->
-            <div class="quick-strip">
-              <div class="strip-head">
-                <span>📍 ปุ่มลัดสถานีหลัก (แตะเพื่อใส่สถานีต้นทาง / สถานีปลายทาง)</span>
-                <button class="text-btn" id="clearRouteBtn" type="button">ล้างสถานี</button>
-              </div>
-              <div class="chips" id="quickStationChips">
-                <button type="button" class="chip highlight" data-quick="พิษณุโลก">📌 พิษณุโลก</button>
-                <button type="button" class="chip" data-quick="กรุงเทพอภิวัฒน์">กรุงเทพอภิวัฒน์</button>
-                <button type="button" class="chip" data-quick="เชียงใหม่">เชียงใหม่</button>
-              </div>
-            </div>
-
-            <div class="swap-row">
-              <div class="field">
-                <label for="passOriginBtn">สถานีต้นทาง <span>ต้นทางผู้โดยสาร</span></label>
-                <div class="control-wrap">
-                  <input id="passOrigin" type="hidden" value="" />
-                  <button class="control station-picker-trigger is-empty" id="passOriginBtn" type="button">
-                    <span id="passOriginLabel">กดเลือกสถานีต้นทาง</span>
-                  </button>
-                  <button class="mini-btn" id="favOriginBtn" type="button" title="บันทึกสถานีโปรด">☆</button>
+            <!-- ส่วนเลือกสถานี (จะซ่อนอัตโนมัติหากเลือกขบวนรถไม่สำรองที่นั่ง) -->
+            <div id="stationSelectionBox">
+              <!-- ปุ่มลัดสถานีหลัก -->
+              <div class="quick-strip">
+                <div class="strip-head">
+                  <span>📍 ปุ่มลัดสถานีหลัก (แตะเพื่อใส่สถานีต้นทาง / สถานีปลายทาง)</span>
+                  <button class="text-btn" id="clearRouteBtn" type="button">ล้างสถานี</button>
+                </div>
+                <div class="chips" id="quickStationChips">
+                  <button type="button" class="chip highlight" data-quick="พิษณุโลก">📌 พิษณุโลก</button>
+                  <button type="button" class="chip" data-quick="กรุงเทพอภิวัฒน์">กรุงเทพอภิวัฒน์</button>
+                  <button type="button" class="chip" data-quick="เชียงใหม่">เชียงใหม่</button>
                 </div>
               </div>
-              <button class="swap-btn" id="swapStationsBtn" type="button" title="สลับสถานีต้นทางและสถานีปลายทาง">⇄</button>
-              <div class="field">
-                <label for="passDestBtn">สถานีปลายทาง <span>ปลายทางผู้โดยสาร</span></label>
-                <div class="control-wrap">
-                  <input id="passDest" type="hidden" value="" />
-                  <button class="control station-picker-trigger is-empty" id="passDestBtn" type="button">
-                    <span id="passDestLabel">กดเลือกสถานีปลายทาง</span>
-                  </button>
-                  <button class="mini-btn" id="favDestBtn" type="button" title="บันทึกสถานีโปรด">☆</button>
+
+              <div class="swap-row">
+                <div class="field">
+                  <label for="passOriginBtn">สถานีต้นทาง <span>ต้นทางผู้โดยสาร</span></label>
+                  <div class="control-wrap">
+                    <input id="passOrigin" type="hidden" value="" />
+                    <button class="control station-picker-trigger is-empty" id="passOriginBtn" type="button">
+                      <span id="passOriginLabel">กดเลือกสถานีต้นทาง</span>
+                    </button>
+                    <button class="mini-btn" id="favOriginBtn" type="button" title="บันทึกสถานีโปรด">☆</button>
+                  </div>
+                </div>
+                <button class="swap-btn" id="swapStationsBtn" type="button" title="สลับสถานีต้นทางและสถานีปลายทาง">⇄</button>
+                <div class="field">
+                  <label for="passDestBtn">สถานีปลายทาง <span>ปลายทางผู้โดยสาร</span></label>
+                  <div class="control-wrap">
+                    <input id="passDest" type="hidden" value="" />
+                    <button class="control station-picker-trigger is-empty" id="passDestBtn" type="button">
+                      <span id="passDestLabel">กดเลือกสถานีปลายทาง</span>
+                    </button>
+                    <button class="mini-btn" id="favDestBtn" type="button" title="บันทึกสถานีโปรด">☆</button>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div class="quick-strip" id="favoriteStrip">
-              <div class="strip-head">
-                <span>⭐ สถานีที่บันทึกไว้เพิ่มเติม</span>
-                <button class="text-btn" id="clearFavoritesBtn" type="button">ล้างทั้งหมด</button>
+              <div class="quick-strip" id="favoriteStrip">
+                <div class="strip-head">
+                  <span>⭐ สถานีที่บันทึกไว้เพิ่มเติม</span>
+                  <button class="text-btn" id="clearFavoritesBtn" type="button">ล้างทั้งหมด</button>
+                </div>
+                <div class="chips" id="favoriteChips"></div>
               </div>
-              <div class="chips" id="favoriteChips"></div>
+
+              <div class="distance-summary hidden" id="distanceSummary">
+                <div class="metric"><span>ระยะขบวนรถ</span><strong id="totalKmText">-</strong></div>
+                <div class="metric"><span>ระยะเดินทาง</span><strong id="passengerKmText">-</strong></div>
+                <div class="metric"><span>สัดส่วนระยะทาง</span><strong id="percentageText">-</strong></div>
+              </div>
             </div>
 
-            <div class="distance-summary hidden" id="distanceSummary">
-              <div class="metric"><span>ระยะขบวนรถ</span><strong id="totalKmText">-</strong></div>
-              <div class="metric"><span>ระยะเดินทาง</span><strong id="passengerKmText">-</strong></div>
-              <div class="metric"><span>สัดส่วนระยะทาง</span><strong id="percentageText">-</strong></div>
-            </div>
           </div>
         </div>
       </div>
@@ -1042,7 +1046,7 @@ const northSchedules = [
   { id: "201/202", name: "201/202 ธรรมดา กรุงเทพ (หัวลำโพง)–พิษณุโลก", origin: "กรุงเทพ (หัวลำโพง)", dest: "พิษณุโลก",
     stops: ["กรุงเทพ (หัวลำโพง)", "สามเสน", "ชุมทางบางซื่อ", "กรุงเทพอภิวัฒน์", "บางเขน", "หลักสี่", "ดอนเมือง", "รังสิต", "เชียงราก", "บางปะอิน", "อยุธยา", "ชุมทางบ้านภาชี", "ท่าเรือ", "ลพบุรี", "บ้านหมี่", "ช่องแค", "บ้านตาคลี", "นครสวรรค์", "ปากน้ำโพ", "ชุมแสง", "ตะพานหิน", "พิจิตร", "บางกระทุ่ม", "พิษณุโลก"] },
   { id: "401/402", name: "401/402 ท้องถิ่น ลพบุรี–พิษณุโลก", origin: "ลพบุรี", dest: "พิษณุโลก",
-    stops: ["ลพบุรี", "บ้านป่าหวาย", "บ้านกลับ", "หนองโดน", "บ้านหมอ", "ท่าเรือ", "หนองวิวัฒน์", "ชุมทางบ้านภาชี", "พระแก้ว", "มาบพระจันทร์", "บ้านม้า", "อยุธยา", "บ้านโพ", "บางปะอิน", "คลองพุทรา", "เชียงรากน้อย", "นวนคร", "มหาวิทยาลัยธรรมศาสตร์", "เชียงราก", "คลองหนึ่ง", "รังสิต", "หลักหก", "ดอนเมือง", "หลักสี่", "บางเขน", "กรุงเทพอภิวัฒน์", "ชุมทางบางซื่อ", "สามเสน", "กรุงเทพ (หัวลำโพง)", "สามเสน", "ชุมทางบางซื่อ", "กรุงเทพอภิวัฒน์", "บางเขน", "หลักสี่", "ดอนเมือง", "รังสิต", "เชียงราก", "บางปะอิน", "อยุธยา", "ชุมทางบ้านภาชี", "ท่าเรือ", "ลพบุรี", "บ้านหมี่", "ช่องแค", "บ้านตาคลี", "นครสวรรค์", "ปากน้ำโพ", "ชุมแสง", "ตะพานหิน", "พิจิตร", "บางกระทุ่ม", "พิษณุโลก"] },
+    stops: ["ลพบุรี", "บ้านป่าหวาย", "บ้านกลับ", "หนองโดน", "บ้านหมอ", "ท่าเรือ", "หนองวิวัฒน์", "ชุมทางบ้านภาชี", "พระแก้ว", "มาบพระจันทร์", "บ้านม้า", "อยุธยา", "บ้านโพ", "บางปะอิน", "คลองพุทรา", "เชียงรากน้อย", "นวนคร", "มหาวิทยาลัยธรรมศาสตร์", "เชียงราก", "คลองหนึ่ง", "รังสิต", "หลักหก", "ดอนเมือง", "หลักสี่", "บางเขน", "กรุงเทพอภิวัฒน์", "ชุมทางบางซื่อ", "สามเสน", "กรุงเทพ (หัวลำโพง)", "ชุมทางบางซื่อ", "กรุงเทพอภิวัฒน์", "บางเขน", "หลักสี่", "ดอนเมือง", "รังสิต", "เชียงราก", "บางปะอิน", "อยุธยา", "ชุมทางบ้านภาชี", "ท่าเรือ", "ลพบุรี", "บ้านหมี่", "ช่องแค", "บ้านตาคลี", "นครสวรรค์", "ปากน้ำโพ", "ชุมแสง", "ตะพานหิน", "พิจิตร", "บางกระทุ่ม", "พิษณุโลก"] },
   { id: "403", name: "403 ท้องถิ่น พิษณุโลก–ศิลาอาสน์", origin: "พิษณุโลก", dest: "ศิลาอาสน์",
     stops: ["พิษณุโลก", "บ้านเต็งหนาม", "บ้านตูม", "พรหมพิราม", "หนองตม", "บ้านโคน", "พิชัย", "ชุมทางบ้านดารา", "ท่าสัก", "ตรอน", "อุตรดิตถ์", "ศิลาอาสน์"] },
   { id: "410", name: "410 ท้องถิ่น ศิลาอาสน์–พิษณุโลก", origin: "ศิลาอาสน์", dest: "พิษณุโลก",
@@ -1191,6 +1195,7 @@ const el = {
   passDestBtn: $('passDestBtn'),
   passOriginLabel: $('passOriginLabel'),
   passDestLabel: $('passDestLabel'),
+  stationSelectionBox: $('stationSelectionBox'),
   distanceSummary: $('distanceSummary'),
   totalKmText: $('totalKmText'),
   passengerKmText: $('passengerKmText'),
@@ -1211,7 +1216,15 @@ function syncStationButtons() {
 
 function syncStationConstraints() {
   const train = getTrain(el.selectedTrain.value);
-  if (train) {
+  const isNonReserved = getReservationType(train) === 'nonreserved';
+  
+  // ซ่อนกล่องเลือกสถานีทันทีหากเป็นรถไม่สำรองที่นั่ง
+  el.stationSelectionBox.classList.toggle('hidden', isNonReserved);
+
+  if (isNonReserved) {
+    el.passOrigin.value = '';
+    el.passDest.value = '';
+  } else if (train) {
     const allowed = activeStationNames(train);
     if (el.passOrigin.value && !allowed.includes(el.passOrigin.value)) el.passOrigin.value = '';
     if (el.passDest.value && !allowed.includes(el.passDest.value)) el.passDest.value = '';
@@ -1291,6 +1304,21 @@ function renderFavoriteButtons() {
 function getBookingInputs() {
   const travelDate = parseLocalDate(el.travelDate.value);
   const train = getTrain(el.selectedTrain.value);
+  const resType = getReservationType(train);
+
+  if (resType === 'nonreserved') {
+    return {
+      travelDate,
+      train,
+      reservationType: 'nonreserved',
+      total: 0,
+      passenger: 0,
+      routeValid: true,
+      origin: 'สถานีต้นทาง',
+      destination: 'สถานีปลายทาง'
+    };
+  }
+
   let total = NaN, passenger = NaN, routeValid = true;
   const origin = el.passOrigin.value.trim(), destination = el.passDest.value.trim();
   const trainOrigin = train?.origin || '';
@@ -1305,7 +1333,7 @@ function getBookingInputs() {
   return {
     travelDate,
     train,
-    reservationType: getReservationType(train),
+    reservationType: 'reserved',
     total,
     passenger,
     routeValid,
@@ -1316,7 +1344,7 @@ function getBookingInputs() {
   };
 }
 
-function bookingEmpty(message = 'เลือกวันที่เดินทาง ขบวนรถ และสถานีต้นทาง–ปลายทางให้ครบ') {
+function bookingEmpty(message = 'เลือกวันที่เดินทาง และขบวนรถไฟให้ครบถ้วน') {
   state.lastBookingResult = null;
   el.distanceSummary.classList.add('hidden');
   el.bookingResult.innerHTML = `<div class="empty"><div class="empty-icon">🚆</div><h3>พร้อมคำนวณวันเปิดจอง</h3><p>${esc(message)}<br>ผลลัพธ์จะแสดงอัตโนมัติทันที</p></div>`;
@@ -1351,6 +1379,10 @@ function calculateBooking() {
   if (!d.travelDate) return bookingEmpty('กรุณากดเลือก "วันที่เดินทาง" ในขั้นตอนที่ 1');
   if (d.travelDate < localDateOnly()) return bookingError('วันที่เดินทางผ่านไปแล้ว กรุณาเลือกวันนี้หรือวันในอนาคต');
   if (!d.train) return bookingEmpty('กรุณาเลือก "ขบวนรถไฟ" ในขั้นตอนที่ 2');
+
+  // หากเป็นรถไม่สำรองที่นั่ง ให้แสดงผลทันทีโดยไม่ต้องเลือกสถานี
+  if (d.reservationType === 'nonreserved') return renderNonReservedResult(d);
+
   if (!d.origin || !d.destination) return bookingEmpty('กรุณาเลือก "สถานีต้นทาง" และ "สถานีปลายทาง"');
   if (!exactStation(d.origin) || !exactStation(d.destination)) return bookingError('กรุณาเลือกสถานีจากรายการที่กำหนด');
   if (d.origin === d.destination) return bookingError('สถานีต้นทางและสถานีปลายทางต้องเป็นคนละสถานีกัน');
@@ -1360,9 +1392,7 @@ function calculateBooking() {
     return bookingError('สถานีที่เลือกไม่อยู่ในจุดจอดหรือช่วงวิ่งของขบวนรถนี้');
   }
 
-  if (d.reservationType === 'nonreserved') return renderNonReservedResult(d);
-
-  if (!Number.isFinite(d.total) || !Number.isFinite(d.passenger)) return bookingEmpty('กรุณาเลือกขบวนรถและสถานีให้ครบถ้วน');
+  if (!Number.isFinite(d.total) || !Number.isFinite(d.passenger)) return bookingEmpty('กรุณาเลือกสถานีต้นทางและปลายทางให้ครบถ้วน');
   if (!d.routeValid) return bookingError('สถานีต้นทางและสถานีปลายทางต้องอยู่ภายในช่วงวิ่งของขบวนรถ');
   if (d.total <= 0 || d.passenger <= 0) return bookingError('ระยะทางต้องมากกว่า 0 กิโลเมตร');
   if (d.passenger > d.total) return bookingError('ระยะทางผู้โดยสารต้องไม่เกินระยะทางวิ่งทั้งหมดของขบวน');
@@ -1372,6 +1402,7 @@ function calculateBooking() {
 }
 
 function routeMarkup(d) {
+  if (d.reservationType === 'nonreserved') return '';
   return `<div class="route-line"><div class="station">${esc(d.origin)}</div><div class="arrow">➜</div><div class="station">${esc(d.destination)}</div></div>`;
 }
 
@@ -1394,18 +1425,18 @@ function bookingActions() {
 }
 
 function renderNonReservedResult(d) {
-  updateDistanceSummary(d.total, d.passenger);
+  el.distanceSummary.classList.add('hidden');
   const result = {
     type: 'nonreserved',
     createdAt: new Date().toISOString(),
     travelDate: toLocalISO(d.travelDate),
-    origin: d.origin,
-    destination: d.destination,
+    origin: d.train.origin,
+    destination: d.train.dest,
     trainId: d.train.id,
     trainName: d.train.name,
     headline: 'ซื้อในวันเดินทาง',
     summary: BOOKING_RULES.nonReservedText,
-    copyText: `🚆 ${d.train.name}\n📍 ${d.origin} → ${d.destination}\n📅 เดินทางวันที่ ${formatDate(d.travelDate)}\n🎫 ${BOOKING_RULES.nonReservedText}\n☎️ สอบถามเพิ่มเติม สถานีรถไฟพิษณุโลก หรือสายด่วน 1690`
+    copyText: `🚆 ${d.train.name}\n📅 เดินทางวันที่ ${formatDate(d.travelDate)}\n🎫 ${BOOKING_RULES.nonReservedText}\n☎️ สอบถามเพิ่มเติม สถานีรถไฟพิษณุโลก หรือสายด่วน 1690`
   };
   state.lastBookingResult = result;
   el.bookingResult.innerHTML = `
@@ -1418,11 +1449,10 @@ function renderNonReservedResult(d) {
         <span class="status info">🎫 ซื้อวันเดินทาง</span>
       </div>
       <div class="result-main">
-        ${routeMarkup(d)}
         <div class="big-result">
           <span>การจำหน่ายตั๋ว</span>
-          <strong style="font-size:32px">ซื้อในวันเดินทาง</strong>
-          <small>จำหน่ายที่สถานี ก่อนขบวนรถออกไม่เกิน 2 ชั่วโมง</small>
+          <strong style="font-size:30px">ซื้อในวันเดินทาง</strong>
+          <small>ขบวนรถธรรมดา/ท้องถิ่น ไม่ต้องจองล่วงหน้า ก่อนรถออกไม่เกิน 2 ชม.</small>
         </div>
         <div class="date-panel">
           <div class="label">วันที่เดินทาง</div>
@@ -1527,7 +1557,7 @@ function saveBookingHistory(r) {
   state.bookingHistory = state.bookingHistory.filter(x => x.key !== key);
   state.bookingHistory.unshift({
     key,
-    title: `${r.headline} (${r.origin} → ${r.destination})`,
+    title: r.type === 'nonreserved' ? `ซื้อในวันเดินทาง (ขบวน ${r.trainId})` : `${r.headline} (${r.origin} → ${r.destination})`,
     subtitle: `ขบวน ${r.trainId} • เดินทาง ${formatDate(parseLocalDate(r.travelDate))}`,
     restore: getBookingSnapshot()
   });
@@ -1589,8 +1619,8 @@ function openBookingReminder() {
   $('reminderDate').min = bangkokToday();$('reminderDate').max = r.travelDate;
   $('reminderDate').value = date;
   $('reminderTime').value = r.openTime \vert{}\vert{} '08:30';$('reminderRoute').innerHTML = `
-    <b>${esc(r.origin)} → ${esc(r.destination)}</b>
-    <span>เดินทาง ${bangkokDateLabel(r.travelDate)} · ${esc(r.trainName)}</span>
+    <b>${non ? esc(r.trainName) : esc(r.origin) + ' → ' + esc(r.destination)}</b>
+    <span>เดินทาง ${bangkokDateLabel(r.travelDate)}</span>
     <span>${non ? 'ซื้อตั๋วที่สถานีในวันเดินทาง' : `เริ่มเปิดจอง ${bangkokDateLabel(date)} เวลา ${esc(r.openTime || '08:30')} น.`}</span>`;
 
   const hasPassed = bangkokInstant(date, r.openTime || '08:30') <= new Date();
@@ -1644,7 +1674,7 @@ function openGoogleCalendar() {
   const p = reminderInputs(), error = reminderValidation(p);
   if (error) return updateReminderPreview();
   const r = reminderResult;
-  const title = `เตือนจองตั๋วรถไฟ: ${r.origin} → ${r.destination}`;
+  const title = r.type === 'nonreserved' ? `เตือนเดินทางรถไฟ: ${r.trainName}` : `เตือนจองตั๋วรถไฟ: ${r.origin} → ${r.destination}`;
   const details = `${r.copyText}\n\nจองตั๋วออนไลน์: https://dticket.railway.co.th/`;
   const end = new Date(p.at.getTime() + 15 * 60000);
 
@@ -1653,7 +1683,7 @@ function openGoogleCalendar() {
   url.searchParams.set('text', title);
   url.searchParams.set('dates', `${calendarStamp(p.at)}/${calendarStamp(end)}`);
   url.searchParams.set('details', details);
-  url.searchParams.set('location', r.origin);
+  url.searchParams.set('location', r.type === 'nonreserved' ? 'สถานีรถไฟพิษณุโลก' : r.origin);
   url.searchParams.set('ctz', REMINDER_ZONE);
   url.searchParams.set('openExternalBrowser', '1');
 
@@ -1665,7 +1695,7 @@ function openGoogleCalendar() {
 function copyReminderText() {
   if (!reminderResult) return;
   const p = reminderInputs();
-  const text = `⏰ ตั้งเตือนจองตั๋ว: ${bangkokDateLabel(p.date)} เวลา ${p.time} น.\n${reminderResult.copyText}`;
+  const text = `⏰ ตั้งเตือน: ${bangkokDateLabel(p.date)} เวลา ${p.time} น.\n${reminderResult.copyText}`;
   copyText(text).then(() => {
     showToast('คัดลอกข้อความเตือนแล้ว ส่งเก็บไว้ในแชท LINE ได้เลย');
     closeModal('reminderDialog');
